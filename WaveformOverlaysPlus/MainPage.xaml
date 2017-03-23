@@ -72,7 +72,7 @@
                         <Button Content="Over1" FontSize="{StaticResource myFontSize}"/>
                         <Button Content="Over2" FontSize="{StaticResource myFontSize}"/>
                     </StackPanel>
-                    <TextBlock Height="28"/>
+                    <TextBlock Height="27"/>
                     <TextBlock Text="Overlays" HorizontalAlignment="Center" FontSize="{StaticResource myFontSize}"/>
                 </StackPanel>
                 <Rectangle Width="1" Height="55" Margin="10,0" Fill="#FF909090"/>
