@@ -5,4 +5,8 @@
     xmlns:local="using:WaveformOverlaysPlus"
     RequestedTheme="Light">
 
+    <Application.Resources>
+        <x:Double x:Key="myFontSize">12</x:Double>
+    </Application.Resources>
+
 </Application>
