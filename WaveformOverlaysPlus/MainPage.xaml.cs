@@ -49,6 +49,7 @@ namespace WaveformOverlaysPlus
             this.InitializeComponent();
         }
 
+        #region OnNavigated
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             // Register for PrintTaskRequested event
@@ -75,19 +76,19 @@ namespace WaveformOverlaysPlus
             printDoc.GetPreviewPage -= GetPreviewPage;
             printDoc.AddPages -= AddPages;
         }
+        #endregion
 
+        #region New and Exit
         private void menuNew_Click(object sender, RoutedEventArgs e)
         {
             gridMain.Children.Clear();
         }
 
-        private async void btnFile_Click(object sender, RoutedEventArgs e)
+        private void menuExit_Click(object sender, RoutedEventArgs e)
         {
-
-
-            //StorageFile thumbnailFile = await ImageUtils.WriteableBitmapToStorageFile(wb, "thumbnail.png");
-            //StorageFile shareFile = await ImageUtils.WriteableBitmapToStorageFile(wb, "shareFile.png");
+            Application.Current.Exit();
         }
+        #endregion
 
         #region Open
 
@@ -573,8 +574,9 @@ namespace WaveformOverlaysPlus
         }
 
 
+
         #endregion
 
-
+        
     }
 }

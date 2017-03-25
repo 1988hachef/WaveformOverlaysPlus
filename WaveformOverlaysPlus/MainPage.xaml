@@ -20,7 +20,7 @@
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Top">
 
-            <Button Name="btnFile" Content="File" Background="White" FontSize="{StaticResource myFontSize}" Click="btnFile_Click" >
+            <Button Name="btnFile" Content="File" Background="White" FontSize="{StaticResource myFontSize}" >
                 <Button.Flyout>
                     <MenuFlyout>
                         <MenuFlyoutItem Name="menuNew" Text="New" FontSize="{StaticResource myFontSize}" Click="menuNew_Click"/>
@@ -30,7 +30,7 @@
                         <MenuFlyoutItem Name="menuPrint" Text="Print" Click="PrintButtonClick" FontSize="{StaticResource myFontSize}"/>
                         <MenuFlyoutItem Name="menuShare" Text="Share" FontSize="{StaticResource myFontSize}" Click="menuShare_Click"/>
                         <MenuFlyoutSeparator/>
-                        <MenuFlyoutItem Text="Exit" FontSize="{StaticResource myFontSize}"/>
+                        <MenuFlyoutItem Name="menuExit" Text="Exit" FontSize="{StaticResource myFontSize}" Click="menuExit_Click"/>
                     </MenuFlyout>
                 </Button.Flyout>
             </Button>
