@@ -99,7 +99,7 @@
 
 
 
-        <Grid Name="gridForOverall" Grid.Row="2">
+        <Grid Name="gridForOverall" Grid.Row="2" >
 
             <Grid Name="gridMain" Grid.Row="2"/>
 

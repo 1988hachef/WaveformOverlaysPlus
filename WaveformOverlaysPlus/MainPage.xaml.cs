@@ -41,6 +41,8 @@ namespace WaveformOverlaysPlus
         private PrintDocument printDoc;
         private IPrintDocumentSource printDocSource;
 
+        DataTransferManager dataTransferManager;
+
 
         public MainPage()
         {
@@ -61,8 +63,17 @@ namespace WaveformOverlaysPlus
             printDoc.AddPages += AddPages;
 
             // Register the current page as a share source.
-            DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
+            dataTransferManager = DataTransferManager.GetForCurrentView();
             dataTransferManager.DataRequested += new TypedEventHandler<DataTransferManager, DataRequestedEventArgs>(this.ShareImageHandler);
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            dataTransferManager.DataRequested -= ShareImageHandler;
+            printMan.PrintTaskRequested -= PrintTaskRequested;
+            printDoc.Paginate -= Paginate;
+            printDoc.GetPreviewPage -= GetPreviewPage;
+            printDoc.AddPages -= AddPages;
         }
 
         private void menuNew_Click(object sender, RoutedEventArgs e)
