@@ -20,7 +20,7 @@
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Top">
 
-            <Button Name="btnFile" Content="File" Background="White" FontSize="{StaticResource myFontSize}" >
+            <Button Name="btnFile" Content="File" Style="{StaticResource styleMenuButton}" >
                 <Button.Flyout>
                     <MenuFlyout>
                         <MenuFlyoutItem Name="menuNew" Text="New" FontSize="{StaticResource myFontSize}" Click="menuNew_Click"/>
@@ -36,7 +36,7 @@
             </Button>
 
 
-            <Button Content="Edit" Background="White" FontSize="{StaticResource myFontSize}">
+            <Button Content="Edit" Style="{StaticResource styleMenuButton}">
                 <Button.Flyout>
                     <MenuFlyout>
                         <MenuFlyoutItem Text="Copy" FontSize="{StaticResource myFontSize}"/>
@@ -45,7 +45,7 @@
                 </Button.Flyout>
             </Button>
 
-            <Button Content="Help" Background="White" FontSize="{StaticResource myFontSize}">
+            <Button Content="Help" Style="{StaticResource styleMenuButton}">
                 <Button.Flyout>
                     <MenuFlyout>
                         <MenuFlyoutItem Text="Help" FontSize="{StaticResource myFontSize}"/>
@@ -69,8 +69,8 @@
 
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="Over1" FontSize="{StaticResource myFontSize}"/>
-                        <Button Content="Over2" FontSize="{StaticResource myFontSize}"/>
+                        <Button Content="Over1" Style="{StaticResource styleToolButton}"/>
+                        <Button Content="Over2" Style="{StaticResource styleToolButton}"/>
                     </StackPanel>
                     <TextBlock Height="27"/>
                     <TextBlock Text="Overlays" HorizontalAlignment="Center" FontSize="{StaticResource myFontSize}"/>
