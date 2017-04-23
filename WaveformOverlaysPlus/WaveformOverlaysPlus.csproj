@@ -96,6 +96,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\PaintObjectTemplatedControl.cs" />
+    <Compile Include="Converters\OpacityBindingConverter.cs" />
     <Compile Include="Helpers\ImageUtils.cs" />
     <Compile Include="Helpers\WriteableBitmapExtensions.cs" />
     <Compile Include="MainPage.xaml.cs">
@@ -125,6 +127,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
