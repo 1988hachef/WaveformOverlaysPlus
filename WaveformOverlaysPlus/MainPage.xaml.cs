@@ -25,6 +25,9 @@ using Windows.UI.Xaml.Printing;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel;
 using WaveformOverlaysPlus.Helpers;
+using Windows.Storage.FileProperties;
+using WaveformOverlaysPlus.Controls;
+using Windows.UI;
 
 namespace WaveformOverlaysPlus
 {
@@ -82,6 +85,11 @@ namespace WaveformOverlaysPlus
         private void menuNew_Click(object sender, RoutedEventArgs e)
         {
             gridMain.Children.Clear();
+            
+            if (!(gridMain.Background.Equals(Colors.White)))
+            {
+                gridMain.Background = new SolidColorBrush(Colors.White);
+            }
         }
 
         private void menuExit_Click(object sender, RoutedEventArgs e)
@@ -105,262 +113,44 @@ namespace WaveformOverlaysPlus
 
             if (imgFile != null)
             {
-                originalWB = new WriteableBitmap(1, 1);
-                await originalWB.LoadAsync(imgFile);
+                double _height = 0;
+                double _width = 0;
 
-                if (originalWB.PixelWidth < 100 || originalWB.PixelHeight < 100)
+                Image image = new Image();
+                image.Stretch = Stretch.Fill;
+
+                // Set the image source and get the image width and height
+                using (IRandomAccessStream IRASstream = await imgFile.OpenAsync(FileAccessMode.Read))
+                {
+                    BitmapImage bitmapImage = new BitmapImage();
+                    await bitmapImage.SetSourceAsync(IRASstream);
+                    _height = bitmapImage.PixelHeight;
+                    _width = bitmapImage.PixelWidth;
+                    image.Source = bitmapImage;
+                }
+
+                if (_width < 40 || _height < 40)
                 {
                     MessageDialog tooSmallMessage = new MessageDialog("Image too small. Please choose a larger image.");
                     await tooSmallMessage.ShowAsync();
                 }
-                else
+
+                if (_width > gridMain.ActualWidth || _height > gridMain.ActualHeight)
                 {
-                    AddNewImage(originalWB);
+                    double scale = Math.Min(gridMain.ActualWidth / _width, gridMain.ActualHeight / _height);
+                    _width = (_width * scale) - 1;
+                    _height = (_height * scale) - 1;
                 }
 
-                StorageFile originalFile = await ImageUtils.WriteableBitmapToStorageFile(originalWB, "originalImage.png");
-                StorageFile cropperFile = await ImageUtils.WriteableBitmapToStorageFile(originalWB, "cropImage.png");
-            }
-        }
+                PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
+                paintObject.Width = _width;
+                paintObject.Height = _height;
+                paintObject.Content = image;
+                paintObject.OpacitySliderIsVisible = true;
 
-        private void AddNewImage(WriteableBitmap wb)
-        {
-            if (imageMain != null)
-            {
-                gridMain.Children.Remove(imageMain);
-                transformImage.TranslateX = 0;
-                transformImage.TranslateY = 0;
-            }
+                gridMain.Children.Add(paintObject);
 
-            // Initialize the transform for the image
-            transformImage = new CompositeTransform();
-
-            // Initialize the image
-            imageMain = new Image
-            {
-                ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY,
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Top,
-                RenderTransform = transformImage,
-                Source = wb,
-                Visibility = Visibility.Collapsed
-            };
-
-            // Create event handlers for image
-            imageMain.ManipulationDelta += imageMain_ManipulationDelta;
-            imageMain.PointerEntered += imageMain_PointerEntered;
-            imageMain.PointerExited += imageMain_PointerExited;
-            imageMain.SizeChanged += imageMain_SizeChanged;
-            imageMain.Loaded += imageMain_Loaded;
-
-            // Add the image
-            gridMain.Children.Add(imageMain);
-            imageMain.SetValue(Canvas.ZIndexProperty, -1);
-        }
-        #endregion
-
-        #region Image events
-
-        private void imageMain_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (originalWB != null)
-            {
-                if (originalWB.PixelWidth < gridMain.ActualWidth && originalWB.PixelHeight < gridMain.ActualHeight)
-                {
-                    imageMain.Width = originalWB.PixelWidth;
-                    imageMain.Height = originalWB.PixelHeight;
-                }
-                else
-                {
-                    imageMain.Width = gridMain.ActualWidth;
-                    imageMain.Height = gridMain.ActualHeight;
-                }
-            }
-            else
-            {
-                imageMain.Width = gridMain.ActualWidth;
-                imageMain.Height = gridMain.ActualHeight;
-            }
-
-            if (imageMain.Visibility == Visibility.Collapsed)
-            {
-                imageMain.Visibility = Visibility.Visible;
-            }
-        }
-
-        private void imageMain_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
-        {
-            if (tblockMove.Text == unlocked)
-            {
-                MoveAndRestrain(imageMain, gridMain, transformImage, e);
-            }
-        }
-
-        private void imageMain_PointerEntered(object sender, PointerRoutedEventArgs e)
-        {
-            if (tblockMove.Text == unlocked)
-            {
-                Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.SizeAll, 1);
-            }
-        }
-
-        private void imageMain_PointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            if (Window.Current.CoreWindow.PointerCursor.Type == Windows.UI.Core.CoreCursorType.SizeAll)
-            {
-                Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 1);
-            }
-        }
-
-        private async void imageMain_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (imageMain != null)
-            {
-                if (imageMain.ActualWidth > gridMain.ActualWidth || imageMain.ActualHeight > gridMain.ActualHeight)
-                {
-                    double scale = Math.Min(gridMain.ActualWidth / imageMain.ActualWidth, gridMain.ActualHeight / imageMain.ActualHeight);
-                    imageMain.Width = imageMain.ActualWidth * scale;
-                    imageMain.Height = imageMain.ActualHeight * scale;
-
-                    var dialog = new MessageDialog("Image at max size, but you can crop it then zoom in. (Image is restricted to staying within the border)");
-                    await dialog.ShowAsync();
-                }
-
-                // Get the top left point of prisoner in relationship to jail
-                GeneralTransform gt = imageMain.TransformToVisual(gridMain);
-                Point prisonerTopLeftPoint = gt.TransformPoint(new Point(0, 0));
-
-                // Set these variables to represent the edges of prisoner
-                double left = prisonerTopLeftPoint.X;
-                double top = prisonerTopLeftPoint.Y;
-                double right = left + imageMain.ActualWidth;
-                double bottom = top + imageMain.ActualHeight;
-
-                // Reposition prisoner to keep in jail (jail's BorderThickness is subtracted for right and bottom because it affects postioning)
-                if (left < 0)
-                {
-                    transformImage.TranslateX = 0;
-                }
-                else if ((right > gridMain.ActualWidth) && (left > 0))
-                {
-                    double updatedLeft = gridMain.ActualWidth - imageMain.ActualWidth;
-                    transformImage.TranslateX = updatedLeft - gridMain.BorderThickness.Right;
-                }
-
-                if (top < 0)
-                {
-                    transformImage.TranslateY = 0;
-                }
-                else if ((bottom > gridMain.ActualHeight) && (top > 0))
-                {
-                    double updatedTop = gridMain.ActualHeight - imageMain.ActualHeight;
-                    transformImage.TranslateY = updatedTop - gridMain.BorderThickness.Bottom;
-                }
-            }
-        }
-
-        #endregion
-
-        #region MoveAndRestrain methods
-
-        private void MoveAndRestrain(FrameworkElement prisoner, FrameworkElement jail, CompositeTransform move, ManipulationDeltaRoutedEventArgs eventData)
-        {
-            // Get the top left point of the prisoner in relationship to the jail
-            GeneralTransform gt = prisoner.TransformToVisual(jail);
-            Point prisonerTopLeftPoint = gt.TransformPoint(new Point(0, 0));
-
-            // Set these variables to represent the edges of the prisoner
-            double left = prisonerTopLeftPoint.X;
-            double top = prisonerTopLeftPoint.Y;
-            double right = left + prisoner.ActualWidth;
-            double bottom = top + prisoner.ActualHeight;
-
-            // Combine those edges with the movement value (When these are used in the next step, it keeps the prisoner from getting stuck at the jail boundary)
-            double leftAdjust = left + eventData.Delta.Translation.X;
-            double topAdjust = top + eventData.Delta.Translation.Y;
-            double rightAdjust = right + eventData.Delta.Translation.X;
-            double bottomAdjust = bottom + eventData.Delta.Translation.Y;
-
-            // Allow prisoner movement if within jail boundary (Use two separate "if" statements here, so the movement isn't sticky at the boundary)
-            if ((leftAdjust >= 0) && (rightAdjust <= jail.ActualWidth))
-            {
-                move.TranslateX += eventData.Delta.Translation.X;
-            }
-
-            if ((topAdjust >= 0) && (bottomAdjust <= jail.ActualHeight))
-            {
-                move.TranslateY += eventData.Delta.Translation.Y;
-            }
-        }
-
-        private void MoveAndRestrainWithThumb(FrameworkElement prisoner, FrameworkElement jail, CompositeTransform movePrisoner, CompositeTransform moveThumb, ManipulationDeltaRoutedEventArgs eventData)
-        {
-            // Get the top left point of the prisoner in relationship to the jail
-            GeneralTransform gt = prisoner.TransformToVisual(jail);
-            Point prisonerTopLeftPoint = gt.TransformPoint(new Point(0, 0));
-
-            // Set these variables to represent the edges of the prisoner
-            double left = prisonerTopLeftPoint.X;
-            double top = prisonerTopLeftPoint.Y;
-            double right = left + prisoner.ActualWidth;
-            double bottom = top + prisoner.ActualHeight;
-
-            // Combine those edges with the movement value (When these are used in the next step, it keeps the prisoner from getting stuck at the jail boundary)
-            double leftAdjust = left + eventData.Delta.Translation.X;
-            double topAdjust = top + eventData.Delta.Translation.Y;
-            double rightAdjust = right + eventData.Delta.Translation.X;
-            double bottomAdjust = bottom + eventData.Delta.Translation.Y;
-
-            // Allow prisoner movement if within jail boundary (Use two separate "if" statements here, so the movement isn't sticky at the boundary)
-            if ((leftAdjust >= 0) && (rightAdjust <= jail.ActualWidth))
-            {
-                movePrisoner.TranslateX += eventData.Delta.Translation.X;
-                moveThumb.TranslateX += eventData.Delta.Translation.X;
-            }
-
-            if ((topAdjust >= 0) && (bottomAdjust <= jail.ActualHeight))
-            {
-                movePrisoner.TranslateY += eventData.Delta.Translation.Y;
-                moveThumb.TranslateY += eventData.Delta.Translation.Y;
-            }
-        }
-
-        private void MoveAndRestrainThumb(FrameworkElement Alice,
-                                          FrameworkElement Wonderland,
-                                          CompositeTransform transform,
-                                          int minSize,
-                                          ManipulationDeltaRoutedEventArgs eventData)
-        {
-            GeneralTransform gt = Alice.TransformToVisual(Wonderland);
-            Point TopLeftPoint = gt.TransformPoint(new Point(0, 0));
-
-            // Set these variables to represent the edges of the thing we are resizing
-            double right = TopLeftPoint.X + Alice.ActualWidth;
-            double bottom = TopLeftPoint.Y + Alice.ActualHeight;
-
-            // Combine the adjustable edges with the movement value.
-            double rightAdjust = right + eventData.Delta.Translation.X;
-            double bottomAdjust = bottom + eventData.Delta.Translation.Y;
-
-            // Set these to use for restricting the minimum size
-            double yadjust = Alice.Height + eventData.Delta.Translation.Y;
-            double xadjust = Alice.Width + eventData.Delta.Translation.X;
-
-            //// Get image's position inside the grid
-            //GeneralTransform gt2 = imageMain.TransformToVisual(gridMain);
-            //Point imageTopLeftPoint = gt2.TransformPoint(new Point(0, 0));
-
-            // Restrict adjustments
-            if ((rightAdjust <= Wonderland.ActualWidth) && (xadjust >= minSize))
-            {
-                Alice.Width = xadjust;
-                transform.TranslateX += eventData.Delta.Translation.X;
-            }
-
-            if ((bottomAdjust <= Wonderland.ActualHeight) && (yadjust >= minSize))
-            {
-                Alice.Height = yadjust;
-                transform.TranslateY += eventData.Delta.Translation.Y;
+                await imgFile.CopyAsync(ApplicationData.Current.LocalCacheFolder, "desiredNewName", NameCollisionOption.ReplaceExisting);
             }
         }
 
@@ -374,28 +164,15 @@ namespace WaveformOverlaysPlus
             {
                 FileSavePicker savePicker = new FileSavePicker();
                 savePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-                savePicker.FileTypeChoices.Add(".bmp Bitmap", new List<string>() { ".bmp" });
-                savePicker.FileTypeChoices.Add(".gif Graphical Interchange Format", new List<string>() { ".gif" });
-                savePicker.FileTypeChoices.Add(".jpg Joint Photographic Experts Group", new List<string>() { ".jpg" });
                 savePicker.FileTypeChoices.Add(".png Portable Network Graphics", new List<string>() { ".png" });
+                savePicker.FileTypeChoices.Add(".bmp Bitmap", new List<string>() { ".bmp" });
+                savePicker.FileTypeChoices.Add(".jpg Joint Photographic Experts Group", new List<string>() { ".jpg" });
+                savePicker.FileTypeChoices.Add(".gif Graphical Interchange Format", new List<string>() { ".gif" });
                 StorageFile file = await savePicker.PickSaveFileAsync();
 
                 if (file != null)
                 {
-                    RenderTargetBitmap rtb = new RenderTargetBitmap();
-                    await rtb.RenderAsync(gridForOverall);
-                    IBuffer pixelBuffer = await rtb.GetPixelsAsync();
-                    byte[] pixels = pixelBuffer.ToArray();
-                    WriteableBitmap wb = new WriteableBitmap(rtb.PixelWidth, rtb.PixelHeight);
-                    using (Stream stream = wb.PixelBuffer.AsStream())
-                    {
-                        await stream.WriteAsync(pixels, 0, pixels.Length);
-                    }
-                    await wb.SaveAsync(file);
-                }
-                else
-                {
-
+                    await ImageUtils.CaptureElementToFile(gridForOverall, file);
                 }
             }
             catch (Exception ex)
@@ -438,7 +215,7 @@ namespace WaveformOverlaysPlus
                     ContentDialog noPrintingDialog = new ContentDialog()
                     {
                         Title = "Printing error",
-                        Content = "\nSorry, printing can' t proceed at this time.",
+                        Content = "\nSorry, printing can't proceed at this time.",
                         PrimaryButtonText = "OK"
                     };
                     await noPrintingDialog.ShowAsync();

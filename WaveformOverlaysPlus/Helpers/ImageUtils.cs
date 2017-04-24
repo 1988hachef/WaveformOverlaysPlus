@@ -2,9 +2,11 @@
 using System.IO;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.Graphics.Display;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace WaveformOverlaysPlus.Helpers
@@ -30,6 +32,28 @@ namespace WaveformOverlaysPlus.Helpers
                 await encoder.FlushAsync();
             }
             return file;
+        }
+
+        public static async Task CaptureElementToFile(UIElement uiElement, StorageFile file)
+        {
+            RenderTargetBitmap renderTargetBitmap = new RenderTargetBitmap();
+            await renderTargetBitmap.RenderAsync(uiElement);
+            IBuffer pixelBuffer = await renderTargetBitmap.GetPixelsAsync();
+
+            DisplayInformation dispInfo = DisplayInformation.GetForCurrentView();
+
+            using (var stream = await file.OpenAsync(FileAccessMode.ReadWrite))
+            {
+                var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.BmpEncoderId, stream);
+
+                encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Straight,
+                    (uint)renderTargetBitmap.PixelWidth,
+                    (uint)renderTargetBitmap.PixelHeight,
+                    dispInfo.LogicalDpi, dispInfo.LogicalDpi,
+                    pixelBuffer.ToArray());
+
+                await encoder.FlushAsync();
+            }
         }
     }
 }

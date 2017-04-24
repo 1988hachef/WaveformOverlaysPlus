@@ -184,6 +184,58 @@
             </Setter>
         </Style>
 
+        <Style x:Key="styleTextBox" TargetType="TextBox">
+            <Setter Property="MinWidth" Value="{ThemeResource TextControlThemeMinWidth}"/>
+
+            <Setter Property="MinHeight" Value="29"/>
+            <!--<Setter Property="MinHeight" Value="{ThemeResource TextControlThemeMinHeight}"/>-->
+
+            <Setter Property="Foreground" Value="{ThemeResource TextControlForeground}"/>
+            <Setter Property="Background" Value="{ThemeResource TextControlBackground}"/>
+            <Setter Property="BorderBrush" Value="{ThemeResource TextControlBorderBrush}"/>
+            <Setter Property="SelectionHighlightColor" Value="{ThemeResource TextControlSelectionHighlightColor}"/>
+
+            <Setter Property="BorderThickness" Value="3"/>
+            <!--<Setter Property="BorderThickness" Value="{ThemeResource TextControlBorderThemeThickness}"/>-->
+
+            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+            <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
+            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Auto"/>
+            <Setter Property="ScrollViewer.VerticalScrollMode" Value="Auto"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden"/>
+            <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False"/>
+
+            <Setter Property="Padding" Value="7,0,7,5"/>
+            <!--<Setter Property="Padding" Value="{ThemeResource TextControlThemePadding}"/>-->
+
+            <!--Added the below property settings which are not normally set here in this style-->
+            <Setter Property="IsSpellCheckEnabled" Value="False"/>
+            <Setter Property="Margin" Value="1"/>
+            <Setter Property="PlaceholderText" Value="Click here to type"/>
+            <Setter Property="AcceptsReturn" Value="True"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Grid>
+                            <Rectangle x:Name="BorderElement"
+                                       Stroke="{TemplateBinding BorderBrush}"
+                                       StrokeThickness="3" Fill="{TemplateBinding Background}"
+                                       RadiusX="7" RadiusY="7"/>
+                            <ScrollViewer x:Name="ContentElement" 
+                                          IsTabStop="False"  
+                                          Margin="{TemplateBinding BorderThickness}" 
+                                          Padding="{TemplateBinding Padding}" 
+                                          VerticalScrollBarVisibility="Hidden"  
+                                          ZoomMode="Disabled"/>
+                            <ContentControl x:Name="PlaceholderTextContentPresenter" Content="{TemplateBinding PlaceholderText}" Foreground="{ThemeResource TextControlPlaceholderForeground}" IsHitTestVisible="False" IsTabStop="False" Margin="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
 
     </Application.Resources>
 
