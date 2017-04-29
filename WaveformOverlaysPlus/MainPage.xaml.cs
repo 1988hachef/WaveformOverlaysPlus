@@ -28,6 +28,8 @@ using WaveformOverlaysPlus.Helpers;
 using Windows.Storage.FileProperties;
 using WaveformOverlaysPlus.Controls;
 using Windows.UI;
+using Windows.Graphics.Display;
+using Windows.Graphics.Imaging;
 
 namespace WaveformOverlaysPlus
 {
@@ -352,8 +354,83 @@ namespace WaveformOverlaysPlus
 
 
 
+
         #endregion
 
-        
+        #region Copy and Paste
+
+        private async void menuCopy_Click(object sender, RoutedEventArgs e)
+        {
+            StorageFile file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync("TempImgFile", CreationCollisionOption.ReplaceExisting);
+            await ImageUtils.CaptureElementToFile(gridForOverall, file);
+
+            DataPackage dataPackage = new DataPackage();
+            dataPackage.RequestedOperation = DataPackageOperation.Copy;
+            dataPackage.SetBitmap(RandomAccessStreamReference.CreateFromFile(file));
+
+            Clipboard.SetContent(dataPackage);
+        }
+
+        private async void menuPaste_Click(object sender, RoutedEventArgs e)
+        {
+            DataPackageView dataPackageView = Clipboard.GetContent();
+            if (dataPackageView.Contains(StandardDataFormats.Bitmap))
+            {
+                IRandomAccessStreamReference imageReceived = null;
+                try
+                {
+                    imageReceived = await dataPackageView.GetBitmapAsync();
+                }
+                catch (Exception ex)
+                {
+                    var dialog = new MessageDialog("Error retrieving image from Clipboard: " + ex.Message).ShowAsync();
+                }
+
+                if (imageReceived != null)
+                {
+                    double _height = 0;
+                    double _width = 0;
+
+                    Image image = new Image();
+                    image.Stretch = Stretch.Fill;
+
+                    // Set the image source and get the image width and height
+                    using (var imageStream = await imageReceived.OpenReadAsync())
+                    {
+                        BitmapImage bitmapImage = new BitmapImage();
+                        await bitmapImage.SetSourceAsync(imageStream);
+                        _height = bitmapImage.PixelHeight;
+                        _width = bitmapImage.PixelWidth;
+                        image.Source = bitmapImage;
+                    }
+
+                    if (_width < 40 || _height < 40)
+                    {
+                        var dialog = new MessageDialog("Image too small. Please choose a larger image.").ShowAsync();
+                    }
+
+                    if (_width > gridMain.ActualWidth || _height > gridMain.ActualHeight)
+                    {
+                        double scale = Math.Min(gridMain.ActualWidth / _width, gridMain.ActualHeight / _height);
+                        _width = (_width * scale) - 1;
+                        _height = (_height * scale) - 1;
+                    }
+
+                    PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
+                    paintObject.Width = _width;
+                    paintObject.Height = _height;
+                    paintObject.Content = image;
+                    paintObject.OpacitySliderIsVisible = true;
+
+                    gridMain.Children.Add(paintObject);
+                }
+            }
+            else
+            {
+                var dialog = new MessageDialog("Bitmap format is not available in clipboard").ShowAsync();
+            }
+        }
+
+        #endregion
     }
 }

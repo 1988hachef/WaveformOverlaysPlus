@@ -39,8 +39,8 @@
             <Button Content="Edit" Style="{StaticResource styleMenuButton}">
                 <Button.Flyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem Text="Copy" FontSize="{StaticResource myFontSize}"/>
-                        <MenuFlyoutItem Text="Paste" FontSize="{StaticResource myFontSize}"/>
+                        <MenuFlyoutItem Name="menuCopy" Text="Copy" FontSize="{StaticResource myFontSize}" Click="menuCopy_Click"/>
+                        <MenuFlyoutItem Name="menuPaste" Text="Paste" FontSize="{StaticResource myFontSize}" Click="menuPaste_Click"/>
                     </MenuFlyout>
                 </Button.Flyout>
             </Button>
