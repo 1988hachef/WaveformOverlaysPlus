@@ -203,6 +203,7 @@ namespace WaveformOverlaysPlus
             }
 
             imageForPrint.Source = wb;
+            gridForPrint.Visibility = Visibility.Visible;
 
             if (PrintManager.IsSupported())
             {
@@ -222,6 +223,12 @@ namespace WaveformOverlaysPlus
                     };
                     await noPrintingDialog.ShowAsync();
                 }
+                finally
+                {
+                    imageForPrint.ClearValue(Image.SourceProperty);
+                    gridForPrint.Visibility = Visibility.Collapsed;
+                    gridContextDialog.Visibility = Visibility.Collapsed;
+                }
             }
             else
             {
@@ -235,6 +242,7 @@ namespace WaveformOverlaysPlus
                 await noPrintingDialog.ShowAsync();
 
                 imageForPrint.ClearValue(Image.SourceProperty);
+                gridForPrint.Visibility = Visibility.Collapsed;
                 gridContextDialog.Visibility = Visibility.Collapsed;
             }
         }
@@ -289,6 +297,10 @@ namespace WaveformOverlaysPlus
                         PrimaryButtonText = "OK"
                     };
                     await noPrintingDialog.ShowAsync();
+
+                    imageForPrint.ClearValue(Image.SourceProperty);
+                    gridForPrint.Visibility = Visibility.Collapsed;
+                    gridContextDialog.Visibility = Visibility.Collapsed;
                 });
             }
 
@@ -299,6 +311,7 @@ namespace WaveformOverlaysPlus
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     imageForPrint.ClearValue(Image.SourceProperty);
+                    gridForPrint.Visibility = Visibility.Collapsed;
                     gridContextDialog.Visibility = Visibility.Collapsed;
                 });
             }

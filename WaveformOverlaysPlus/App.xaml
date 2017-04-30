@@ -12,7 +12,7 @@
         <Style x:Key="styleMenuButton" TargetType="Button">
             
             <!--Changed Background to White-->
-            <Setter Property="Background" Value="White"/>
+            <Setter Property="Background" Value="Transparent"/>
             
             <Setter Property="Foreground" Value="{ThemeResource ButtonForeground}"/>
             <Setter Property="BorderBrush" Value="{ThemeResource ButtonBorderBrush}"/>
@@ -118,6 +118,10 @@
             
             <Setter Property="UseSystemFocusVisuals" Value="True"/>
             <Setter Property="FocusVisualMargin" Value="-3"/>
+            
+            <!--Add Margin Setter-->
+            <Setter Property="Margin" Value="5"/>
+
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">

@@ -13,12 +13,19 @@
 
     <Grid Background="White">
         <Grid.RowDefinitions>
-            <RowDefinition Height="28"/>
-            <RowDefinition Height="76"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Top">
+            <StackPanel.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFF0F0F0" Offset="0"/>
+                    <GradientStop Color="#FFA8A4A4" Offset="1"/>
+                    <GradientStop Color="#FFF0F0F0" Offset="0.902"/>
+                </LinearGradientBrush>
+            </StackPanel.Background>
 
             <Button Name="btnFile" Content="File" Style="{StaticResource styleMenuButton}" >
                 <Button.Flyout>
@@ -64,54 +71,67 @@
 
         </StackPanel>
 
-        <ScrollViewer Grid.Row="1" Background="#FFF0F0F0" BorderBrush="#FFD31212" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
-            <StackPanel Orientation="Horizontal">
 
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Button Content="Over1" Style="{StaticResource styleToolButton}"/>
-                        <Button Content="Over2" Style="{StaticResource styleToolButton}"/>
-                    </StackPanel>
-                    <TextBlock Height="27"/>
-                    <TextBlock Text="Overlays" HorizontalAlignment="Center" FontSize="{StaticResource myFontSize}"/>
+
+
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <StackPanel.Background>
+                    <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
+                        <GradientStop Color="#FFF0F0F0" Offset="0"/>
+                        <GradientStop Color="#FFA8A4A4" Offset="1"/>
+                        <GradientStop Color="#FFF0F0F0" Offset="0.948"/>
+                    </LinearGradientBrush>
+                </StackPanel.Background>
+
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="A" Style="{StaticResource styleToolButton}"/>
+                    <Button Content="A" Style="{StaticResource styleToolButton}"/>
                 </StackPanel>
-                <Rectangle Width="1" Height="55" Margin="10,0" Fill="#FF909090"/>
-
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Button Content="Zoom" FontSize="{StaticResource myFontSize}"/>
-                        <Button Content="Zoom" FontSize="{StaticResource myFontSize}"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Button Content="Crop" FontSize="{StaticResource myFontSize}"/>
-                        <Button>
-                            <Button.Content>
-                                <TextBlock Name="tblockMove" FontFamily="Segoe MDL2 Assets" Text="&#xE785;"/>
-                            </Button.Content>
-                        </Button>
-                    </StackPanel>
-                    <TextBlock Text="Image" HorizontalAlignment="Center" FontSize="{StaticResource myFontSize}"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="A" Style="{StaticResource styleToolButton}"/>
+                    <Button Content="A" Style="{StaticResource styleToolButton}"/>
                 </StackPanel>
-                <Rectangle Width="1" Height="55" Margin="10,0" Fill="#FF909090"/>
-
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="A" Style="{StaticResource styleToolButton}"/>
+                    <Button Content="A" Style="{StaticResource styleToolButton}"/>
+                </StackPanel>
             </StackPanel>
-        </ScrollViewer>
 
+            <Grid Name="gridForOverall" Grid.Column="1" Background="#FF666666">
 
+                <Grid Name="gridMain" Background="White" Margin="20,5,5,20">
 
-        <Grid Name="gridForOverall" Grid.Row="2" >
-
-            <Grid Name="gridMain" Grid.Row="2">
-
-                
+                </Grid>
 
             </Grid>
 
         </Grid>
 
+        <StackPanel Grid.Row="2">
+            <StackPanel.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFF0F0F0" Offset="1"/>
+                    <GradientStop Color="#FFA8A4A4"/>
+                    <GradientStop Color="#FFF0F0F0" Offset="0.108"/>
+                </LinearGradientBrush>
+            </StackPanel.Background>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="Button"/>
+            </StackPanel>
+
+        </StackPanel>
+
         <Grid Grid.RowSpan="3" Name="gridContextDialog" Visibility="Collapsed" Background="#B2000000"/>
 
-        <Grid Grid.RowSpan="3" Name="gridForPrint" Width="1050" Height="810">
+        <Grid Grid.RowSpan="3" Name="gridForPrint" Width="1050" Height="810" Visibility="Collapsed">
             <Image Name="imageForPrint" Margin="10,0,0,0" />
         </Grid>
 
