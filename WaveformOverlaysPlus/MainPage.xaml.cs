@@ -30,6 +30,9 @@ using WaveformOverlaysPlus.Controls;
 using Windows.UI;
 using Windows.Graphics.Display;
 using Windows.Graphics.Imaging;
+using Microsoft.Services.Store.Engagement;
+using Windows.UI.Xaml.Documents;
+using Windows.UI.Text;
 
 namespace WaveformOverlaysPlus
 {
@@ -52,6 +55,12 @@ namespace WaveformOverlaysPlus
         public MainPage()
         {
             this.InitializeComponent();
+
+            // Set visibility of Feedback, if device supports Feedback
+            if (StoreServicesFeedbackLauncher.IsSupported())
+            {
+                menuFeedback.Visibility = Visibility.Visible;
+            }
         }
 
         #region OnNavigated
@@ -190,7 +199,7 @@ namespace WaveformOverlaysPlus
 
         private async void PrintButtonClick(object sender, RoutedEventArgs e)
         {
-            gridContextDialog.Visibility = Visibility.Visible;
+            gridCover.Visibility = Visibility.Visible;
 
             RenderTargetBitmap rtb = new RenderTargetBitmap();
             await rtb.RenderAsync(gridForOverall);
@@ -227,7 +236,7 @@ namespace WaveformOverlaysPlus
                 {
                     imageForPrint.ClearValue(Image.SourceProperty);
                     gridForPrint.Visibility = Visibility.Collapsed;
-                    gridContextDialog.Visibility = Visibility.Collapsed;
+                    gridCover.Visibility = Visibility.Collapsed;
                 }
             }
             else
@@ -243,7 +252,7 @@ namespace WaveformOverlaysPlus
 
                 imageForPrint.ClearValue(Image.SourceProperty);
                 gridForPrint.Visibility = Visibility.Collapsed;
-                gridContextDialog.Visibility = Visibility.Collapsed;
+                gridCover.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -300,7 +309,7 @@ namespace WaveformOverlaysPlus
 
                     imageForPrint.ClearValue(Image.SourceProperty);
                     gridForPrint.Visibility = Visibility.Collapsed;
-                    gridContextDialog.Visibility = Visibility.Collapsed;
+                    gridCover.Visibility = Visibility.Collapsed;
                 });
             }
 
@@ -312,7 +321,7 @@ namespace WaveformOverlaysPlus
                 {
                     imageForPrint.ClearValue(Image.SourceProperty);
                     gridForPrint.Visibility = Visibility.Collapsed;
-                    gridContextDialog.Visibility = Visibility.Collapsed;
+                    gridCover.Visibility = Visibility.Collapsed;
                 });
             }
         }
@@ -442,6 +451,55 @@ namespace WaveformOverlaysPlus
             {
                 var dialog = new MessageDialog("Bitmap format is not available in clipboard").ShowAsync();
             }
+        }
+
+        #endregion
+
+        #region Help menu items
+
+        private async void menuFeedback_Click(object sender, RoutedEventArgs e)
+        {
+            var launcher = StoreServicesFeedbackLauncher.GetDefault();
+            await launcher.LaunchAsync();
+        }
+
+        private async void menuPrivacyPolicy_Click(object sender, RoutedEventArgs e)
+        {
+            Uri uri = new Uri(@"https://1drv.ms/u/s!AlsPP0wI1WI76nbgs0LoEttkRVnD");
+            bool success = await Windows.System.Launcher.LaunchUriAsync(uri);
+
+            if (success == false)
+            {
+                var dialog = await new MessageDialog("Webpage failed to open. If this continues to happen, please use the Feedback button to report the problem.").ShowAsync();
+            }
+        }
+
+        private void menuAbout_Click(object sender, RoutedEventArgs e)
+        {
+            gridCover.Visibility = Visibility.Visible;
+            gridDialog.Visibility = Visibility.Visible;
+            btnDialogOK.Visibility = Visibility.Visible;
+
+            TextBlock title = new TextBlock();
+            title.Text = "Pressure Waveform Overlays \n";
+            title.FontWeight = FontWeights.Bold;
+
+            TextBlock body = new TextBlock();
+            body.Text = "Version 1.0 \n" +
+                        "Copyright \u00A9 2017 Steven McGrew \n" +
+                        "All rights reserved";
+
+            spanelText.Children.Add(title);
+            spanelText.Children.Add(body);
+        }
+
+        private void btnDialogOK_Click(object sender, RoutedEventArgs e)
+        {
+            gridCover.Visibility = Visibility.Collapsed;
+            gridDialog.Visibility = Visibility.Collapsed;
+            btnDialogOK.Visibility = Visibility.Collapsed;
+
+            spanelText.Children.Clear();
         }
 
         #endregion

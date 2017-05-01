@@ -55,19 +55,19 @@
             <Button Content="Help" Style="{StaticResource styleMenuButton}">
                 <Button.Flyout>
                     <MenuFlyout>
-                        <MenuFlyoutItem Text="Help" FontSize="{StaticResource myFontSize}"/>
-                        <MenuFlyoutItem Text="Feedback" FontSize="{StaticResource myFontSize}"/>
-                        <MenuFlyoutItem Text="Privacy policy" FontSize="{StaticResource myFontSize}"/>
+                        <MenuFlyoutItem Name="menuHelp" Text="Help" FontSize="{StaticResource myFontSize}"/>
+                        <MenuFlyoutItem Name="menuFeedback" Text="Feedback" FontSize="{StaticResource myFontSize}" Visibility="Collapsed" Click="menuFeedback_Click"/>
+                        <MenuFlyoutItem Name="menuPrivacyPolicy" Text="Privacy policy" FontSize="{StaticResource myFontSize}" Click="menuPrivacyPolicy_Click"/>
                         <MenuFlyoutSeparator/>
-                        <MenuFlyoutItem Text="About" FontSize="{StaticResource myFontSize}"/>
+                        <MenuFlyoutItem Name="menuAbout" Text="About" FontSize="{StaticResource myFontSize}" Click="menuAbout_Click"/>
                     </MenuFlyout>
                 </Button.Flyout>
             </Button>
 
             <Rectangle Margin="10,0" Width="1" Height="20" Fill="#FF909090"/>
 
-            <Button Content="Re" FontSize="{StaticResource myFontSize}"/>
-            <Button Content="Un" FontSize="{StaticResource myFontSize}"/>
+            <Button Style="{StaticResource styleMenuButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE7A7;" FontSize="16"/>
+            <Button Style="{StaticResource styleMenuButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE7A6;" FontSize="16"/>
 
         </StackPanel>
 
@@ -200,7 +200,15 @@
 
         </StackPanel>
 
-        <Grid Grid.RowSpan="3" Name="gridContextDialog" Visibility="Collapsed" Background="#B2000000"/>
+        <Grid Name="gridCover" Visibility="Collapsed" Grid.RowSpan="3" Background="#B2000000">
+            <Grid Name="gridDialog" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" Margin="30">
+                <StackPanel>
+                    <StackPanel Name="spanelText" Margin="20"/>
+                    <Button Name="btnDialogOK" Visibility="Collapsed" Content="OK" Margin="20,0,20,20" Click="btnDialogOK_Click"/>
+                    <Button Name="btnDialogCancel" Visibility="Collapsed" Content="Cancel" Margin="20,0,20,20"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
 
         <Grid Grid.RowSpan="3" Name="gridForPrint" Width="1050" Height="810" Visibility="Collapsed">
             <Image Name="imageForPrint" Margin="10,0,0,0" />
