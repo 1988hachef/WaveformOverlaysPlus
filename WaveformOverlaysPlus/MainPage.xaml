@@ -91,75 +91,76 @@
                 </StackPanel.Background>
 
                 <StackPanel Orientation="Horizontal">
-                    <Button Style="{StaticResource styleToolButton}">
-                        <Button.Content>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE7C9;" FontSize="20" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button.Content>
-                    </Button>
-                    <Button Style="{StaticResource styleToolButton}">
-                        <Button.Content>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE123;" FontSize="20" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button.Content>
-                    </Button>
+                    <Button Style="{StaticResource styleToolButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE7C9;" FontSize="20"/>
+                    <Button Style="{StaticResource styleToolButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE123;" FontSize="20"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Button Style="{StaticResource styleToolButton}">
-                        <Button.Content>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xEE56;" FontSize="20" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button.Content>
-                    </Button>
-                    <Button Style="{StaticResource styleToolButton}">
-                        <Button.Content>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xED60;" FontSize="20" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button.Content>
-                    </Button>
+                    <Button Style="{StaticResource styleToolButton}" FontFamily="Segoe MDL2 Assets" Content="&#xEE56;" FontSize="20"/>
+                    <Button Style="{StaticResource styleToolButton}" FontFamily="Segoe MDL2 Assets" Content="&#xED60;" FontSize="20"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource styleToolButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE8D2;" FontSize="20"/>
+                    <Button Style="{StaticResource styleToolButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE8DB;" FontSize="20"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource styleToolButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE741;" FontSize="20"/>
+                    <Button Style="{StaticResource styleToolButton}" FontFamily="Segoe MDL2 Assets" Content="&#xEA3A;" FontSize="20"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource styleToolButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE739;" FontSize="20"/>
                     <Button Style="{StaticResource styleToolButton}">
                         <Button.Content>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8D2;" FontSize="20" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button.Content>
-                    </Button>
-                    <Button Style="{StaticResource styleToolButton}">
-                        <Button.Content>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE191;" FontSize="20" VerticalAlignment="Center"/>
-                            </StackPanel>
+                            <Rectangle Stroke="Black" Width="20" Height="20" RadiusX="4" RadiusY="4"/>
                         </Button.Content>
                     </Button>
                 </StackPanel>
 
                 <Rectangle Fill="Gray" Height="1" Margin="8,5,10,5"/>
 
-                <Button Content="Shapes" Style="{StaticResource styleToolButton}"/>
+                <StackPanel Margin="0,5">
+                    <Button Name="btnSize1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Style="{StaticResource styleToolButton}" Padding="15,0" Margin="5,0"  Height="11">
+                        <Button.Content>
+                            <Rectangle Height="1" Fill="Black"/>
+                        </Button.Content>
+                    </Button>
+                    
+                    <Button Name="btnSize2" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Style="{StaticResource styleToolButton}" Padding="15,0" Margin="5,0"  Height="12">
+                        <Button.Content>
+                            <Rectangle Height="2" Fill="Black"/>
+                        </Button.Content>
+                    </Button>
+                    
+                    <Button Name="btnSize6" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Style="{StaticResource styleToolButton}" Padding="15,0" Margin="5,0"  Height="16">
+                        <Button.Content>
+                            <Rectangle Height="6" Fill="Black"/>
+                        </Button.Content>
+                    </Button>
+                    
+                    <Button Name="btnSize10" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Style="{StaticResource styleToolButton}" Padding="15,0" Margin="5,0"  Height="20">
+                        <Button.Content>
+                            <Rectangle Height="10" Fill="Black"/>
+                        </Button.Content>
+                    </Button>
+                    
+                </StackPanel>
 
                 <Rectangle Fill="Gray" Height="1" Margin="8,5,10,5"/>
 
-                <Button Content="Size" Style="{StaticResource styleToolButton}"/>
-                
-                <Rectangle Fill="Gray" Height="1" Margin="8,5,10,5"/>
-
-                <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" HorizontalAlignment="Right" Margin="0,0,10,0">
+                <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" HorizontalAlignment="Right" Margin="0,7,15,0">
                     <Rectangle Fill="Black" Width="12" Height="12" Margin="7,0,5,0" Stroke="Black" StrokeThickness="1"/>
                     <TextBlock Text="Stroke:" FontSize="{StaticResource myFontSize}"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" HorizontalAlignment="Right" Margin="0,0,10,0">
+                <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" HorizontalAlignment="Right" Margin="0,0,15,0">
                     <Rectangle Fill="Transparent" Width="12" Height="12" Margin="7,0,5,0" Stroke="Black" StrokeThickness="1"/>
                     <TextBlock Text="Fill:" FontSize="{StaticResource myFontSize}"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" HorizontalAlignment="Right" Margin="0,0,10,0">
+                <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" HorizontalAlignment="Right" Margin="0,0,15,0">
                     <Rectangle Fill="Black" Width="12" Height="12" Margin="7,0,5,0" Stroke="Black" StrokeThickness="1"/>
                     <TextBlock Text="Text:" FontSize="{StaticResource myFontSize}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" HorizontalAlignment="Right" Margin="0,0,15,0">
+                    <Rectangle Fill="White" Width="12" Height="12" Margin="7,0,5,0" Stroke="Black" StrokeThickness="1"/>
+                    <TextBlock Text="Page:" FontSize="{StaticResource myFontSize}"/>
                 </StackPanel>
 
             </StackPanel>
