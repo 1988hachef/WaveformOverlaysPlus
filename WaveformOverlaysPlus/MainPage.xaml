@@ -146,29 +146,70 @@
 
                 <Rectangle Fill="Gray" Height="1" Margin="8,5,10,5"/>
 
-                <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" HorizontalAlignment="Right" Margin="0,7,15,0">
-                    <Rectangle Fill="Black" Width="12" Height="12" Margin="7,0,5,0" Stroke="Black" StrokeThickness="1"/>
-                    <TextBlock Text="Stroke:" FontSize="{StaticResource myFontSize}"/>
+                <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" HorizontalAlignment="Right" Margin="0,7,25,0">
+                    <Button Background="Black" Style="{StaticResource styleColorButton}" Margin="2,2,5,2"/>
+                    <TextBlock Text="Stroke:" FontSize="{StaticResource myFontSize}" VerticalAlignment="Center"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" HorizontalAlignment="Right" Margin="0,0,15,0">
-                    <Rectangle Fill="Transparent" Width="12" Height="12" Margin="7,0,5,0" Stroke="Black" StrokeThickness="1"/>
-                    <TextBlock Text="Fill:" FontSize="{StaticResource myFontSize}"/>
+                <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" HorizontalAlignment="Right" Margin="0,0,25,0">
+                    <Button Background="Transparent" Style="{StaticResource styleColorButton}" Margin="2,2,5,2">
+                        <TextBlock Text="x" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Padding="0,0,0,5.5"/>
+                    </Button>
+                    <TextBlock Text="Fill:" FontSize="{StaticResource myFontSize}" VerticalAlignment="Center"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" HorizontalAlignment="Right" Margin="0,0,15,0">
-                    <Rectangle Fill="Black" Width="12" Height="12" Margin="7,0,5,0" Stroke="Black" StrokeThickness="1"/>
-                    <TextBlock Text="Text:" FontSize="{StaticResource myFontSize}"/>
+                <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" HorizontalAlignment="Right" Margin="0,0,25,0">
+                    <Button Background="Black" Style="{StaticResource styleColorButton}" Margin="2,2,5,2"/>
+                    <TextBlock Text="Text:" FontSize="{StaticResource myFontSize}" VerticalAlignment="Center"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" HorizontalAlignment="Right" Margin="0,0,15,0">
-                    <Rectangle Fill="White" Width="12" Height="12" Margin="7,0,5,0" Stroke="Black" StrokeThickness="1"/>
-                    <TextBlock Text="Page:" FontSize="{StaticResource myFontSize}"/>
+                <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" HorizontalAlignment="Right" Margin="0,0,25,0">
+                    <Button Background="White" Style="{StaticResource styleColorButton}" Margin="2,2,5,2"/>
+                    <TextBlock Text="Page:" FontSize="{StaticResource myFontSize}" VerticalAlignment="Center"/>
                 </StackPanel>
 
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,2,0">
+                    <Button Background="#FFFA2732" Style="{StaticResource styleColorButton}"/>
+                    <Button Background="#FFC29A1F" Style="{StaticResource styleColorButton}"/>
+                    <Button Background="#FF00A84F" Style="{StaticResource styleColorButton}"/>
+                    <Button Background="Blue" Style="{StaticResource styleColorButton}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,2,0">
+                    <Button Background="Red" Style="{StaticResource styleColorButton}"/>
+                    <Button Background="Yellow" Style="{StaticResource styleColorButton}"/>
+                    <Button Background="Lime" Style="{StaticResource styleColorButton}"/>
+                    <Button Background="Cyan" Style="{StaticResource styleColorButton}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,2,0">
+                    <Button Background="#FFFFAEC9" Style="{StaticResource styleColorButton}"/>
+                    <Button Background="Orange" Style="{StaticResource styleColorButton}"/>
+                    <Button Background="#FFB5E61D" Style="{StaticResource styleColorButton}"/>
+                    <Button Background="#FF99D9EA" Style="{StaticResource styleColorButton}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,2,0">
+                    <Button Background="HotPink" Style="{StaticResource styleColorButton}" />
+                    <Button Background="#FFFF7F27" Style="{StaticResource styleColorButton}" />
+                    <Button Background="White" Style="{StaticResource styleColorButton}" />
+                    <Button Background="#FFC8BFE7" Style="{StaticResource styleColorButton}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,2,0">
+                    <Button Background="#FFA349A4" Style="{StaticResource styleColorButton}"/>
+                    <Button Background="SaddleBrown" Style="{StaticResource styleColorButton}" />
+                    <Button Background="#FF7F7F7F" Style="{StaticResource styleColorButton}" />
+                    <Button Background="#FF00A2E8" Style="{StaticResource styleColorButton}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,2,0">
+                    <Button Background="Transparent" Style="{StaticResource styleColorButton}" >
+                        <TextBlock Text="x" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Padding="0,0,0,5.5"/>
+                    </Button>
+                    <Button Background="#FF880015" Style="{StaticResource styleColorButton}" />
+                    <Button Background="Black" Style="{StaticResource styleColorButton}" />
+                    <Button Background="#FF3F48CC" Style="{StaticResource styleColorButton}" />
+                </StackPanel>
+                
             </StackPanel>
 
             <Grid Name="gridForOverall" Grid.Column="1" Background="#FF666666">
 
                 <Grid Name="gridMain" Background="White" Margin="20,5,5,20">
-
+                    
                 </Grid>
 
             </Grid>
