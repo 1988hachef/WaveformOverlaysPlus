@@ -6,7 +6,11 @@
     RequestedTheme="Light">
 
     <Application.Resources>
-        
+
+        <SolidColorBrush x:Key="LightBlueBackground" Color="#FFE8EFF7"/>
+        <SolidColorBrush x:Key="LightBlueBorderBrush" Color="#FFA4CEF9"/>
+        <SolidColorBrush x:Key="BlueBackground" Color="#FFC9E0F7"/>
+        <SolidColorBrush x:Key="BlueBorderBrush" Color="#FF62A2E4"/>
         <x:Double x:Key="myFontSize">12</x:Double>
         
         <Style x:Key="styleMenuButton" TargetType="Button">
@@ -331,6 +335,255 @@
             </Setter>
         </Style>
 
+        <Style x:Key="styleToolRadioButton" TargetType="RadioButton">
+
+            <Setter Property="Background" Value="Transparent"/>
+            <!--<Setter Property="Background" Value="{ThemeResource RadioButtonBackground}"/>-->
+
+            <Setter Property="Foreground" Value="Black"/>
+            <!--<Setter Property="Foreground" Value="{ThemeResource RadioButtonForeground}"/>-->
+
+            <Setter Property="BorderBrush" Value="{ThemeResource RadioButtonBorderBrush}"/>
+            <!--<Setter Property="BorderBrush" Value="{ThemeResource RadioButtonBorderBrush}"/>-->
+
+            <Setter Property="Padding" Value="0"/>
+            <!--<Setter Property="Padding" Value="8,6,0,0"/>-->
+
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <!--<Setter Property="HorizontalContentAlignment" Value="Left"/>-->
+
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <!--<Setter Property="VerticalContentAlignment" Value="Top"/>-->
+
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+            <!--<Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>-->
+
+            <Setter Property="FontSize" Value="20"/>
+            <!--<Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>-->
+
+            <Setter Property="MinWidth" Value="10"/>
+            <!--<Setter Property="MinWidth" Value="120"/>-->
+
+            <Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <Setter Property="FocusVisualMargin" Value="-7,-3,-7,-3"/>
+
+            <!--Add these-->
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Width" Value="38"/>
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="Margin" Value="5"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Grid x:Name="RootGrid" 
+                              BorderBrush="{TemplateBinding BorderBrush}" 
+                              BorderThickness="{TemplateBinding BorderThickness}" 
+                              Background="{TemplateBinding Background}">
+
+                            <!--comment this out-->
+                            <!--<Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>-->
+
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+
+                                            <!--Comment out-->
+                                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource RadioButtonForegroundPointerOver}"/>
+                                            </ObjectAnimationUsingKeyFrames>-->
+
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="rectForPressedAndPointerOver">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource LightBlueBackground}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource RadioButtonBackgroundPointerOver}"/>
+                                            </ObjectAnimationUsingKeyFrames>-->
+
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="rectForPressedAndPointerOver">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource LightBlueBorderBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource RadioButtonBorderBrushPointerOver}"/>
+                                            </ObjectAnimationUsingKeyFrames>-->
+
+
+                                            <!--Comment out stuff below-->
+
+                                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="OuterEllipse">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource RadioButtonOuterEllipseStrokePointerOver}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="OuterEllipse">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource RadioButtonOuterEllipseFillPointerOver}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="CheckOuterEllipse">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource RadioButtonOuterEllipseCheckedStrokePointerOver}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="CheckOuterEllipse">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource RadioButtonOuterEllipseCheckedFillPointerOver}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="CheckGlyph">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource RadioButtonCheckGlyphFillPointerOver}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="CheckGlyph">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource RadioButtonCheckGlyphStrokePointerOver}"/>
+                                            </ObjectAnimationUsingKeyFrames>-->
+
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+
+                                            <!--Comment out-->
+                                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource RadioButtonForegroundPressed}"/>
+                                            </ObjectAnimationUsingKeyFrames>-->
+
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="rectForPressedAndPointerOver">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource LightBlueBackground}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource RadioButtonBackgroundPressed}"/>
+                                            </ObjectAnimationUsingKeyFrames>-->
+
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="rectForPressedAndPointerOver">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource LightBlueBorderBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource RadioButtonBorderBrushPressed}"/>
+                                            </ObjectAnimationUsingKeyFrames>-->
+
+
+                                            <!--comment out stuff below-->
+
+                                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="OuterEllipse">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource RadioButtonOuterEllipseStrokePressed}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="OuterEllipse">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource RadioButtonOuterEllipseFillPressed}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="CheckOuterEllipse">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource RadioButtonOuterEllipseCheckedStrokePressed}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="CheckOuterEllipse">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource RadioButtonOuterEllipseCheckedFillPressed}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="CheckGlyph">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource RadioButtonCheckGlyphFillPressed}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="CheckGlyph">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource RadioButtonCheckGlyphStrokePressed}"/>
+                                            </ObjectAnimationUsingKeyFrames>-->
+
+                                            <!--Add-->
+                                            <PointerDownThemeAnimation Storyboard.TargetName="RootGrid"/>
+
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+
+                                            <!--add this stuff-->
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="rectForPressedAndPointerOver">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Gray"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="rectForPressedAndPointerOver">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="DimGray"/>
+                                            </ObjectAnimationUsingKeyFrames>
+
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource RadioButtonForegroundDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource RadioButtonBackgroundDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource RadioButtonBorderBrushDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+
+
+                                            <!--comment out stuff below-->
+
+                                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="OuterEllipse">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource RadioButtonOuterEllipseStrokeDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="OuterEllipse">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource RadioButtonOuterEllipseFillDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="CheckOuterEllipse">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource RadioButtonOuterEllipseCheckedStrokeDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="CheckOuterEllipse">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource RadioButtonOuterEllipseCheckedFillDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="CheckGlyph">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource RadioButtonCheckGlyphFillDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="CheckGlyph">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource RadioButtonCheckGlyphStrokeDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>-->
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="CheckStates">
+                                    <VisualState x:Name="Checked">
+                                        <Storyboard>
+
+                                            <!--add this stuff-->
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource BlueBackground}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource BlueBorderBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+
+
+                                            <!--comment out stuff below-->
+
+                                            <!--<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="CheckGlyph"/>
+                                            <DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="OuterEllipse"/>
+                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="CheckOuterEllipse"/>-->
+
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Unchecked"/>
+                                    <VisualState x:Name="Indeterminate"/>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+
+                            <!--comment out grid-->
+                            <!--<Grid Height="32" VerticalAlignment="Top">
+                                <Ellipse x:Name="OuterEllipse" Fill="{StaticResource RadioButtonOuterEllipseFill}" Height="20" Stroke="{ThemeResource RadioButtonOuterEllipseStroke}" StrokeThickness="{ThemeResource RadioButtonBorderThemeThickness}" UseLayoutRounding="False" Width="20"/>
+                                <Ellipse x:Name="CheckOuterEllipse" Fill="{ThemeResource RadioButtonOuterEllipseCheckedFill}" Height="20" Opacity="0" Stroke="{ThemeResource RadioButtonOuterEllipseCheckedStroke}" StrokeThickness="{ThemeResource RadioButtonBorderThemeThickness}" UseLayoutRounding="False" Width="20"/>
+                                <Ellipse x:Name="CheckGlyph" Fill="{ThemeResource RadioButtonCheckGlyphFill}" Height="10" Opacity="0" Stroke="{ThemeResource RadioButtonCheckGlyphStroke}" UseLayoutRounding="False" Width="10"/>
+                            </Grid>-->
+                            
+                            <!--add this-->
+                            <Rectangle x:Name="rectForPressedAndPointerOver" StrokeThickness="1"/>
+
+                            <ContentPresenter x:Name="ContentPresenter" 
+                                              AutomationProperties.AccessibilityView="Raw" 
+                                              Content="{TemplateBinding Content}" 
+                                              Foreground="{TemplateBinding Foreground}" 
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                              Margin="{TemplateBinding Padding}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              BorderThickness="1"/>
+                            <!--<ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" Grid.Column="1" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" TextWrapping="Wrap" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>-->
+
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
     </Application.Resources>
 

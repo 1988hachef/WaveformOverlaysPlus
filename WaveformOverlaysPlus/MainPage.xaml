@@ -81,7 +81,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Column="0">
+            <StackPanel Grid.Column="0" Padding="0,0,3,0">
                 <StackPanel.Background>
                     <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
                         <GradientStop Color="#FFF0F0F0" Offset="0"/>
@@ -206,7 +206,7 @@
                 
             </StackPanel>
 
-            <Grid Name="gridForOverall" Grid.Column="1" Background="#FF666666">
+            <Grid Name="gridForOverall" Grid.Column="1" Background="#FFD7E0EE">
 
                 <Grid Name="gridMain" Background="White" Margin="20,5,5,20">
                     
@@ -226,13 +226,13 @@
             </StackPanel.Background>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button>
+                <Button Background="#FFE8EFF7" BorderBrush="#FFA4CEF9">
                     <Button.Content>
                         <Image Source="/Assets/IconCompressionOverlay.bmp" Width="32" Height="32"/>
                     </Button.Content>
                 </Button>
-                <Button Content="Valve timing"/>
-                <Button>
+                <Button Content="Valve timing" Background="#FFC9E0F7" BorderBrush="#FF62A2E4"/>
+                <Button BorderBrush="#FFE2E3E4" Background="#FFF5F6F7">
                     <Button.Content>
                         <Image Source="/Assets/IconCylinderIDOverlay.bmp"/>
                     </Button.Content>
