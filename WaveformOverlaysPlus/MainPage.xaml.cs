@@ -38,13 +38,6 @@ namespace WaveformOverlaysPlus
 {
     public sealed partial class MainPage : Page
     {
-        WriteableBitmap originalWB;
-        Image imageMain;
-        CompositeTransform transformImage;
-
-        static string locked = "\uE72E";
-        static string unlocked = "\uE785";
-
         private PrintManager printMan;
         private PrintDocument printDoc;
         private IPrintDocumentSource printDocSource;
@@ -503,6 +496,10 @@ namespace WaveformOverlaysPlus
         }
 
         #endregion
-        
+
+        private void tool_Checked(object sender, RoutedEventArgs e)
+        {
+            
+        }
     }
 }
