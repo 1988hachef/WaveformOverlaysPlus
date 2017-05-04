@@ -38,12 +38,47 @@ namespace WaveformOverlaysPlus
 {
     public sealed partial class MainPage : Page
     {
+        string ColorChangerBox;
+
         private PrintManager printMan;
         private PrintDocument printDoc;
         private IPrintDocumentSource printDocSource;
 
         DataTransferManager dataTransferManager;
 
+        #region Dependency Properties
+
+        public int currentSizeSelected
+        {
+            get { return (int)GetValue(currentSizeSelecctedProperty); }
+            set { SetValue(currentSizeSelecctedProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for currentSizeSeleccted.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty currentSizeSelecctedProperty =
+            DependencyProperty.Register("currentSizeSeleccted", typeof(int), typeof(MainPage), new PropertyMetadata(2));
+
+
+        public double currentFontSize
+        {
+            get { return (double)GetValue(currentFontSizeProperty); }
+            set
+            {
+                value = value == 1 ? value = 14 :
+                        value == 2 ? value = 18 :
+                        value == 6 ? value = 24 :
+                        value == 10 ? value = 36 :
+                        value = 18;
+
+                SetValue(currentFontSizeProperty, value);
+            }
+        }
+
+        // Using a DependencyProperty as the backing store for currentFontSize.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty currentFontSizeProperty =
+            DependencyProperty.Register("currentFontSize", typeof(double), typeof(MainPage), new PropertyMetadata(18));
+
+        #endregion
 
         public MainPage()
         {
@@ -499,7 +534,118 @@ namespace WaveformOverlaysPlus
 
         private void tool_Checked(object sender, RoutedEventArgs e)
         {
+            string name = (sender as RadioButton).Name;
+
+            switch (name)
+            {
+                case "cursor":
+
+                    break;
+                case "text":
+                    AddTextBox();
+                    break;
+                case "arrow":
+
+                    break;
+                case "ellipse":
+
+                    break;
+                case "roundedRectangle":
+
+                    break;
+                case "rectangle":
+
+                    break;
+                case "line":
+
+                    break;
+                case "eraser":
+
+                    break;
+                case "crop":
+
+                    break;
+                case "pen":
+
+                    break;
+            }
+        }
+
+        private void AddTextBox()
+        {
+            TextBox textBox = new TextBox();
+            textBox.Style = App.Current.Resources["styleTextBox"] as Style;
             
+            // Set the binding
+            Binding bindForeground = new Binding();
+            bindForeground.Source = textColor.Background;
+            bindForeground.Path = new PropertyPath("Value");
+            
+            textBox.SetBinding(ForegroundProperty, bindForeground);
+
+            Binding bindBackground = new Binding();
+            bindBackground.Source = fillColor.Background;
+            bindBackground.Path = new PropertyPath("Value");
+            bindBackground.Mode = BindingMode.OneWay;
+            textBox.SetBinding(BackgroundProperty, bindBackground);
+
+            Binding bindBorderBrush = new Binding();
+            bindBorderBrush.Source = strokeColor.Background;
+            bindBorderBrush.Path = new PropertyPath("Value");
+            textBox.SetBinding(BorderBrushProperty, bindBorderBrush);
+            
+            Binding bindStrokeSize = new Binding();
+            bindStrokeSize.Source = currentSizeSelected;
+            bindStrokeSize.Path = new PropertyPath("Value");
+            textBox.SetBinding(BorderThicknessProperty, bindStrokeSize);
+
+            Binding bindFontSize = new Binding();
+            bindFontSize.Source = currentFontSize;
+            bindFontSize.Path = new PropertyPath("Value");
+            textBox.SetBinding(FontSizeProperty, bindFontSize);
+
+            //textBox.Foreground = new SolidColorBrush(Colors.Red);
+            //textBox.Background = new SolidColorBrush(Colors.LightBlue);
+            //textBox.BorderBrush = textBox.Foreground;
+
+            PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
+            paintObject.Content = textBox;
+
+            gridMain.Children.Add(paintObject);
+        }
+
+        private void sizes_Checked(object sender, RoutedEventArgs e)
+        {
+            var radioButton = sender as RadioButton;
+            currentSizeSelected = Convert.ToInt32(radioButton.Tag);
+            currentFontSize = Convert.ToDouble(currentSizeSelected);
+        }
+
+        private void color_Click(object sender, RoutedEventArgs e)
+        {
+            var colorButton = sender as Button;
+
+            switch (ColorChangerBox)
+            {
+                case "strokeColorRB":
+                    strokeColor.Background = colorButton.Background;
+                    break;
+                case "fillColorRB":
+                    fillColor.Background = colorButton.Background;
+                    break;
+                case "textColorRB":
+                    textColor.Background = colorButton.Background;
+                    break;
+                case "pageColorRB":
+                    pageColor.Background = colorButton.Background;
+                    break;
+            }
+        }
+
+        private void colorChanger_Checked(object sender, RoutedEventArgs e)
+        {
+            var colorChangerBoxButton = sender as RadioButton;
+            ColorChangerBox = colorChangerBoxButton.Name;
         }
     }
 }

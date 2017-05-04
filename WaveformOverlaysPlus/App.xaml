@@ -441,13 +441,11 @@
             </Setter>
         </Style>
 
-        <!--<Style x:Key="styleTextBox" TargetType="TextBox">
+        <Style x:Key="styleTextBox" TargetType="TextBox">
             <Setter Property="MinWidth" Value="{ThemeResource TextControlThemeMinWidth}"/>
 
             <Setter Property="MinHeight" Value="29"/>
-            -->
-        <!--<Setter Property="MinHeight" Value="{ThemeResource TextControlThemeMinHeight}"/>-->
-        <!--
+            <!--<Setter Property="MinHeight" Value="{ThemeResource TextControlThemeMinHeight}"/>-->
 
             <Setter Property="Foreground" Value="{ThemeResource TextControlForeground}"/>
             <Setter Property="Background" Value="{ThemeResource TextControlBackground}"/>
@@ -455,9 +453,7 @@
             <Setter Property="SelectionHighlightColor" Value="{ThemeResource TextControlSelectionHighlightColor}"/>
 
             <Setter Property="BorderThickness" Value="3"/>
-            -->
-        <!--<Setter Property="BorderThickness" Value="{ThemeResource TextControlBorderThemeThickness}"/>-->
-        <!--
+            <!--<Setter Property="BorderThickness" Value="{ThemeResource TextControlBorderThemeThickness}"/>-->
 
             <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
             <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
@@ -468,15 +464,14 @@
             <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False"/>
 
             <Setter Property="Padding" Value="7,0,7,5"/>
-            -->
-        <!--<Setter Property="Padding" Value="{ThemeResource TextControlThemePadding}"/>-->
+            <!--<Setter Property="Padding" Value="{ThemeResource TextControlThemePadding}"/>-->
 
-        <!--Added the below property settings which are not normally set here in this style-->
-        <!--
+            <!--Added the below property settings which are not normally set here in this style-->
             <Setter Property="IsSpellCheckEnabled" Value="False"/>
             <Setter Property="Margin" Value="1"/>
             <Setter Property="PlaceholderText" Value="Click here to type"/>
             <Setter Property="AcceptsReturn" Value="True"/>
+            <Setter Property="FontWeight" Value="Bold"/>
 
             <Setter Property="Template">
                 <Setter.Value>
@@ -497,7 +492,7 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-        </Style>-->
+        </Style>
 
     </Application.Resources>
 

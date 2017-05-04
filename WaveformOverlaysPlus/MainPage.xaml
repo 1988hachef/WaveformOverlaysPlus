@@ -119,25 +119,25 @@
 
                 <StackPanel Margin="0">
                     
-                    <RadioButton Name="btnSize1" Style="{StaticResource styleToolRadioButton}" Margin="5,0" Width="88"  Height="17" HorizontalAlignment="Center">
+                    <RadioButton Tag="1" GroupName="sizes" Style="{StaticResource styleToolRadioButton}" Margin="5,0" Width="88"  Height="17" HorizontalAlignment="Center" Checked="sizes_Checked">
                         <RadioButton.Content>
                             <Rectangle Width="56" Height="1" Fill="Black"/>
                         </RadioButton.Content>
                     </RadioButton>
 
-                    <RadioButton Name="btnSize2" Style="{StaticResource styleToolRadioButton}" Margin="5,0" Width="88"  Height="18" HorizontalAlignment="Center">
+                    <RadioButton Tag="2" GroupName="sizes" Style="{StaticResource styleToolRadioButton}" Margin="5,0" Width="88"  Height="18" HorizontalAlignment="Center" Checked="sizes_Checked">
                         <RadioButton.Content>
                             <Rectangle Width="56" Height="2" Fill="Black"/>
                         </RadioButton.Content>
                     </RadioButton>
 
-                    <RadioButton Name="btnSize6" Style="{StaticResource styleToolRadioButton}" Margin="5,0" Width="88"  Height="22" HorizontalAlignment="Center" IsChecked="True">
+                    <RadioButton Tag="6" GroupName="sizes" Style="{StaticResource styleToolRadioButton}" Margin="5,0" Width="88"  Height="22" HorizontalAlignment="Center" Checked="sizes_Checked" IsChecked="True">
                         <RadioButton.Content>
                             <Rectangle Width="56" Height="6" Fill="Black"/>
                         </RadioButton.Content>
                     </RadioButton>
 
-                    <RadioButton Name="btnSize10" Style="{StaticResource styleToolRadioButton}" Margin="5,0" Width="88"  Height="26" HorizontalAlignment="Center">
+                    <RadioButton Tag="10" GroupName="sizes" Style="{StaticResource styleToolRadioButton}" Margin="5,0" Width="88"  Height="26" HorizontalAlignment="Center" Checked="sizes_Checked">
                         <RadioButton.Content>
                             <Rectangle Width="56" Height="10" Fill="Black"/>
                         </RadioButton.Content>
@@ -147,19 +147,19 @@
 
                 <Rectangle Fill="Gray" Height="1" Margin="8,5,10,5"/>
 
-                <RadioButton Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" IsChecked="True">
+                <RadioButton Name="strokeColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" IsChecked="True" Checked="colorChanger_Checked">
                     <RadioButton.Content>
                         <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
-                            <Border Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Black" BorderThickness="1"/>
+                            <Border Name="strokeColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Black" BorderThickness="1"/>
                             <TextBlock Text="Stroke:" FontSize="{StaticResource myFontSize}" VerticalAlignment="Center"/>
                         </StackPanel>
                     </RadioButton.Content>
                 </RadioButton>
 
-                <RadioButton Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24">
+                <RadioButton Name="fillColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" Checked="colorChanger_Checked">
                     <RadioButton.Content>
                         <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
-                            <Border Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Transparent" BorderThickness="1">
+                            <Border Name="fillColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Transparent" BorderThickness="1">
                                 <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8BB;" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
                             </Border>
                             <TextBlock Text="Fill:" FontSize="{StaticResource myFontSize}" VerticalAlignment="Center"/>
@@ -167,61 +167,61 @@
                     </RadioButton.Content>
                 </RadioButton>
 
-                <RadioButton Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24">
+                <RadioButton Name="textColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" Checked="colorChanger_Checked">
                     <RadioButton.Content>
                         <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
-                            <Border Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Black" BorderThickness="1"/>
+                            <Border Name="textColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Black" BorderThickness="1"/>
                             <TextBlock Text="Text:" FontSize="{StaticResource myFontSize}" VerticalAlignment="Center"/>
                         </StackPanel>
                     </RadioButton.Content>
                 </RadioButton>
 
-                <RadioButton Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24">
+                <RadioButton Name="pageColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" Checked="colorChanger_Checked">
                     <RadioButton.Content>
                         <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
-                            <Border Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="White" BorderThickness="1"/>
+                            <Border Name="pageColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="White" BorderThickness="1"/>
                             <TextBlock Text="Page:" FontSize="{StaticResource myFontSize}" VerticalAlignment="Center"/>
                         </StackPanel>
                     </RadioButton.Content>
                 </RadioButton>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,2,0">
-                    <Button Background="#FFFA2732" Style="{StaticResource styleColorButton}"/>
-                    <Button Background="#FFC29A1F" Style="{StaticResource styleColorButton}"/>
-                    <Button Background="#FF00A84F" Style="{StaticResource styleColorButton}"/>
-                    <Button Background="Blue" Style="{StaticResource styleColorButton}"/>
+                    <Button Background="#FFFA2732" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                    <Button Background="#FFC29A1F" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                    <Button Background="#FF00A84F" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                    <Button Background="Blue" Style="{StaticResource styleColorButton}" Click="color_Click"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,2,0">
-                    <Button Background="Red" Style="{StaticResource styleColorButton}"/>
-                    <Button Background="Yellow" Style="{StaticResource styleColorButton}"/>
-                    <Button Background="Lime" Style="{StaticResource styleColorButton}"/>
-                    <Button Background="Cyan" Style="{StaticResource styleColorButton}"/>
+                    <Button Background="Red" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                    <Button Background="Yellow" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                    <Button Background="Lime" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                    <Button Background="Cyan" Style="{StaticResource styleColorButton}" Click="color_Click"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,2,0">
-                    <Button Background="#FFFFAEC9" Style="{StaticResource styleColorButton}"/>
-                    <Button Background="Orange" Style="{StaticResource styleColorButton}"/>
-                    <Button Background="#FFB5E61D" Style="{StaticResource styleColorButton}"/>
-                    <Button Background="#FF99D9EA" Style="{StaticResource styleColorButton}"/>
+                    <Button Background="#FFFFAEC9" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                    <Button Background="Orange" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                    <Button Background="#FFB5E61D" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                    <Button Background="#FF99D9EA" Style="{StaticResource styleColorButton}" Click="color_Click"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,2,0">
-                    <Button Background="HotPink" Style="{StaticResource styleColorButton}" />
-                    <Button Background="#FFFF7F27" Style="{StaticResource styleColorButton}" />
-                    <Button Background="White" Style="{StaticResource styleColorButton}" />
-                    <Button Background="#FFC8BFE7" Style="{StaticResource styleColorButton}" />
+                    <Button Background="HotPink" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                    <Button Background="#FFFF7F27" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                    <Button Background="White" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                    <Button Background="#FFC8BFE7" Style="{StaticResource styleColorButton}" Click="color_Click"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,2,0">
-                    <Button Background="#FFA349A4" Style="{StaticResource styleColorButton}"/>
-                    <Button Background="SaddleBrown" Style="{StaticResource styleColorButton}" />
-                    <Button Background="#FF7F7F7F" Style="{StaticResource styleColorButton}" />
-                    <Button Background="#FF00A2E8" Style="{StaticResource styleColorButton}" />
+                    <Button Background="#FFA349A4" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                    <Button Background="SaddleBrown" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                    <Button Background="#FF7F7F7F" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                    <Button Background="#FF00A2E8" Style="{StaticResource styleColorButton}" Click="color_Click"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,2,0">
-                    <Button Background="Transparent" Style="{StaticResource styleColorButton}" >
+                    <Button Background="Transparent" Style="{StaticResource styleColorButton}" Click="color_Click">
                         <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8BB;" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
                     </Button>
-                    <Button Background="#FF880015" Style="{StaticResource styleColorButton}" />
-                    <Button Background="Black" Style="{StaticResource styleColorButton}" />
-                    <Button Background="#FF3F48CC" Style="{StaticResource styleColorButton}" />
+                    <Button Background="#FF880015" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                    <Button Background="Black" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                    <Button Background="#FF3F48CC" Style="{StaticResource styleColorButton}" Click="color_Click"/>
                 </StackPanel>
                 
             </StackPanel>
