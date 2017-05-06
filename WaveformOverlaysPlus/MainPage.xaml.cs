@@ -47,17 +47,25 @@ namespace WaveformOverlaysPlus
         DataTransferManager dataTransferManager;
 
         #region Dependency Properties
-
-        public int currentSizeSelected
+        
+        public double currentSizeSelected
         {
-            get { return (int)GetValue(currentSizeSelecctedProperty); }
-            set { SetValue(currentSizeSelecctedProperty, value); }
+            get { return (double)GetValue(currentSizeSelectedProperty); }
+            set
+            {
+                value = value == 1 ? value = 2 :
+                        value == 2 ? value = 3 :
+                        value == 6 ? value = 4 :
+                        value == 10 ? value = 6 :
+                        value = 4;
+
+                SetValue(currentSizeSelectedProperty, value);
+            }
         }
 
-        // Using a DependencyProperty as the backing store for currentSizeSeleccted.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty currentSizeSelecctedProperty =
-            DependencyProperty.Register("currentSizeSeleccted", typeof(int), typeof(MainPage), new PropertyMetadata(2));
-
+        // Using a DependencyProperty as the backing store for currentSizeSelected.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty currentSizeSelectedProperty =
+            DependencyProperty.Register("currentSizeSelected", typeof(double), typeof(MainPage), new PropertyMetadata(3));
 
         public double currentFontSize
         {
@@ -575,38 +583,8 @@ namespace WaveformOverlaysPlus
         {
             TextBox textBox = new TextBox();
             textBox.Style = App.Current.Resources["styleTextBox"] as Style;
-            
-            // Set the binding
-            Binding bindForeground = new Binding();
-            bindForeground.Source = textColor.Background;
-            bindForeground.Path = new PropertyPath("Value");
-            
-            textBox.SetBinding(ForegroundProperty, bindForeground);
 
-            Binding bindBackground = new Binding();
-            bindBackground.Source = fillColor.Background;
-            bindBackground.Path = new PropertyPath("Value");
-            bindBackground.Mode = BindingMode.OneWay;
-            textBox.SetBinding(BackgroundProperty, bindBackground);
-
-            Binding bindBorderBrush = new Binding();
-            bindBorderBrush.Source = strokeColor.Background;
-            bindBorderBrush.Path = new PropertyPath("Value");
-            textBox.SetBinding(BorderBrushProperty, bindBorderBrush);
-            
-            Binding bindStrokeSize = new Binding();
-            bindStrokeSize.Source = currentSizeSelected;
-            bindStrokeSize.Path = new PropertyPath("Value");
-            textBox.SetBinding(BorderThicknessProperty, bindStrokeSize);
-
-            Binding bindFontSize = new Binding();
-            bindFontSize.Source = currentFontSize;
-            bindFontSize.Path = new PropertyPath("Value");
-            textBox.SetBinding(FontSizeProperty, bindFontSize);
-
-            //textBox.Foreground = new SolidColorBrush(Colors.Red);
-            //textBox.Background = new SolidColorBrush(Colors.LightBlue);
-            //textBox.BorderBrush = textBox.Foreground;
+            Bind(textBox, borderForStrokeColor, borderForFillColor, borderForTextColor);
 
             PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
             paintObject.Content = textBox;
@@ -617,8 +595,9 @@ namespace WaveformOverlaysPlus
         private void sizes_Checked(object sender, RoutedEventArgs e)
         {
             var radioButton = sender as RadioButton;
-            currentSizeSelected = Convert.ToInt32(radioButton.Tag);
-            currentFontSize = Convert.ToDouble(currentSizeSelected);
+            double size = Convert.ToDouble(radioButton.Tag);
+            currentSizeSelected = size;
+            currentFontSize = size;
         }
 
         private void color_Click(object sender, RoutedEventArgs e)
@@ -628,16 +607,16 @@ namespace WaveformOverlaysPlus
             switch (ColorChangerBox)
             {
                 case "strokeColorRB":
-                    strokeColor.Background = colorButton.Background;
+                    borderForStrokeColor.Background = colorButton.Background;
                     break;
                 case "fillColorRB":
-                    fillColor.Background = colorButton.Background;
+                    borderForFillColor.Background = colorButton.Background;
                     break;
                 case "textColorRB":
-                    textColor.Background = colorButton.Background;
+                    borderForTextColor.Background = colorButton.Background;
                     break;
                 case "pageColorRB":
-                    pageColor.Background = colorButton.Background;
+                    borderForPageColor.Background = colorButton.Background;
                     break;
             }
         }
@@ -646,6 +625,43 @@ namespace WaveformOverlaysPlus
         {
             var colorChangerBoxButton = sender as RadioButton;
             ColorChangerBox = colorChangerBoxButton.Name;
+        }
+
+        private void Bind(FrameworkElement target, FrameworkElement elementForStrokeColor, FrameworkElement elementForFillColor, FrameworkElement elementForTextColor)
+        {
+            if (elementForStrokeColor != null)
+            {
+                Binding bindStroke = new Binding();
+                bindStroke.Source = elementForStrokeColor;
+                bindStroke.Path = new PropertyPath("Background");
+                target.SetBinding(BorderBrushProperty, bindStroke);
+
+                Binding bindStrokeSize = new Binding();
+                bindStrokeSize.Source = this;
+                bindStrokeSize.Path = new PropertyPath("currentSizeSelected");
+                target.SetBinding(MinHeightProperty, bindStrokeSize);
+            }
+
+            if (elementForFillColor != null)
+            {
+                Binding bindFill = new Binding();
+                bindFill.Source = elementForFillColor;
+                bindFill.Path = new PropertyPath("Background");
+                target.SetBinding(BackgroundProperty, bindFill);
+            }
+
+            if (elementForTextColor != null)
+            {
+                Binding bindTextColor = new Binding();
+                bindTextColor.Source = elementForTextColor;
+                bindTextColor.Path = new PropertyPath("Background");
+                target.SetBinding(ForegroundProperty, bindTextColor);
+
+                Binding bindFontSize = new Binding();
+                bindFontSize.Source = this;
+                bindFontSize.Path = new PropertyPath("currentFontSize");
+                target.SetBinding(FontSizeProperty, bindFontSize);
+            }
         }
     }
 }

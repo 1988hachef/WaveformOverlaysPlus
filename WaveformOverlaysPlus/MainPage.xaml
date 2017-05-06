@@ -145,12 +145,12 @@
 
                 </StackPanel>
 
-                <Rectangle Fill="Gray" Height="1" Margin="8,5,10,5"/>
+                <Rectangle Name="rectSeparator" Fill="Gray" Height="1" Margin="8,5,10,5"/>
 
                 <RadioButton Name="strokeColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" IsChecked="True" Checked="colorChanger_Checked">
                     <RadioButton.Content>
                         <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
-                            <Border Name="strokeColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Black" BorderThickness="1"/>
+                            <Border Name="borderForStrokeColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Black" BorderThickness="1"/>
                             <TextBlock Text="Stroke:" FontSize="{StaticResource myFontSize}" VerticalAlignment="Center"/>
                         </StackPanel>
                     </RadioButton.Content>
@@ -159,7 +159,7 @@
                 <RadioButton Name="fillColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" Checked="colorChanger_Checked">
                     <RadioButton.Content>
                         <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
-                            <Border Name="fillColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Transparent" BorderThickness="1">
+                            <Border Name="borderForFillColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Transparent" BorderThickness="1">
                                 <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8BB;" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
                             </Border>
                             <TextBlock Text="Fill:" FontSize="{StaticResource myFontSize}" VerticalAlignment="Center"/>
@@ -170,7 +170,7 @@
                 <RadioButton Name="textColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" Checked="colorChanger_Checked">
                     <RadioButton.Content>
                         <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
-                            <Border Name="textColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Black" BorderThickness="1"/>
+                            <Border Name="borderForTextColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Black" BorderThickness="1"/>
                             <TextBlock Text="Text:" FontSize="{StaticResource myFontSize}" VerticalAlignment="Center"/>
                         </StackPanel>
                     </RadioButton.Content>
@@ -179,7 +179,7 @@
                 <RadioButton Name="pageColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" Checked="colorChanger_Checked">
                     <RadioButton.Content>
                         <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
-                            <Border Name="pageColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="White" BorderThickness="1"/>
+                            <Border Name="borderForPageColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="White" BorderThickness="1"/>
                             <TextBlock Text="Page:" FontSize="{StaticResource myFontSize}" VerticalAlignment="Center"/>
                         </StackPanel>
                     </RadioButton.Content>
@@ -228,7 +228,7 @@
 
             <Grid Name="gridForOverall" Grid.Column="1" Background="#FFD7E0EE">
 
-                <Grid Name="gridMain" Background="White" Margin="20,5,5,20">
+                <Grid Name="gridMain" Background="{Binding Background, ElementName=borderForPageColor}" Margin="20,5,5,20">
                     
                 </Grid>
 

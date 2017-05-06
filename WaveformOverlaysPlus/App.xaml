@@ -444,7 +444,7 @@
         <Style x:Key="styleTextBox" TargetType="TextBox">
             <Setter Property="MinWidth" Value="{ThemeResource TextControlThemeMinWidth}"/>
 
-            <Setter Property="MinHeight" Value="29"/>
+            <Setter Property="MinHeight" Value="3"/>
             <!--<Setter Property="MinHeight" Value="{ThemeResource TextControlThemeMinHeight}"/>-->
 
             <Setter Property="Foreground" Value="{ThemeResource TextControlForeground}"/>
@@ -479,7 +479,8 @@
                         <Grid>
                             <Rectangle x:Name="BorderElement"
                                        Stroke="{TemplateBinding BorderBrush}"
-                                       StrokeThickness="3" Fill="{TemplateBinding Background}"
+                                       StrokeThickness="{TemplateBinding MinHeight}"
+                                       Fill="{TemplateBinding Background}"
                                        RadiusX="7" RadiusY="7"/>
                             <ScrollViewer x:Name="ContentElement" 
                                           IsTabStop="False"  
@@ -487,7 +488,13 @@
                                           Padding="{TemplateBinding Padding}" 
                                           VerticalScrollBarVisibility="Hidden"  
                                           ZoomMode="Disabled"/>
-                            <ContentControl x:Name="PlaceholderTextContentPresenter" Content="{TemplateBinding PlaceholderText}" Foreground="{ThemeResource TextControlPlaceholderForeground}" IsHitTestVisible="False" IsTabStop="False" Margin="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" />
+                            <ContentControl x:Name="PlaceholderTextContentPresenter"
+                                            Content="{TemplateBinding PlaceholderText}" 
+                                            Foreground="{ThemeResource TextControlPlaceholderForeground}" 
+                                            IsHitTestVisible="False" 
+                                            IsTabStop="False" 
+                                            Margin="{TemplateBinding BorderThickness}" 
+                                            Padding="{TemplateBinding Padding}" />
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
