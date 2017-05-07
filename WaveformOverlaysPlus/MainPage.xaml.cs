@@ -33,6 +33,7 @@ using Windows.Graphics.Imaging;
 using Microsoft.Services.Store.Engagement;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Text;
+using Windows.UI.Xaml.Shapes;
 
 namespace WaveformOverlaysPlus
 {
@@ -47,7 +48,7 @@ namespace WaveformOverlaysPlus
         DataTransferManager dataTransferManager;
 
         #region Dependency Properties
-        
+
         public double currentSizeSelected
         {
             get { return (double)GetValue(currentSizeSelectedProperty); }
@@ -562,7 +563,7 @@ namespace WaveformOverlaysPlus
 
                     break;
                 case "rectangle":
-
+                    AddRectangle();
                     break;
                 case "line":
 
@@ -579,45 +580,28 @@ namespace WaveformOverlaysPlus
             }
         }
 
-        private void AddTextBox()
+        void AddTextBox()
         {
-            if (gridMain.Children.Count > 0)
-            {
-                var lastChild = gridMain.Children.LastOrDefault();
-
-                var childType = lastChild.GetType();
-
-                if (childType == typeof(PaintObjectTemplatedControl))
-                {
-                    var child = lastChild as PaintObjectTemplatedControl;
-                    var contentType = child.Content.GetType();
-
-                    if (contentType == typeof(TextBox))
-                    {
-                        TextBox t = child.Content as TextBox;
-                        var back = t.Background;
-                        var fore = t.Foreground;
-                        var bord = t.BorderBrush;
-                        var min = t.MinHeight; //MinHeight property is used for BorderThickness Binding because the border in the custom textbox style is accomplished by a rectangle strokethickness which is a double not a Thickness
-                        var fontsize = t.FontSize;
-
-                        t.Background = back;
-                        t.Foreground = fore;
-                        t.BorderBrush = bord;
-                        t.MinHeight = min; //MinHeight property is used for BorderThickness Binding because the border in the custom textbox style is accomplished by a rectangle strokethickness which is a double not a Thickness
-                        t.FontSize = fontsize;
-                    }
-                }
-            }
-
+            UnBindLast();
             TextBox textBox = new TextBox();
             textBox.Style = App.Current.Resources["styleTextBox"] as Style;
-
-            Bind(textBox, borderForStrokeColor, borderForFillColor, borderForTextColor);
+            Bind(textBox);
 
             PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
             paintObject.Content = textBox;
+            gridMain.Children.Add(paintObject);
+        }
 
+        void AddRectangle()
+        {
+            UnBindLast();
+            Rectangle rectangle = new Rectangle();
+            Bind(rectangle);
+
+            PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
+            paintObject.Width = 200;
+            paintObject.Height = 200;
+            paintObject.Content = rectangle;
             gridMain.Children.Add(paintObject);
         }
 
@@ -687,12 +671,32 @@ namespace WaveformOverlaysPlus
             ColorChangerBox = colorChangerBoxButton.Name;
         }
 
-        private void Bind(FrameworkElement target, FrameworkElement elementForStrokeColor, FrameworkElement elementForFillColor, FrameworkElement elementForTextColor)
+        void Bind(FrameworkElement target)
         {
-            if (elementForStrokeColor != null)
+            if (target is Shape) // Rectangle, Ellipse, Line, or Polyline
+            {
+                Shape shape = target as Shape;
+
+                Binding bindStroke = new Binding();
+                bindStroke.Source = borderForStrokeColor;
+                bindStroke.Path = new PropertyPath("Background");
+                shape.SetBinding(Shape.StrokeProperty, bindStroke);
+
+                Binding bindFill = new Binding();
+                bindFill.Source = borderForFillColor;
+                bindFill.Path = new PropertyPath("Background");
+                shape.SetBinding(Shape.FillProperty, bindFill);
+
+                Binding bindStrokeSize = new Binding();
+                bindStrokeSize.Source = this;
+                bindStrokeSize.Path = new PropertyPath("currentSizeSelected");
+                target.SetBinding(Shape.StrokeThicknessProperty, bindStrokeSize);
+            }
+
+            if (target is TextBox)
             {
                 Binding bindStroke = new Binding();
-                bindStroke.Source = elementForStrokeColor;
+                bindStroke.Source = borderForStrokeColor;
                 bindStroke.Path = new PropertyPath("Background");
                 target.SetBinding(BorderBrushProperty, bindStroke);
 
@@ -700,20 +704,14 @@ namespace WaveformOverlaysPlus
                 bindStrokeSize.Source = this;
                 bindStrokeSize.Path = new PropertyPath("currentSizeSelected");
                 target.SetBinding(MinHeightProperty, bindStrokeSize);
-            }
 
-            if (elementForFillColor != null)
-            {
                 Binding bindFill = new Binding();
-                bindFill.Source = elementForFillColor;
+                bindFill.Source = borderForFillColor;
                 bindFill.Path = new PropertyPath("Background");
                 target.SetBinding(BackgroundProperty, bindFill);
-            }
 
-            if (elementForTextColor != null)
-            {
                 Binding bindTextColor = new Binding();
-                bindTextColor.Source = elementForTextColor;
+                bindTextColor.Source = borderForTextColor;
                 bindTextColor.Path = new PropertyPath("Background");
                 target.SetBinding(ForegroundProperty, bindTextColor);
 
@@ -721,6 +719,38 @@ namespace WaveformOverlaysPlus
                 bindFontSize.Source = this;
                 bindFontSize.Path = new PropertyPath("currentFontSize");
                 target.SetBinding(FontSizeProperty, bindFontSize);
+            }
+        }
+
+        void UnBindLast()
+        {
+            if (gridMain.Children.Count > 0)
+            {
+                var lastChild = gridMain.Children.LastOrDefault();
+
+                if (lastChild is PaintObjectTemplatedControl)
+                {
+                    var child = lastChild as PaintObjectTemplatedControl;
+                    var content = child.Content;
+
+                    if (content is Shape) // Rectangle or Ellipse
+                    {
+                        Shape s = content as Shape;
+                        s.Stroke = s.Stroke;
+                        s.Fill = s.Fill;
+                        s.StrokeThickness = s.StrokeThickness;
+                    }
+
+                    if (content is TextBox)
+                    {
+                        TextBox t = content as TextBox;
+                        t.Background = t.Background;
+                        t.Foreground = t.Foreground;
+                        t.BorderBrush = t.BorderBrush;
+                        t.MinHeight = t.MinHeight; //MinHeight property is used for BorderThickness Binding because the border in the custom textbox style is accomplished by a rectangle strokethickness which is a double not a Thickness
+                        t.FontSize = t.FontSize;
+                    }
+                }
             }
         }
     }
