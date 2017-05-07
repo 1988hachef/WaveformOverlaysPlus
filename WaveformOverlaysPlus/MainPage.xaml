@@ -150,7 +150,9 @@
                 <RadioButton Name="strokeColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" IsChecked="True" Checked="colorChanger_Checked">
                     <RadioButton.Content>
                         <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
-                            <Border Name="borderForStrokeColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Black" BorderThickness="1"/>
+                            <Border Name="borderForStrokeColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Black" BorderThickness="1">
+                                <TextBlock Name="strokeX" Visibility="Collapsed" FontFamily="Segoe MDL2 Assets" Text="&#xE8BB;" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                            </Border>
                             <TextBlock Text="Stroke:" FontSize="{StaticResource myFontSize}" VerticalAlignment="Center"/>
                         </StackPanel>
                     </RadioButton.Content>
@@ -160,7 +162,7 @@
                     <RadioButton.Content>
                         <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
                             <Border Name="borderForFillColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Transparent" BorderThickness="1">
-                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8BB;" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                                <TextBlock Name="fillX" FontFamily="Segoe MDL2 Assets" Text="&#xE8BB;" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
                             </Border>
                             <TextBlock Text="Fill:" FontSize="{StaticResource myFontSize}" VerticalAlignment="Center"/>
                         </StackPanel>
@@ -170,7 +172,9 @@
                 <RadioButton Name="textColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" Checked="colorChanger_Checked">
                     <RadioButton.Content>
                         <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
-                            <Border Name="borderForTextColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Black" BorderThickness="1"/>
+                            <Border Name="borderForTextColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Black" BorderThickness="1">
+                                <TextBlock Name="textX" Visibility="Collapsed" FontFamily="Segoe MDL2 Assets" Text="&#xE8BB;" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                            </Border>
                             <TextBlock Text="Text:" FontSize="{StaticResource myFontSize}" VerticalAlignment="Center"/>
                         </StackPanel>
                     </RadioButton.Content>
@@ -216,7 +220,7 @@
                     <Button Background="#FF00A2E8" Style="{StaticResource styleColorButton}" Click="color_Click"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,2,0">
-                    <Button Background="Transparent" Style="{StaticResource styleColorButton}" Click="color_Click">
+                    <Button Name="btnTransparent" Background="Transparent" Style="{StaticResource styleColorButton}" Click="color_Click">
                         <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8BB;" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
                     </Button>
                     <Button Background="#FF880015" Style="{StaticResource styleColorButton}" Click="color_Click"/>

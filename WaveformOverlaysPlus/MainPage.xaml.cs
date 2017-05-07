@@ -53,11 +53,11 @@ namespace WaveformOverlaysPlus
             get { return (double)GetValue(currentSizeSelectedProperty); }
             set
             {
-                value = value == 1 ? value = 2 :
-                        value == 2 ? value = 3 :
-                        value == 6 ? value = 4 :
-                        value == 10 ? value = 6 :
-                        value = 4;
+                value = value == 1 ? 2 :
+                        value == 2 ? 3 :
+                        value == 6 ? 4 :
+                        value == 10 ? 6 :
+                        4;
 
                 SetValue(currentSizeSelectedProperty, value);
             }
@@ -72,11 +72,11 @@ namespace WaveformOverlaysPlus
             get { return (double)GetValue(currentFontSizeProperty); }
             set
             {
-                value = value == 1 ? value = 14 :
-                        value == 2 ? value = 18 :
-                        value == 6 ? value = 24 :
-                        value == 10 ? value = 36 :
-                        value = 18;
+                value = value == 1 ? 14 :
+                        value == 2 ? 18 :
+                        value == 6 ? 24 :
+                        value == 10 ? 36 :
+                        18;
 
                 SetValue(currentFontSizeProperty, value);
             }
@@ -581,6 +581,35 @@ namespace WaveformOverlaysPlus
 
         private void AddTextBox()
         {
+            if (gridMain.Children.Count > 0)
+            {
+                var lastChild = gridMain.Children.LastOrDefault();
+
+                var childType = lastChild.GetType();
+
+                if (childType == typeof(PaintObjectTemplatedControl))
+                {
+                    var child = lastChild as PaintObjectTemplatedControl;
+                    var contentType = child.Content.GetType();
+
+                    if (contentType == typeof(TextBox))
+                    {
+                        TextBox t = child.Content as TextBox;
+                        var back = t.Background;
+                        var fore = t.Foreground;
+                        var bord = t.BorderBrush;
+                        var min = t.MinHeight; //MinHeight property is used for BorderThickness Binding because the border in the custom textbox style is accomplished by a rectangle strokethickness which is a double not a Thickness
+                        var fontsize = t.FontSize;
+
+                        t.Background = back;
+                        t.Foreground = fore;
+                        t.BorderBrush = bord;
+                        t.MinHeight = min; //MinHeight property is used for BorderThickness Binding because the border in the custom textbox style is accomplished by a rectangle strokethickness which is a double not a Thickness
+                        t.FontSize = fontsize;
+                    }
+                }
+            }
+
             TextBox textBox = new TextBox();
             textBox.Style = App.Current.Resources["styleTextBox"] as Style;
 
@@ -602,22 +631,53 @@ namespace WaveformOverlaysPlus
 
         private void color_Click(object sender, RoutedEventArgs e)
         {
-            var colorButton = sender as Button;
+            Button colorButton = sender as Button;
+            Brush chosenColor = colorButton.Background;
 
-            switch (ColorChangerBox)
+            if (colorButton.Name != null)
             {
-                case "strokeColorRB":
-                    borderForStrokeColor.Background = colorButton.Background;
-                    break;
-                case "fillColorRB":
-                    borderForFillColor.Background = colorButton.Background;
-                    break;
-                case "textColorRB":
-                    borderForTextColor.Background = colorButton.Background;
-                    break;
-                case "pageColorRB":
-                    borderForPageColor.Background = colorButton.Background;
-                    break;
+                if (colorButton.Name == "btnTransparent")
+                {
+                    switch (ColorChangerBox)
+                    {
+                        case "strokeColorRB":
+                            strokeX.Visibility = Visibility.Visible;
+                            borderForStrokeColor.Background = chosenColor;
+                            break;
+                        case "fillColorRB":
+                            fillX.Visibility = Visibility.Visible;
+                            borderForFillColor.Background = chosenColor;
+                            break;
+                        case "textColorRB":
+                            textX.Visibility = Visibility.Visible;
+                            borderForTextColor.Background = chosenColor;
+                            break;
+                        case "pageColorRB":
+                            borderForPageColor.Background = new SolidColorBrush(Colors.White);
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (ColorChangerBox)
+                    {
+                        case "strokeColorRB":
+                            strokeX.Visibility = Visibility.Collapsed;
+                            borderForStrokeColor.Background = chosenColor;
+                            break;
+                        case "fillColorRB":
+                            fillX.Visibility = Visibility.Collapsed;
+                            borderForFillColor.Background = chosenColor;
+                            break;
+                        case "textColorRB":
+                            textX.Visibility = Visibility.Collapsed;
+                            borderForTextColor.Background = chosenColor;
+                            break;
+                        case "pageColorRB":
+                            borderForPageColor.Background = chosenColor;
+                            break;
+                    }
+                }
             }
         }
 
