@@ -5,7 +5,8 @@
     xmlns:local="using:WaveformOverlaysPlus"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
+    mc:Ignorable="d" Loaded="Page_Loaded">
 
     <!--<Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -231,11 +232,22 @@
             </StackPanel>
 
             <Grid Name="gridForOverall" Grid.Column="1" Background="#FFD7E0EE">
-
-                <Grid Name="gridMain" Background="{Binding Background, ElementName=borderForPageColor}" Margin="20,5,5,20">
+                <Grid Name="gridToContainOthers" Margin="20,5,5,20">
                     
-                </Grid>
+                    <Grid Name="gridMain" Background="{Binding Background, ElementName=borderForPageColor}">
+                    </Grid>
 
+                    <canvas:CanvasControl Draw="DrawCanvas" x:Name="DrawingCanvas" IsHitTestVisible="False"/>
+
+                    <Grid Name="gridForOtherInput" Visibility="Collapsed" >
+                        <Grid.Background>
+                            <SolidColorBrush Color="White" Opacity="0.01"/>
+                        </Grid.Background>
+                    </Grid>
+
+                    <InkCanvas x:Name="inkCanvas" Visibility="Collapsed"/>
+
+                </Grid>
             </Grid>
 
         </Grid>

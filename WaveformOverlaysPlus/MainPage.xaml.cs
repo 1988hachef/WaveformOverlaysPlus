@@ -34,6 +34,12 @@ using Microsoft.Services.Store.Engagement;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Text;
 using Windows.UI.Xaml.Shapes;
+using Windows.UI.Input.Inking;
+using Microsoft.Graphics.Canvas.UI.Xaml;
+using System.Diagnostics;
+using Microsoft.Graphics.Canvas;
+using Microsoft.Graphics.Canvas.Effects;
+using System.Numerics;
 
 namespace WaveformOverlaysPlus
 {
@@ -41,11 +47,28 @@ namespace WaveformOverlaysPlus
     {
         string ColorChangerBox;
 
+        #region For Custom Ink Rendering and Erase
+        private readonly List<InkStrokeContainer> _strokes = new List<InkStrokeContainer>();
+        private InkSynchronizer _inkSynchronizer;
+        private bool _isErasing;
+        private Point _lastPoint;
+        private int _deferredDryDelay;
+        private IReadOnlyList<InkStroke> _pendingDry;
+        #endregion
+
+        #region For Ink
+        InkPresenter _inkPresenter;
+        #endregion
+
+        #region For Printing
         private PrintManager printMan;
         private PrintDocument printDoc;
         private IPrintDocumentSource printDocSource;
+        #endregion
 
+        #region For Sharing
         DataTransferManager dataTransferManager;
+        #endregion
 
         #region Dependency Properties
 
@@ -98,6 +121,18 @@ namespace WaveformOverlaysPlus
             {
                 menuFeedback.Visibility = Visibility.Visible;
             }
+
+            // Set initial ink stroke attributes.
+            _inkPresenter = inkCanvas.InkPresenter;
+            _inkPresenter.InputDeviceTypes = CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Touch;
+            InkDrawingAttributes drawingAttributes = new InkDrawingAttributes();
+            drawingAttributes.DrawAsHighlighter = false;
+            drawingAttributes.PenTip = PenTipShape.Circle;
+            drawingAttributes.Color = Colors.Blue;
+            drawingAttributes.Size = new Size(2, 2);
+            drawingAttributes.IgnorePressure = false;
+            drawingAttributes.FitToCurve = true;
+            inkCanvas.InkPresenter.UpdateDefaultDrawingAttributes(drawingAttributes);
         }
 
         #region OnNavigated
@@ -541,10 +576,227 @@ namespace WaveformOverlaysPlus
 
         #endregion
 
+        #region Ink
+
+        //  How to update inkCanvas drawingAttributes
+        ///  
+        //if (inkCanvas != null)
+        //{
+        //    InkDrawingAttributes drawingAttributes = inkCanvas.InkPresenter.CopyDefaultDrawingAttributes();
+        //    drawingAttributes.DrawAsHighlighter = false;
+        //    drawingAttributes.PenTip = PenTipShape.Circle;
+        //    drawingAttributes.Color = Colors.DodgerBlue;
+        //    drawingAttributes.Size = new Size(2, 2);
+        //    drawingAttributes.IgnorePressure = false;
+        //    drawingAttributes.FitToCurve = true;
+        //    inkCanvas.InkPresenter.UpdateDefaultDrawingAttributes(drawingAttributes);
+        //}
+
+        void AddInk()
+        {
+            inkCanvas.Visibility = Visibility.Visible;
+            _inkPresenter.InputProcessingConfiguration.Mode = InkInputProcessingMode.Inking;
+        }
+
+        #endregion
+
+        #region Custom Ink Rendering with Erase
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            var display = DisplayInformation.GetForCurrentView();
+
+            // 1. Activate custom drawing 
+            _inkSynchronizer = _inkPresenter.ActivateCustomDrying();
+
+            // 2. add use custom drawing when strokes are collected
+            _inkPresenter.StrokesCollected += InkPresenter_StrokesCollected;
+
+            _inkPresenter.InputProcessingConfiguration.RightDragAction = InkInputRightDragAction.LeaveUnprocessed;
+
+            var unprocessedInput = _inkPresenter.UnprocessedInput;
+            unprocessedInput.PointerPressed += UnprocessedInput_PointerPressed;
+            unprocessedInput.PointerMoved += UnprocessedInput_PointerMoved;
+            unprocessedInput.PointerReleased += UnprocessedInput_PointerReleased;
+            unprocessedInput.PointerExited += UnprocessedInput_PointerExited;
+            unprocessedInput.PointerLost += UnprocessedInput_PointerLost;
+        }
+
+        private void UnprocessedInput_PointerLost(InkUnprocessedInput sender, Windows.UI.Core.PointerEventArgs args)
+        {
+            if (_isErasing)
+            {
+                args.Handled = true;
+            }
+
+            _isErasing = false;
+        }
+
+        private void UnprocessedInput_PointerExited(InkUnprocessedInput sender, Windows.UI.Core.PointerEventArgs args)
+        {
+            if (_isErasing)
+            {
+                args.Handled = true;
+            }
+
+            _isErasing = true;
+        }
+
+        private void UnprocessedInput_PointerReleased(InkUnprocessedInput sender, Windows.UI.Core.PointerEventArgs args)
+        {
+            if (_isErasing)
+            {
+                args.Handled = true;
+            }
+
+            _isErasing = false;
+        }
+
+        private void UnprocessedInput_PointerMoved(InkUnprocessedInput sender, Windows.UI.Core.PointerEventArgs args)
+        {
+            if (!_isErasing)
+            {
+                return;
+            }
+
+            var invalidate = false;
+
+            foreach (var item in _strokes.ToArray())
+            {
+                var rect = item.SelectWithLine(_lastPoint, args.CurrentPoint.Position);
+
+                if (rect.IsEmpty)
+                {
+                    continue;
+                }
+
+                if (rect.Width * rect.Height > 0)
+                {
+                    _strokes.Remove(item);
+
+                    invalidate = true;
+                }
+            }
+
+            _lastPoint = args.CurrentPoint.Position;
+
+            args.Handled = true;
+
+            if (invalidate)
+            {
+                DrawingCanvas.Invalidate();
+            }
+        }
+
+        private void UnprocessedInput_PointerPressed(InkUnprocessedInput sender, Windows.UI.Core.PointerEventArgs args)
+        {
+            _lastPoint = args.CurrentPoint.Position;
+
+            args.Handled = true;
+
+            _isErasing = true;
+        }
+
+        private void InkPresenter_StrokesCollected(InkPresenter sender, InkStrokesCollectedEventArgs args)
+        {
+            _pendingDry = _inkSynchronizer.BeginDry();
+
+            var container = new InkStrokeContainer();
+
+            foreach (var stroke in _pendingDry)
+            {
+                container.AddStroke(stroke.Clone());
+            }
+
+            _strokes.Add(container);
+
+            DrawingCanvas.Invalidate();
+        }
+
+        private void DrawCanvas(CanvasControl sender, CanvasDrawEventArgs args)
+        {
+            DrawInk(args.DrawingSession);
+
+            if (_pendingDry != null && _deferredDryDelay == 0)
+            {
+                args.DrawingSession.DrawInk(_pendingDry);
+
+                _deferredDryDelay = 1;
+
+                CompositionTarget.Rendering += DeferEndDry;
+            }
+        }
+
+        private void DeferEndDry(object sender, object e)
+        {
+            Debug.Assert(_pendingDry != null);
+
+            if (_deferredDryDelay > 0)
+            {
+                _deferredDryDelay--;
+            }
+            else
+            {
+                CompositionTarget.Rendering -= DeferEndDry;
+                _pendingDry = null;
+
+                _inkSynchronizer.EndDry();
+            }
+        }
+
+        private void DrawInk(CanvasDrawingSession session)
+        {
+            session.Clear(DrawingCanvas.ClearColor);
+
+            foreach (var item in _strokes)
+            {
+                var strokes = item.GetStrokes();
+
+                using (var list = new CanvasCommandList(session))
+                {
+                    using (var listSession = list.CreateDrawingSession())
+                    {
+                        listSession.DrawInk(strokes);
+                    }
+
+                    using (var shadowEffect = new ShadowEffect
+                    {
+                        ShadowColor = Colors.DarkRed,
+                        Source = list,
+                    })
+                    {
+                        session.DrawImage(shadowEffect, new Vector2(2, 2));
+                    }
+                }
+
+                session.DrawInk(strokes);
+            }
+        }
+
+        // This is how to redraw all strokes, if you needed to change them or add/remove an effect.
+        void RedrawAllStrokes()
+        {
+            _pendingDry = _inkSynchronizer.BeginDry();
+            var container = new InkStrokeContainer();
+            foreach (var stroke in _pendingDry)
+            {
+                container.AddStroke(stroke.Clone());
+            }
+            _strokes.Add(container);
+            DrawingCanvas.Invalidate();
+        }
+
+        #endregion
+
         private void tool_Checked(object sender, RoutedEventArgs e)
         {
-            string name = (sender as RadioButton).Name;
+            // Collapse inkCanvas because it will be in the way if other tools are selected
+            if (inkCanvas != null)
+            {
+                inkCanvas.Visibility = Visibility.Collapsed;
+            }
 
+            string name = (sender as RadioButton).Name;
             switch (name)
             {
                 case "cursor":
@@ -575,7 +827,7 @@ namespace WaveformOverlaysPlus
 
                     break;
                 case "pen":
-
+                    AddInk();
                     break;
             }
         }
@@ -609,14 +861,24 @@ namespace WaveformOverlaysPlus
         {
             var radioButton = sender as RadioButton;
             double size = Convert.ToDouble(radioButton.Tag);
+
             currentSizeSelected = size;
             currentFontSize = size;
+
+            if (inkCanvas != null)
+            {
+                InkDrawingAttributes drawingAttributes = inkCanvas.InkPresenter.CopyDefaultDrawingAttributes();
+                drawingAttributes.Size = new Size(size, size);
+                inkCanvas.InkPresenter.UpdateDefaultDrawingAttributes(drawingAttributes);
+            }
         }
 
         private void color_Click(object sender, RoutedEventArgs e)
         {
+            InkDrawingAttributes drawingAttributes = inkCanvas.InkPresenter.CopyDefaultDrawingAttributes();
+
             Button colorButton = sender as Button;
-            Brush chosenColor = colorButton.Background;
+            SolidColorBrush chosenColor = colorButton.Background as SolidColorBrush;
 
             if (colorButton.Name != null)
             {
@@ -627,6 +889,7 @@ namespace WaveformOverlaysPlus
                         case "strokeColorRB":
                             strokeX.Visibility = Visibility.Visible;
                             borderForStrokeColor.Background = chosenColor;
+                            drawingAttributes.Color = chosenColor.Color;
                             break;
                         case "fillColorRB":
                             fillX.Visibility = Visibility.Visible;
@@ -648,6 +911,7 @@ namespace WaveformOverlaysPlus
                         case "strokeColorRB":
                             strokeX.Visibility = Visibility.Collapsed;
                             borderForStrokeColor.Background = chosenColor;
+                            drawingAttributes.Color = chosenColor.Color;
                             break;
                         case "fillColorRB":
                             fillX.Visibility = Visibility.Collapsed;
@@ -663,6 +927,7 @@ namespace WaveformOverlaysPlus
                     }
                 }
             }
+            inkCanvas.InkPresenter.UpdateDefaultDrawingAttributes(drawingAttributes);
         }
 
         private void colorChanger_Checked(object sender, RoutedEventArgs e)
@@ -753,5 +1018,6 @@ namespace WaveformOverlaysPlus
                 }
             }
         }
+        
     }
 }

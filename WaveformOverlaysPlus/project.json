@@ -1,7 +1,8 @@
 ﻿{
   "dependencies": {
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
-    "Microsoft.Services.Store.SDK": "10.1703.19001"
+    "Microsoft.Services.Store.SDK": "10.1703.19001",
+    "Win2D.uwp": "1.20.0"
   },
   "frameworks": {
     "uap10.0": {}
