@@ -122,17 +122,9 @@ namespace WaveformOverlaysPlus
                 menuFeedback.Visibility = Visibility.Visible;
             }
 
-            // Set initial ink stroke attributes.
+            // Initialize _inkPresenter
             _inkPresenter = inkCanvas.InkPresenter;
             _inkPresenter.InputDeviceTypes = CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Touch;
-            InkDrawingAttributes drawingAttributes = new InkDrawingAttributes();
-            drawingAttributes.DrawAsHighlighter = false;
-            drawingAttributes.PenTip = PenTipShape.Circle;
-            drawingAttributes.Color = Colors.Blue;
-            drawingAttributes.Size = new Size(2, 2);
-            drawingAttributes.IgnorePressure = false;
-            drawingAttributes.FitToCurve = true;
-            inkCanvas.InkPresenter.UpdateDefaultDrawingAttributes(drawingAttributes);
         }
 
         #region OnNavigated
@@ -576,7 +568,7 @@ namespace WaveformOverlaysPlus
 
         #endregion
 
-        #region Ink
+        #region Ink and Eraser
 
         //  How to update inkCanvas drawingAttributes
         ///  
@@ -598,12 +590,39 @@ namespace WaveformOverlaysPlus
             _inkPresenter.InputProcessingConfiguration.Mode = InkInputProcessingMode.Inking;
         }
 
+        void AddEraser()
+        {
+            inkCanvas.Visibility = Visibility.Visible;
+            _inkPresenter.InputProcessingConfiguration.Mode = InkInputProcessingMode.None;
+        }
+
         #endregion
 
         #region Custom Ink Rendering with Erase
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            // Set initial ink stroke attributes.
+            InkDrawingAttributes drawingAttributes = new InkDrawingAttributes();
+            drawingAttributes.DrawAsHighlighter = false;
+            drawingAttributes.PenTip = PenTipShape.Circle;
+
+            SolidColorBrush initialBrush = new SolidColorBrush(Colors.Blue);
+            if (borderForStrokeColor != null)
+            {
+                initialBrush = borderForStrokeColor.Background as SolidColorBrush;
+            }
+            drawingAttributes.Color = initialBrush.Color;
+
+            if (rbSize10 != null)
+            {
+                drawingAttributes.Size = new Size(currentSizeSelected, currentSizeSelected);
+            }
+
+            drawingAttributes.IgnorePressure = false;
+            drawingAttributes.FitToCurve = true;
+            inkCanvas.InkPresenter.UpdateDefaultDrawingAttributes(drawingAttributes);
+
             var display = DisplayInformation.GetForCurrentView();
 
             // 1. Activate custom drawing 
@@ -821,7 +840,7 @@ namespace WaveformOverlaysPlus
 
                     break;
                 case "eraser":
-
+                    AddEraser();
                     break;
                 case "crop":
 

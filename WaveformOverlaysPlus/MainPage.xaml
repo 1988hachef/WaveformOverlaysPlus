@@ -138,7 +138,7 @@
                         </RadioButton.Content>
                     </RadioButton>
 
-                    <RadioButton Tag="10" GroupName="sizes" Style="{StaticResource styleToolRadioButton}" Margin="5,0" Width="88"  Height="26" HorizontalAlignment="Center" Checked="sizes_Checked">
+                    <RadioButton Tag="10" Name="rbSize10" GroupName="sizes" Style="{StaticResource styleToolRadioButton}" Margin="5,0" Width="88"  Height="26" HorizontalAlignment="Center" Checked="sizes_Checked">
                         <RadioButton.Content>
                             <Rectangle Width="56" Height="10" Fill="Black"/>
                         </RadioButton.Content>
@@ -239,6 +239,7 @@
 
                     <canvas:CanvasControl Draw="DrawCanvas" x:Name="DrawingCanvas" IsHitTestVisible="False"/>
 
+                    <!--PointerPressed="gridForOtherInput_PointerPressed" PointerEntered="gridForOtherInput_PointerEntered" PointerExited="gridForOtherInput_PointerExited" PointerReleased="gridForOtherInput_PointerReleased"-->
                     <Grid Name="gridForOtherInput" Visibility="Collapsed" >
                         <Grid.Background>
                             <SolidColorBrush Color="White" Opacity="0.01"/>
