@@ -46,6 +46,7 @@ namespace WaveformOverlaysPlus
     public sealed partial class MainPage : Page
     {
         string ColorChangerBox;
+        string currentToolChosen;
 
         #region For Custom Ink Rendering and Erase
         private readonly List<InkStrokeContainer> _strokes = new List<InkStrokeContainer>();
@@ -68,6 +69,16 @@ namespace WaveformOverlaysPlus
 
         #region For Sharing
         DataTransferManager dataTransferManager;
+        #endregion
+
+        #region For Arrow and Line
+        Line lineForArrow;
+        double topLineLimiter;
+        double bottomLineLimiter;
+        double leftLineLimiter;
+        double rightLineLimiter;
+        double firstY;
+        double firstX;
         #endregion
 
         #region Dependency Properties
@@ -811,43 +822,56 @@ namespace WaveformOverlaysPlus
 
         private void tool_Checked(object sender, RoutedEventArgs e)
         {
-            // Collapse inkCanvas because it will be in the way if other tools are selected
+            // Collapse stuff that may be in the way
             if (inkCanvas != null)
             {
                 inkCanvas.Visibility = Visibility.Collapsed;
+            }
+            if (gridForOtherInput != null)
+            {
+                gridForOtherInput.Visibility = Visibility.Collapsed;
             }
 
             string name = (sender as RadioButton).Name;
             switch (name)
             {
                 case "cursor":
-
+                    currentToolChosen = "cursor";
                     break;
                 case "text":
+                    currentToolChosen = "text";
                     AddTextBox();
                     break;
                 case "arrow":
-
+                    currentToolChosen = "arrow";
+                    SwitchToArrowMode();
                     break;
                 case "ellipse":
-
+                    currentToolChosen = "ellipse";
+                    AddEllipse();
                     break;
                 case "roundedRectangle":
-
+                    currentToolChosen = "roundedRectangle";
+                    AddRoundedRectangle();
                     break;
                 case "rectangle":
+                    currentToolChosen = "rectangle";
                     AddRectangle();
                     break;
                 case "line":
+                    currentToolChosen = "line";
 
                     break;
                 case "eraser":
+                    currentToolChosen = "eraser";
                     AddEraser();
                     break;
                 case "crop":
+                    currentToolChosen = "crop";
 
                     break;
                 case "pen":
+                    currentToolChosen = "pen";
                     AddInk();
                     break;
             }
@@ -876,6 +900,40 @@ namespace WaveformOverlaysPlus
             paintObject.Height = 200;
             paintObject.Content = rectangle;
             gridMain.Children.Add(paintObject);
+        }
+
+        void AddRoundedRectangle()
+        {
+            UnBindLast();
+            Rectangle rectangle = new Rectangle();
+            rectangle.RadiusX = 20;
+            rectangle.RadiusY = 20;
+            Bind(rectangle);
+
+            PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
+            paintObject.Width = 200;
+            paintObject.Height = 200;
+            paintObject.Content = rectangle;
+            gridMain.Children.Add(paintObject);
+        }
+
+        void AddEllipse()
+        {
+            UnBindLast();
+            Ellipse ell = new Ellipse();
+            Bind(ell);
+
+            PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
+            paintObject.Width = 200;
+            paintObject.Height = 200;
+            paintObject.Content = ell;
+            gridMain.Children.Add(paintObject);
+        }
+
+        void SwitchToArrowMode()
+        {
+            UnBindLast();
+            gridForOtherInput.Visibility = Visibility.Visible;
         }
 
         private void sizes_Checked(object sender, RoutedEventArgs e)
@@ -977,6 +1035,38 @@ namespace WaveformOverlaysPlus
                 bindStrokeSize.Source = this;
                 bindStrokeSize.Path = new PropertyPath("currentSizeSelected");
                 target.SetBinding(Shape.StrokeThicknessProperty, bindStrokeSize);
+
+                //if (target is Polyline)
+                //{
+                //    Binding bindStroke = new Binding();
+                //    bindStroke.Source = borderForStrokeColor;
+                //    bindStroke.Path = new PropertyPath("Background");
+                //    target.SetBinding(Shape.StrokeProperty, bindStroke);
+
+                //    Binding bindFill = new Binding();
+                //    bindFill.Source = borderForStrokeColor;
+                //    bindFill.Path = new PropertyPath("Background");
+                //    target.SetBinding(Shape.FillProperty, bindFill);
+                //}
+                //else
+                //{
+                //    Shape shape = target as Shape;
+
+                //    Binding bindStroke = new Binding();
+                //    bindStroke.Source = borderForStrokeColor;
+                //    bindStroke.Path = new PropertyPath("Background");
+                //    shape.SetBinding(Shape.StrokeProperty, bindStroke);
+
+                //    Binding bindFill = new Binding();
+                //    bindFill.Source = borderForFillColor;
+                //    bindFill.Path = new PropertyPath("Background");
+                //    shape.SetBinding(Shape.FillProperty, bindFill);
+
+                //    Binding bindStrokeSize = new Binding();
+                //    bindStrokeSize.Source = this;
+                //    bindStrokeSize.Path = new PropertyPath("currentSizeSelected");
+                //    target.SetBinding(Shape.StrokeThicknessProperty, bindStrokeSize);
+                //}
             }
 
             if (target is TextBox)
@@ -1037,6 +1127,136 @@ namespace WaveformOverlaysPlus
                         t.FontSize = t.FontSize;
                     }
                 }
+                if (lastChild is Polyline)
+                {
+                    var p = lastChild as Polyline;
+                    p.Stroke = p.Stroke;
+                    p.Fill = p.Fill;
+                    p.StrokeThickness = p.StrokeThickness;
+
+                    if (gridMain.Children.Count >= 2)
+                    {
+                        var secondToLastChild = gridMain.Children[gridMain.Children.Count - 2];
+
+                        if (secondToLastChild is Line)
+                        {
+                            var l = secondToLastChild as Line;
+                            l.Stroke = l.Stroke;
+                            l.Fill = l.Fill;
+                            l.StrokeThickness = l.StrokeThickness;
+                        }
+                    }
+                        
+                }
+                if (lastChild is Line)
+                {
+                    var l = lastChild as Line;
+                    l.Stroke = l.Stroke;
+                    l.Fill = l.Fill;
+                    l.StrokeThickness = l.StrokeThickness;
+                }
+            }
+        }
+
+        private void gridForOtherInput_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            UnBindLast();
+
+            (sender as Grid).CapturePointer(e.Pointer);
+
+            lineForArrow = new Line()
+            {
+                StrokeEndLineCap = PenLineCap.Triangle
+            };
+            Bind(lineForArrow);
+
+            lineForArrow.X1 = e.GetCurrentPoint(gridMain).RawPosition.X;
+            lineForArrow.Y1 = e.GetCurrentPoint(gridMain).RawPosition.Y;
+            lineForArrow.X2 = e.GetCurrentPoint(gridMain).RawPosition.X;
+            lineForArrow.Y2 = e.GetCurrentPoint(gridMain).RawPosition.Y;
+            gridMain.Children.Add(lineForArrow);
+
+            // Set these variables for use in PointerMoved event
+            topLineLimiter = currentSizeSelected / 2;
+            bottomLineLimiter = gridMain.ActualHeight - (currentSizeSelected / 2);
+            leftLineLimiter = currentSizeSelected / 2;
+            rightLineLimiter = gridMain.ActualWidth - (currentSizeSelected / 2);
+            firstY = e.GetCurrentPoint(gridMain).RawPosition.Y;
+            firstX = e.GetCurrentPoint(gridMain).RawPosition.X;
+
+            // Add the pointer moved event
+            gridForOtherInput.PointerMoved += gridForOtherInput_PointerMoved;
+        }
+
+        private void gridForOtherInput_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            if (lineForArrow != null)
+            {
+                var secondY = e.GetCurrentPoint(gridMain).RawPosition.Y;
+                var secondX = e.GetCurrentPoint(gridMain).RawPosition.X;
+
+                var yChange = secondY - firstY;
+                var xChange = secondX - firstX;
+
+                var yAdjust = yChange + firstY;
+                var xAdjust = xChange + firstX;
+
+                if (yAdjust >= topLineLimiter && yAdjust <= bottomLineLimiter)
+                {
+                    lineForArrow.Y2 = e.GetCurrentPoint(gridMain).RawPosition.Y;
+                }
+
+                if (xAdjust >= leftLineLimiter && xAdjust <= rightLineLimiter)
+                {
+                    lineForArrow.X2 = e.GetCurrentPoint(gridMain).RawPosition.X;
+                }
+            }
+        }
+
+        private void gridForOtherInput_PointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            // Remove the pointer moved event
+            gridForOtherInput.PointerMoved -= gridForOtherInput_PointerMoved;
+
+            if (currentToolChosen == "arrow")
+            {
+                // Determine the length to make the arrow head lines
+                int arrowHeadLength =
+                    currentSizeSelected == 2 ? 13
+                  : currentSizeSelected == 3 ? 13
+                  : currentSizeSelected == 4 ? 14
+                  : currentSizeSelected == 6 ? 15
+                  : 15;
+
+                Point ptA = new Point(lineForArrow.X1, lineForArrow.Y1);
+                Point ptB = new Point(lineForArrow.X2, lineForArrow.Y2);
+
+                // Find the arrow shaft unit vector.
+                float vx = (float)(ptB.X - ptA.X);
+                float vy = (float)(ptB.Y - ptA.Y);
+                float dist = (float)Math.Sqrt(vx * vx + vy * vy);
+                vx /= dist;
+                vy /= dist;
+
+                var length = arrowHeadLength;
+                float ax = length * (-vy - vx);
+                float ay = length * (vx - vy);
+                Point pointArrow1 = new Point(ptB.X + ax, ptB.Y + ay);
+                Point pointArrow2 = new Point(ptB.X - ay, ptB.Y + ax);
+
+                Polyline arrowHead = new Polyline();
+                arrowHead.StrokeLineJoin = PenLineJoin.Miter;
+                arrowHead.StrokeThickness = 6;
+                arrowHead.Points.Add(pointArrow1);
+                arrowHead.Points.Add(ptB);
+                arrowHead.Points.Add(pointArrow2);
+                arrowHead.Points.Add(pointArrow1);
+                arrowHead.Points.Add(ptB);
+                Bind(arrowHead);
+
+                gridMain.Children.Add(arrowHead);
+
+                (sender as Grid).ReleasePointerCapture(e.Pointer);
             }
         }
 

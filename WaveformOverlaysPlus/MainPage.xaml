@@ -240,11 +240,10 @@
 
                     <canvas:CanvasControl Draw="DrawCanvas" x:Name="DrawingCanvas" IsHitTestVisible="False"/>
 
-                    <!--PointerPressed="gridForOtherInput_PointerPressed" PointerEntered="gridForOtherInput_PointerEntered" PointerExited="gridForOtherInput_PointerExited" PointerReleased="gridForOtherInput_PointerReleased"-->
-                    <Grid Name="gridForOtherInput" Visibility="Collapsed" >
-                        <Grid.Background>
+                    <Grid Name="gridForOtherInput" Background="Transparent" Visibility="Collapsed" PointerPressed="gridForOtherInput_PointerPressed" PointerReleased="gridForOtherInput_PointerReleased">
+                        <!--<Grid.Background>
                             <SolidColorBrush Color="White" Opacity="0.01"/>
-                        </Grid.Background>
+                        </Grid.Background>-->
                     </Grid>
 
                     <InkCanvas x:Name="inkCanvas" Visibility="Collapsed"/>
