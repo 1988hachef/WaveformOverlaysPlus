@@ -96,20 +96,20 @@
                     <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE123;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="crop"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xEE56;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="pen"/>
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xED60;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="eraser"/>
+                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xEE56;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="pen" Click="PenOrEraser_Clicked"/>
+                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xED60;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="eraser" Click="PenOrEraser_Clicked"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE8D2;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="text"/>
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE8DB;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="line"/>
+                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE8D2;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="text" Click="text_Click"/>
+                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE8DB;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="line" Click="ArrowOrLine_Clicked"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE741;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="arrow"/>
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xEA3A;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="ellipse"/>
+                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE741;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="arrow" Click="ArrowOrLine_Clicked"/>
+                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xEA3A;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="ellipse" Click="ellipse_Click"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE739;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,0" Checked="tool_Checked" Name="rectangle"/>
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,0" Checked="tool_Checked" Name="roundedRectangle">
+                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE739;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,0" Checked="tool_Checked" Name="rectangle" Click="RectOrRoundRect_Clicked"/>
+                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,0" Checked="tool_Checked" Name="roundedRectangle" Click="RectOrRoundRect_Clicked">
                         <RadioButton.Content>
                             <Rectangle Stroke="Black" Width="20" Height="20" RadiusX="4" RadiusY="4"/>
                         </RadioButton.Content>
