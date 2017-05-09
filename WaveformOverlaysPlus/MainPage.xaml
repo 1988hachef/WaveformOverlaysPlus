@@ -235,17 +235,10 @@
                 <Grid Name="gridToContainOthers" Margin="20,5,5,20">
 
                     <Grid Name="gridMain" Background="{Binding Background, ElementName=borderForPageColor}">
-                        
-                    </Grid>
 
+                    </Grid>
                     <canvas:CanvasControl Draw="DrawCanvas" x:Name="DrawingCanvas" IsHitTestVisible="False"/>
-
-                    <Grid Name="gridForOtherInput" Background="Transparent" Visibility="Collapsed" PointerPressed="gridForOtherInput_PointerPressed" PointerReleased="gridForOtherInput_PointerReleased">
-                        <!--<Grid.Background>
-                            <SolidColorBrush Color="White" Opacity="0.01"/>
-                        </Grid.Background>-->
-                    </Grid>
-
+                    <Grid Name="gridForOtherInput" Background="Transparent" Visibility="Collapsed" PointerPressed="gridForOtherInput_PointerPressed" PointerReleased="gridForOtherInput_PointerReleased"/>
                     <InkCanvas x:Name="inkCanvas" Visibility="Collapsed"/>
 
                 </Grid>

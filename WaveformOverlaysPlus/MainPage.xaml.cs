@@ -820,343 +820,7 @@ namespace WaveformOverlaysPlus
 
         #endregion
 
-        private void tool_Checked(object sender, RoutedEventArgs e)
-        {
-            // Collapse stuff that may be in the way
-            if (inkCanvas != null)
-            {
-                inkCanvas.Visibility = Visibility.Collapsed;
-            }
-            if (gridForOtherInput != null)
-            {
-                gridForOtherInput.Visibility = Visibility.Collapsed;
-            }
-
-            string name = (sender as RadioButton).Name;
-            switch (name)
-            {
-                case "cursor":
-                    currentToolChosen = "cursor";
-                    break;
-                case "text":
-                    currentToolChosen = "text";
-                    AddTextBox();
-                    break;
-                case "arrow":
-                    currentToolChosen = "arrow";
-                    SwitchToArrowMode();
-                    break;
-                case "ellipse":
-                    currentToolChosen = "ellipse";
-                    AddEllipse();
-                    break;
-                case "roundedRectangle":
-                    currentToolChosen = "roundedRectangle";
-                    AddRoundedRectangle();
-                    break;
-                case "rectangle":
-                    currentToolChosen = "rectangle";
-                    AddRectangle();
-                    break;
-                case "line":
-                    currentToolChosen = "line";
-
-                    break;
-                case "eraser":
-                    currentToolChosen = "eraser";
-                    AddEraser();
-                    break;
-                case "crop":
-                    currentToolChosen = "crop";
-
-                    break;
-                case "pen":
-                    currentToolChosen = "pen";
-                    AddInk();
-                    break;
-            }
-        }
-
-        void AddTextBox()
-        {
-            UnBindLast();
-            TextBox textBox = new TextBox();
-            textBox.Style = App.Current.Resources["styleTextBox"] as Style;
-            Bind(textBox);
-
-            PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
-            paintObject.Content = textBox;
-            gridMain.Children.Add(paintObject);
-        }
-
-        void AddRectangle()
-        {
-            UnBindLast();
-            Rectangle rectangle = new Rectangle();
-            Bind(rectangle);
-
-            PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
-            paintObject.Width = 200;
-            paintObject.Height = 200;
-            paintObject.Content = rectangle;
-            gridMain.Children.Add(paintObject);
-        }
-
-        void AddRoundedRectangle()
-        {
-            UnBindLast();
-            Rectangle rectangle = new Rectangle();
-            rectangle.RadiusX = 20;
-            rectangle.RadiusY = 20;
-            Bind(rectangle);
-
-            PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
-            paintObject.Width = 200;
-            paintObject.Height = 200;
-            paintObject.Content = rectangle;
-            gridMain.Children.Add(paintObject);
-        }
-
-        void AddEllipse()
-        {
-            UnBindLast();
-            Ellipse ell = new Ellipse();
-            Bind(ell);
-
-            PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
-            paintObject.Width = 200;
-            paintObject.Height = 200;
-            paintObject.Content = ell;
-            gridMain.Children.Add(paintObject);
-        }
-
-        void SwitchToArrowMode()
-        {
-            UnBindLast();
-            gridForOtherInput.Visibility = Visibility.Visible;
-        }
-
-        private void sizes_Checked(object sender, RoutedEventArgs e)
-        {
-            var radioButton = sender as RadioButton;
-            double size = Convert.ToDouble(radioButton.Tag);
-
-            currentSizeSelected = size;
-            currentFontSize = size;
-
-            if (inkCanvas != null)
-            {
-                InkDrawingAttributes drawingAttributes = inkCanvas.InkPresenter.CopyDefaultDrawingAttributes();
-                drawingAttributes.Size = new Size(size, size);
-                inkCanvas.InkPresenter.UpdateDefaultDrawingAttributes(drawingAttributes);
-            }
-        }
-
-        private void color_Click(object sender, RoutedEventArgs e)
-        {
-            InkDrawingAttributes drawingAttributes = inkCanvas.InkPresenter.CopyDefaultDrawingAttributes();
-
-            Button colorButton = sender as Button;
-            SolidColorBrush chosenColor = colorButton.Background as SolidColorBrush;
-
-            if (colorButton.Name != null)
-            {
-                if (colorButton.Name == "btnTransparent")
-                {
-                    switch (ColorChangerBox)
-                    {
-                        case "strokeColorRB":
-                            strokeX.Visibility = Visibility.Visible;
-                            borderForStrokeColor.Background = chosenColor;
-                            drawingAttributes.Color = chosenColor.Color;
-                            break;
-                        case "fillColorRB":
-                            fillX.Visibility = Visibility.Visible;
-                            borderForFillColor.Background = chosenColor;
-                            break;
-                        case "textColorRB":
-                            textX.Visibility = Visibility.Visible;
-                            borderForTextColor.Background = chosenColor;
-                            break;
-                        case "pageColorRB":
-                            borderForPageColor.Background = new SolidColorBrush(Colors.White);
-                            break;
-                    }
-                }
-                else
-                {
-                    switch (ColorChangerBox)
-                    {
-                        case "strokeColorRB":
-                            strokeX.Visibility = Visibility.Collapsed;
-                            borderForStrokeColor.Background = chosenColor;
-                            drawingAttributes.Color = chosenColor.Color;
-                            break;
-                        case "fillColorRB":
-                            fillX.Visibility = Visibility.Collapsed;
-                            borderForFillColor.Background = chosenColor;
-                            break;
-                        case "textColorRB":
-                            textX.Visibility = Visibility.Collapsed;
-                            borderForTextColor.Background = chosenColor;
-                            break;
-                        case "pageColorRB":
-                            borderForPageColor.Background = chosenColor;
-                            break;
-                    }
-                }
-            }
-            inkCanvas.InkPresenter.UpdateDefaultDrawingAttributes(drawingAttributes);
-        }
-
-        private void colorChanger_Checked(object sender, RoutedEventArgs e)
-        {
-            var colorChangerBoxButton = sender as RadioButton;
-            ColorChangerBox = colorChangerBoxButton.Name;
-        }
-
-        void Bind(FrameworkElement target)
-        {
-            if (target is Shape) // Rectangle, Ellipse, Line, or Polyline
-            {
-                Shape shape = target as Shape;
-
-                Binding bindStroke = new Binding();
-                bindStroke.Source = borderForStrokeColor;
-                bindStroke.Path = new PropertyPath("Background");
-                shape.SetBinding(Shape.StrokeProperty, bindStroke);
-
-                Binding bindFill = new Binding();
-                bindFill.Source = borderForFillColor;
-                bindFill.Path = new PropertyPath("Background");
-                shape.SetBinding(Shape.FillProperty, bindFill);
-
-                Binding bindStrokeSize = new Binding();
-                bindStrokeSize.Source = this;
-                bindStrokeSize.Path = new PropertyPath("currentSizeSelected");
-                target.SetBinding(Shape.StrokeThicknessProperty, bindStrokeSize);
-
-                //if (target is Polyline)
-                //{
-                //    Binding bindStroke = new Binding();
-                //    bindStroke.Source = borderForStrokeColor;
-                //    bindStroke.Path = new PropertyPath("Background");
-                //    target.SetBinding(Shape.StrokeProperty, bindStroke);
-
-                //    Binding bindFill = new Binding();
-                //    bindFill.Source = borderForStrokeColor;
-                //    bindFill.Path = new PropertyPath("Background");
-                //    target.SetBinding(Shape.FillProperty, bindFill);
-                //}
-                //else
-                //{
-                //    Shape shape = target as Shape;
-
-                //    Binding bindStroke = new Binding();
-                //    bindStroke.Source = borderForStrokeColor;
-                //    bindStroke.Path = new PropertyPath("Background");
-                //    shape.SetBinding(Shape.StrokeProperty, bindStroke);
-
-                //    Binding bindFill = new Binding();
-                //    bindFill.Source = borderForFillColor;
-                //    bindFill.Path = new PropertyPath("Background");
-                //    shape.SetBinding(Shape.FillProperty, bindFill);
-
-                //    Binding bindStrokeSize = new Binding();
-                //    bindStrokeSize.Source = this;
-                //    bindStrokeSize.Path = new PropertyPath("currentSizeSelected");
-                //    target.SetBinding(Shape.StrokeThicknessProperty, bindStrokeSize);
-                //}
-            }
-
-            if (target is TextBox)
-            {
-                Binding bindStroke = new Binding();
-                bindStroke.Source = borderForStrokeColor;
-                bindStroke.Path = new PropertyPath("Background");
-                target.SetBinding(BorderBrushProperty, bindStroke);
-
-                Binding bindStrokeSize = new Binding();
-                bindStrokeSize.Source = this;
-                bindStrokeSize.Path = new PropertyPath("currentSizeSelected");
-                target.SetBinding(MinHeightProperty, bindStrokeSize);
-
-                Binding bindFill = new Binding();
-                bindFill.Source = borderForFillColor;
-                bindFill.Path = new PropertyPath("Background");
-                target.SetBinding(BackgroundProperty, bindFill);
-
-                Binding bindTextColor = new Binding();
-                bindTextColor.Source = borderForTextColor;
-                bindTextColor.Path = new PropertyPath("Background");
-                target.SetBinding(ForegroundProperty, bindTextColor);
-
-                Binding bindFontSize = new Binding();
-                bindFontSize.Source = this;
-                bindFontSize.Path = new PropertyPath("currentFontSize");
-                target.SetBinding(FontSizeProperty, bindFontSize);
-            }
-        }
-
-        void UnBindLast()
-        {
-            if (gridMain.Children.Count > 0)
-            {
-                var lastChild = gridMain.Children.LastOrDefault();
-
-                if (lastChild is PaintObjectTemplatedControl)
-                {
-                    var child = lastChild as PaintObjectTemplatedControl;
-                    var content = child.Content;
-
-                    if (content is Shape) // Rectangle or Ellipse
-                    {
-                        Shape s = content as Shape;
-                        s.Stroke = s.Stroke;
-                        s.Fill = s.Fill;
-                        s.StrokeThickness = s.StrokeThickness;
-                    }
-
-                    if (content is TextBox)
-                    {
-                        TextBox t = content as TextBox;
-                        t.Background = t.Background;
-                        t.Foreground = t.Foreground;
-                        t.BorderBrush = t.BorderBrush;
-                        t.MinHeight = t.MinHeight; //MinHeight property is used for BorderThickness Binding because the border in the custom textbox style is accomplished by a rectangle strokethickness which is a double not a Thickness
-                        t.FontSize = t.FontSize;
-                    }
-                }
-                if (lastChild is Polyline)
-                {
-                    var p = lastChild as Polyline;
-                    p.Stroke = p.Stroke;
-                    p.Fill = p.Fill;
-                    p.StrokeThickness = p.StrokeThickness;
-
-                    if (gridMain.Children.Count >= 2)
-                    {
-                        var secondToLastChild = gridMain.Children[gridMain.Children.Count - 2];
-
-                        if (secondToLastChild is Line)
-                        {
-                            var l = secondToLastChild as Line;
-                            l.Stroke = l.Stroke;
-                            l.Fill = l.Fill;
-                            l.StrokeThickness = l.StrokeThickness;
-                        }
-                    }
-                        
-                }
-                if (lastChild is Line)
-                {
-                    var l = lastChild as Line;
-                    l.Stroke = l.Stroke;
-                    l.Fill = l.Fill;
-                    l.StrokeThickness = l.StrokeThickness;
-                }
-            }
-        }
+        #region Arrow and Line
 
         private void gridForOtherInput_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
@@ -1164,10 +828,12 @@ namespace WaveformOverlaysPlus
 
             (sender as Grid).CapturePointer(e.Pointer);
 
-            lineForArrow = new Line()
+            lineForArrow = new Line();
+            if (currentToolChosen == "arrow")
             {
-                StrokeEndLineCap = PenLineCap.Triangle
-            };
+                lineForArrow.StrokeEndLineCap = PenLineCap.Triangle;
+            }
+
             Bind(lineForArrow);
 
             lineForArrow.X1 = e.GetCurrentPoint(gridMain).RawPosition.X;
@@ -1260,26 +926,316 @@ namespace WaveformOverlaysPlus
             }
         }
 
-        //void BringToFront(UIElement element)
-        //{
-        //    int myZ = Canvas.GetZIndex(element);
-        //    int ZWeAreChecking = 0;
-        //    int maxZ = 0;
+        #endregion
 
-        //    for (int i = 0; i < gridMain.Children.Count; i++)
-        //    {
-        //        UIElement childWeAreChecking = gridMain.Children[i] as UIElement;
-        //        ZWeAreChecking = Canvas.GetZIndex(childWeAreChecking);
-        //        if (maxZ < ZWeAreChecking)
-        //        {
-        //            maxZ = ZWeAreChecking;
-        //        }
-        //    }
+        private void tool_Checked(object sender, RoutedEventArgs e)
+        {
+            // Collapse stuff that may be in the way
+            if (inkCanvas != null)
+            {
+                inkCanvas.Visibility = Visibility.Collapsed;
+            }
+            if (gridForOtherInput != null)
+            {
+                gridForOtherInput.Visibility = Visibility.Collapsed;
+            }
 
-        //    if (myZ < maxZ)
-        //    {
-        //        Canvas.SetZIndex(element, maxZ + 1);
-        //    }
-        //}
+            string name = (sender as RadioButton).Name;
+            switch (name)
+            {
+                case "cursor":
+                    currentToolChosen = "cursor";
+                    SwitchToCursorMode();
+                    break;
+                case "text":
+                    currentToolChosen = "text";
+                    AddTextBox();
+                    break;
+                case "arrow":
+                    currentToolChosen = "arrow";
+                    SwitchToArrowAndLineMode();
+                    break;
+                case "ellipse":
+                    currentToolChosen = "ellipse";
+                    AddEllipse();
+                    break;
+                case "roundedRectangle":
+                    currentToolChosen = "roundedRectangle";
+                    AddRoundedRectangle();
+                    break;
+                case "rectangle":
+                    currentToolChosen = "rectangle";
+                    AddRectangle();
+                    break;
+                case "line":
+                    currentToolChosen = "line";
+                    SwitchToArrowAndLineMode();
+                    break;
+                case "eraser":
+                    currentToolChosen = "eraser";
+                    AddEraser();
+                    break;
+                case "crop":
+                    currentToolChosen = "crop";
+
+                    break;
+                case "pen":
+                    currentToolChosen = "pen";
+                    AddInk();
+                    break;
+            }
+        }
+
+        void AddTextBox()
+        {
+            UnBindLast();
+            TextBox textBox = new TextBox();
+            textBox.Style = App.Current.Resources["styleTextBox"] as Style;
+            Bind(textBox);
+
+            PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
+            paintObject.Content = textBox;
+            gridMain.Children.Add(paintObject);
+        }
+
+        void AddRectangle()
+        {
+            UnBindLast();
+            Rectangle rectangle = new Rectangle();
+            Bind(rectangle);
+
+            PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
+            paintObject.Width = 200;
+            paintObject.Height = 200;
+            paintObject.Content = rectangle;
+            gridMain.Children.Add(paintObject);
+        }
+
+        void AddRoundedRectangle()
+        {
+            UnBindLast();
+            Rectangle rectangle = new Rectangle();
+            rectangle.RadiusX = 20;
+            rectangle.RadiusY = 20;
+            Bind(rectangle);
+
+            PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
+            paintObject.Width = 200;
+            paintObject.Height = 200;
+            paintObject.Content = rectangle;
+            gridMain.Children.Add(paintObject);
+        }
+
+        void AddEllipse()
+        {
+            UnBindLast();
+            Ellipse ell = new Ellipse();
+            Bind(ell);
+
+            PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
+            paintObject.Width = 200;
+            paintObject.Height = 200;
+            paintObject.Content = ell;
+            gridMain.Children.Add(paintObject);
+        }
+
+        void SwitchToArrowAndLineMode()
+        {
+            UnBindLast();
+            gridForOtherInput.Visibility = Visibility.Visible;
+        }
+
+        void SwitchToCursorMode()
+        {
+            UnBindLast();
+        }
+
+        private void sizes_Checked(object sender, RoutedEventArgs e)
+        {
+            var radioButton = sender as RadioButton;
+            double size = Convert.ToDouble(radioButton.Tag);
+
+            currentSizeSelected = size;
+            currentFontSize = size;
+
+            if (inkCanvas != null)
+            {
+                InkDrawingAttributes drawingAttributes = inkCanvas.InkPresenter.CopyDefaultDrawingAttributes();
+                drawingAttributes.Size = new Size(size, size);
+                inkCanvas.InkPresenter.UpdateDefaultDrawingAttributes(drawingAttributes);
+            }
+        }
+
+        private void color_Click(object sender, RoutedEventArgs e)
+        {
+            InkDrawingAttributes drawingAttributes = inkCanvas.InkPresenter.CopyDefaultDrawingAttributes();
+
+            Button colorButton = sender as Button;
+            SolidColorBrush chosenColor = colorButton.Background as SolidColorBrush;
+
+            if (colorButton.Name != null)
+            {
+                if (colorButton.Name == "btnTransparent")
+                {
+                    switch (ColorChangerBox)
+                    {
+                        case "strokeColorRB":
+                            strokeX.Visibility = Visibility.Visible;
+                            borderForStrokeColor.Background = chosenColor;
+                            drawingAttributes.Color = chosenColor.Color;
+                            break;
+                        case "fillColorRB":
+                            fillX.Visibility = Visibility.Visible;
+                            borderForFillColor.Background = chosenColor;
+                            break;
+                        case "textColorRB":
+                            textX.Visibility = Visibility.Visible;
+                            borderForTextColor.Background = chosenColor;
+                            break;
+                        case "pageColorRB":
+                            borderForPageColor.Background = new SolidColorBrush(Colors.White);
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (ColorChangerBox)
+                    {
+                        case "strokeColorRB":
+                            strokeX.Visibility = Visibility.Collapsed;
+                            borderForStrokeColor.Background = chosenColor;
+                            drawingAttributes.Color = chosenColor.Color;
+                            break;
+                        case "fillColorRB":
+                            fillX.Visibility = Visibility.Collapsed;
+                            borderForFillColor.Background = chosenColor;
+                            break;
+                        case "textColorRB":
+                            textX.Visibility = Visibility.Collapsed;
+                            borderForTextColor.Background = chosenColor;
+                            break;
+                        case "pageColorRB":
+                            borderForPageColor.Background = chosenColor;
+                            break;
+                    }
+                }
+            }
+            inkCanvas.InkPresenter.UpdateDefaultDrawingAttributes(drawingAttributes);
+        }
+
+        private void colorChanger_Checked(object sender, RoutedEventArgs e)
+        {
+            var colorChangerBoxButton = sender as RadioButton;
+            ColorChangerBox = colorChangerBoxButton.Name;
+        }
+
+        void Bind(FrameworkElement target)
+        {
+            if (target is Shape) // Rectangle, Ellipse, Line, or Polyline
+            {
+                Binding bindStroke = new Binding();
+                bindStroke.Source = borderForStrokeColor;
+                bindStroke.Path = new PropertyPath("Background");
+                target.SetBinding(Shape.StrokeProperty, bindStroke);
+
+                Binding bindFill = new Binding();
+                bindFill.Source = borderForFillColor;
+                bindFill.Path = new PropertyPath("Background");
+                target.SetBinding(Shape.FillProperty, bindFill);
+
+                Binding bindStrokeSize = new Binding();
+                bindStrokeSize.Source = this;
+                bindStrokeSize.Path = new PropertyPath("currentSizeSelected");
+                target.SetBinding(Shape.StrokeThicknessProperty, bindStrokeSize);
+            }
+
+            if (target is TextBox)
+            {
+                Binding bindStroke = new Binding();
+                bindStroke.Source = borderForStrokeColor;
+                bindStroke.Path = new PropertyPath("Background");
+                target.SetBinding(BorderBrushProperty, bindStroke);
+
+                Binding bindStrokeSize = new Binding();
+                bindStrokeSize.Source = this;
+                bindStrokeSize.Path = new PropertyPath("currentSizeSelected");
+                target.SetBinding(MinHeightProperty, bindStrokeSize);
+
+                Binding bindFill = new Binding();
+                bindFill.Source = borderForFillColor;
+                bindFill.Path = new PropertyPath("Background");
+                target.SetBinding(BackgroundProperty, bindFill);
+
+                Binding bindTextColor = new Binding();
+                bindTextColor.Source = borderForTextColor;
+                bindTextColor.Path = new PropertyPath("Background");
+                target.SetBinding(ForegroundProperty, bindTextColor);
+
+                Binding bindFontSize = new Binding();
+                bindFontSize.Source = this;
+                bindFontSize.Path = new PropertyPath("currentFontSize");
+                target.SetBinding(FontSizeProperty, bindFontSize);
+            }
+        }
+
+        void UnBindLast()
+        {
+            if (gridMain.Children.Count > 0)
+            {
+                var lastChild = gridMain.Children.LastOrDefault();
+
+                if (lastChild is PaintObjectTemplatedControl)
+                {
+                    var child = lastChild as PaintObjectTemplatedControl;
+                    var content = child.Content;
+
+                    if (content is Shape) // Rectangle or Ellipse
+                    {
+                        Shape s = content as Shape;
+                        s.Stroke = s.Stroke;
+                        s.Fill = s.Fill;
+                        s.StrokeThickness = s.StrokeThickness;
+                    }
+
+                    if (content is TextBox)
+                    {
+                        TextBox t = content as TextBox;
+                        t.Background = t.Background;
+                        t.Foreground = t.Foreground;
+                        t.BorderBrush = t.BorderBrush;
+                        t.MinHeight = t.MinHeight; //MinHeight property is used for BorderThickness Binding because the border in the custom textbox style is accomplished by a rectangle strokethickness which is a double not a Thickness
+                        t.FontSize = t.FontSize;
+                    }
+                }
+                if (lastChild is Polyline)
+                {
+                    var p = lastChild as Polyline;
+                    p.Stroke = p.Stroke;
+                    p.Fill = p.Fill;
+                    p.StrokeThickness = p.StrokeThickness;
+
+                    if (gridMain.Children.Count >= 2)
+                    {
+                        var secondToLastChild = gridMain.Children[gridMain.Children.Count - 2];
+
+                        if (secondToLastChild is Line)
+                        {
+                            var l = secondToLastChild as Line;
+                            l.Stroke = l.Stroke;
+                            l.Fill = l.Fill;
+                            l.StrokeThickness = l.StrokeThickness;
+                        }
+                    }
+                        
+                }
+                if (lastChild is Line)
+                {
+                    var l = lastChild as Line;
+                    l.Stroke = l.Stroke;
+                    l.Fill = l.Fill;
+                    l.StrokeThickness = l.StrokeThickness;
+                }
+            }
+        }
     }
 }
