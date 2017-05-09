@@ -231,14 +231,14 @@ namespace WaveformOverlaysPlus.Controls
         private void _menuBringToFront_Click(object sender, RoutedEventArgs e)
         {
             Panel parent = ((Panel)this.Parent);
-            FrameworkElement myElement = this;
+            UIElement myElement = this;
             int myZ = Canvas.GetZIndex(myElement);
             int ZWeAreChecking = 0;
             int maxZ = 0;
 
             for (int i = 0; i < parent.Children.Count; i++)
             {
-                FrameworkElement childWeAreChecking = parent.Children[i] as FrameworkElement;
+                UIElement childWeAreChecking = parent.Children[i] as UIElement;
                 ZWeAreChecking = Canvas.GetZIndex(childWeAreChecking);
                 if (maxZ < ZWeAreChecking)
                 {

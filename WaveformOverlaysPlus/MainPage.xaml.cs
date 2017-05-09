@@ -586,6 +586,8 @@ namespace WaveformOverlaysPlus
 
         void AddInk()
         {
+            UnBindLast();
+
             inkCanvas.Visibility = Visibility.Visible;
             _inkPresenter.InputProcessingConfiguration.Mode = InkInputProcessingMode.Inking;
         }
@@ -1037,6 +1039,27 @@ namespace WaveformOverlaysPlus
                 }
             }
         }
-        
+
+        //void BringToFront(UIElement element)
+        //{
+        //    int myZ = Canvas.GetZIndex(element);
+        //    int ZWeAreChecking = 0;
+        //    int maxZ = 0;
+
+        //    for (int i = 0; i < gridMain.Children.Count; i++)
+        //    {
+        //        UIElement childWeAreChecking = gridMain.Children[i] as UIElement;
+        //        ZWeAreChecking = Canvas.GetZIndex(childWeAreChecking);
+        //        if (maxZ < ZWeAreChecking)
+        //        {
+        //            maxZ = ZWeAreChecking;
+        //        }
+        //    }
+
+        //    if (myZ < maxZ)
+        //    {
+        //        Canvas.SetZIndex(element, maxZ + 1);
+        //    }
+        //}
     }
 }

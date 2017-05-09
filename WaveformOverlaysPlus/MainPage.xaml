@@ -233,8 +233,9 @@
 
             <Grid Name="gridForOverall" Grid.Column="1" Background="#FFD7E0EE">
                 <Grid Name="gridToContainOthers" Margin="20,5,5,20">
-                    
+
                     <Grid Name="gridMain" Background="{Binding Background, ElementName=borderForPageColor}">
+                        
                     </Grid>
 
                     <canvas:CanvasControl Draw="DrawCanvas" x:Name="DrawingCanvas" IsHitTestVisible="False"/>
