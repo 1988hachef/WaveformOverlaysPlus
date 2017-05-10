@@ -86,16 +86,7 @@ namespace WaveformOverlaysPlus
         public double currentSizeSelected
         {
             get { return (double)GetValue(currentSizeSelectedProperty); }
-            set
-            {
-                value = value == 1 ? 2 :
-                        value == 2 ? 3 :
-                        value == 6 ? 4 :
-                        value == 10 ? 6 :
-                        4;
-
-                SetValue(currentSizeSelectedProperty, value);
-            }
+            set { SetValue(currentSizeSelectedProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for currentSizeSelected.  This enables animation, styling, binding, etc...
@@ -813,8 +804,6 @@ namespace WaveformOverlaysPlus
 
         private void gridForOtherInput_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            UnBindLast();
-
             (sender as Grid).CapturePointer(e.Pointer);
 
             lineForArrow = new Line();
@@ -822,14 +811,14 @@ namespace WaveformOverlaysPlus
             {
                 lineForArrow.StrokeEndLineCap = PenLineCap.Triangle;
             }
-
-            Bind(lineForArrow);
-
+            lineForArrow.Stroke = borderForStrokeColor.Background;
+            lineForArrow.StrokeThickness = currentSizeSelected;
             lineForArrow.X1 = e.GetCurrentPoint(gridMain).RawPosition.X;
             lineForArrow.Y1 = e.GetCurrentPoint(gridMain).RawPosition.Y;
             lineForArrow.X2 = e.GetCurrentPoint(gridMain).RawPosition.X;
             lineForArrow.Y2 = e.GetCurrentPoint(gridMain).RawPosition.Y;
             gridMain.Children.Add(lineForArrow);
+            BringToFront(lineForArrow);
 
             // Set these variables for use in PointerMoved event
             topLineLimiter = currentSizeSelected / 2;
@@ -841,6 +830,28 @@ namespace WaveformOverlaysPlus
 
             // Add the pointer moved event
             gridForOtherInput.PointerMoved += gridForOtherInput_PointerMoved;
+        }
+
+        void BringToFront(UIElement element)
+        {
+            int myZ = Canvas.GetZIndex(element);
+            int ZWeAreChecking = 0;
+            int maxZ = 0;
+
+            for (int i = 0; i < gridMain.Children.Count; i++)
+            {
+                UIElement childWeAreChecking = gridMain.Children[i] as UIElement;
+                ZWeAreChecking = Canvas.GetZIndex(childWeAreChecking);
+                if (maxZ < ZWeAreChecking)
+                {
+                    maxZ = ZWeAreChecking;
+                }
+            }
+
+            if (myZ < maxZ)
+            {
+                Canvas.SetZIndex(element, maxZ + 1);
+            }
         }
 
         private void gridForOtherInput_PointerMoved(object sender, PointerRoutedEventArgs e)
@@ -877,11 +888,11 @@ namespace WaveformOverlaysPlus
             {
                 // Determine the length to make the arrow head lines
                 int arrowHeadLength =
-                    currentSizeSelected == 2 ? 13
-                  : currentSizeSelected == 3 ? 13
-                  : currentSizeSelected == 4 ? 14
-                  : currentSizeSelected == 6 ? 15
-                  : 15;
+                    currentSizeSelected == 1 ? 10
+                  : currentSizeSelected == 2 ? 8
+                  : currentSizeSelected == 6 ? 6
+                  : currentSizeSelected == 10 ? 4
+                  : 12;
 
                 Point ptA = new Point(lineForArrow.X1, lineForArrow.Y1);
                 Point ptB = new Point(lineForArrow.X2, lineForArrow.Y2);
@@ -901,16 +912,18 @@ namespace WaveformOverlaysPlus
 
                 Polyline arrowHead = new Polyline();
                 arrowHead.StrokeLineJoin = PenLineJoin.Miter;
-                arrowHead.StrokeThickness = 6;
+                arrowHead.Stroke = borderForStrokeColor.Background;
+                arrowHead.Fill = borderForStrokeColor.Background;
+                arrowHead.StrokeThickness = currentSizeSelected;
                 arrowHead.Points.Add(pointArrow1);
                 arrowHead.Points.Add(ptB);
                 arrowHead.Points.Add(pointArrow2);
                 arrowHead.Points.Add(pointArrow1);
                 arrowHead.Points.Add(ptB);
-                Bind(arrowHead);
 
                 gridMain.Children.Add(arrowHead);
-
+                BringToFront(arrowHead);
+                
                 (sender as Grid).ReleasePointerCapture(e.Pointer);
             }
         }
@@ -929,6 +942,18 @@ namespace WaveformOverlaysPlus
             PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
             paintObject.Content = textBox;
             gridMain.Children.Add(paintObject);
+
+            textBox.SizeChanged += TextBox_SizeChanged;
+        }
+
+        private void TextBox_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            TextBox tBox = sender as TextBox;
+
+            if (tBox.MinHeight == 1) tBox.Padding = new Thickness(6, 0, 6, 2);
+            if (tBox.MinHeight == 2) tBox.Padding = new Thickness(6, 0, 6, 2);
+            if (tBox.MinHeight == 6) tBox.Padding = new Thickness(14, 2, 14, 6);
+            if (tBox.MinHeight == 10) tBox.Padding = new Thickness(16, 2, 16, 10);
         }
 
         private void ellipse_Click(object sender, RoutedEventArgs e)
@@ -1046,34 +1071,34 @@ namespace WaveformOverlaysPlus
                         t.FontSize = t.FontSize;
                     }
                 }
-                if (lastChild is Polyline)
-                {
-                    var p = lastChild as Polyline;
-                    p.Stroke = p.Stroke;
-                    p.Fill = p.Fill;
-                    p.StrokeThickness = p.StrokeThickness;
+                //if (lastChild is Polyline)
+                //{
+                //    var p = lastChild as Polyline;
+                //    p.Stroke = p.Stroke;
+                //    p.Fill = p.Fill;
+                //    p.StrokeThickness = p.StrokeThickness;
 
-                    if (gridMain.Children.Count >= 2)
-                    {
-                        var secondToLastChild = gridMain.Children[gridMain.Children.Count - 2];
+                //    if (gridMain.Children.Count >= 2)
+                //    {
+                //        var secondToLastChild = gridMain.Children[gridMain.Children.Count - 2];
 
-                        if (secondToLastChild is Line)
-                        {
-                            var l = secondToLastChild as Line;
-                            l.Stroke = l.Stroke;
-                            l.Fill = l.Fill;
-                            l.StrokeThickness = l.StrokeThickness;
-                        }
-                    }
+                //        if (secondToLastChild is Line)
+                //        {
+                //            var l = secondToLastChild as Line;
+                //            l.Stroke = l.Stroke;
+                //            l.Fill = l.Fill;
+                //            l.StrokeThickness = l.StrokeThickness;
+                //        }
+                //    }
 
-                }
-                if (lastChild is Line)
-                {
-                    var l = lastChild as Line;
-                    l.Stroke = l.Stroke;
-                    l.Fill = l.Fill;
-                    l.StrokeThickness = l.StrokeThickness;
-                }
+                //}
+                //if (lastChild is Line)
+                //{
+                //    var l = lastChild as Line;
+                //    l.Stroke = l.Stroke;
+                //    l.Fill = l.Fill;
+                //    l.StrokeThickness = l.StrokeThickness;
+                //}
             }
         }
 

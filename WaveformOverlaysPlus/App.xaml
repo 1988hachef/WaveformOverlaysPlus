@@ -463,7 +463,7 @@
             <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden"/>
             <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False"/>
 
-            <Setter Property="Padding" Value="7,0,7,5"/>
+            <Setter Property="Padding" Value="7,0,7,2"/>
             <!--<Setter Property="Padding" Value="{ThemeResource TextControlThemePadding}"/>-->
 
             <!--Added the below property settings which are not normally set here in this style-->
