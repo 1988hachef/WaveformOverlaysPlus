@@ -41,7 +41,27 @@ namespace WaveformOverlaysPlus.Controls
         int minHeight = 40;
         int minWidth = 40;
 
-        #region Dependency Property
+        #region Dependency Properties
+
+        public string ImageFilePath
+        {
+            get { return (string)GetValue(ImageFilePathProperty); }
+            set { SetValue(ImageFilePathProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ImageFilePath.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ImageFilePathProperty =
+            DependencyProperty.Register("ImageFilePath", typeof(string), typeof(PaintObjectTemplatedControl), new PropertyMetadata(""));
+
+        public string ImageFileName
+        {
+            get { return (string)GetValue(ImageFileNameProperty); }
+            set { SetValue(ImageFileNameProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ImageFileName.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ImageFileNameProperty =
+            DependencyProperty.Register("ImageFileName", typeof(string), typeof(PaintObjectTemplatedControl), new PropertyMetadata(""));
 
         public bool OpacitySliderIsVisible
         {

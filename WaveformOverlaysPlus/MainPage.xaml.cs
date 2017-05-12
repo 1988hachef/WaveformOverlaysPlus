@@ -40,11 +40,20 @@ using System.Diagnostics;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Effects;
 using System.Numerics;
+using System.Collections.ObjectModel;
 
 namespace WaveformOverlaysPlus
 {
+    public class StoredImage
+    {
+        public string FileName { get; set; }
+        public string FilePath { get; set; }
+    }
+
     public sealed partial class MainPage : Page
     {
+        ObservableCollection<StoredImage> imageCollection;
+
         string ColorChangerBox;
         string currentToolChosen;
 
@@ -127,6 +136,9 @@ namespace WaveformOverlaysPlus
             // Initialize _inkPresenter
             _inkPresenter = inkCanvas.InkPresenter;
             _inkPresenter.InputDeviceTypes = CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Touch;
+
+            // Initialize imageCollection
+            imageCollection = new ObservableCollection<StoredImage>();
         }
 
         #region OnNavigated
@@ -219,15 +231,48 @@ namespace WaveformOverlaysPlus
                     _height = (_height * scale) - 1;
                 }
 
+                string name = imgFile.Name;
+                string path = "ms-appdata:///local/" + name;
+
                 PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
                 paintObject.Width = _width;
                 paintObject.Height = _height;
                 paintObject.Content = image;
+                paintObject.ImageFileName = name;
+                paintObject.ImageFilePath = path;
                 paintObject.OpacitySliderIsVisible = true;
+                paintObject.Unloaded += PaintObject_Unloaded;
 
                 gridMain.Children.Add(paintObject);
 
-                await imgFile.CopyAsync(ApplicationData.Current.LocalCacheFolder, "desiredNewName", NameCollisionOption.ReplaceExisting);
+                await imgFile.CopyAsync(ApplicationData.Current.LocalFolder, name, NameCollisionOption.ReplaceExisting);
+
+                imageCollection.Add(new StoredImage { FileName = name, FilePath = path });
+            }
+        }
+
+        private void PaintObject_Unloaded(object sender, RoutedEventArgs e)
+        {
+            var paintObj = sender as PaintObjectTemplatedControl;
+
+            if (paintObj.Content is Image)
+            {
+                int index = 0;
+                int pos = 0;
+
+                foreach (StoredImage storedImage in imageCollection)
+                {
+                    if (storedImage.FileName == paintObj.ImageFileName)
+                    {
+                        pos = index;
+                    }
+                    else
+                    {
+                        index++;
+                    }
+                }
+
+                imageCollection.RemoveAt(pos);
             }
         }
 
@@ -1221,7 +1266,6 @@ namespace WaveformOverlaysPlus
                     break;
                 case "crop":
                     currentToolChosen = "crop";
-
                     break;
                 case "pen":
                     currentToolChosen = "pen";
@@ -1248,6 +1292,17 @@ namespace WaveformOverlaysPlus
                     }
                 }
             }
+        }
+
+        private void crop_Click(object sender, RoutedEventArgs e)
+        {
+            gridForCrop.Visibility = Visibility.Visible;
+            gridviewImages.ItemsSource = imageCollection;
+        }
+
+        private void btnCloseCrop_Click(object sender, RoutedEventArgs e)
+        {
+            gridForCrop.Visibility = Visibility.Collapsed;
         }
     }
 }
