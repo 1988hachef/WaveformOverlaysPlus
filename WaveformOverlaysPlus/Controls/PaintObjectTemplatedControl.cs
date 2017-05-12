@@ -43,6 +43,16 @@ namespace WaveformOverlaysPlus.Controls
 
         #region Dependency Properties
 
+        public bool IsForCropper
+        {
+            get { return (bool)GetValue(IsForCropperProperty); }
+            set { SetValue(IsForCropperProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsForCropper.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsForCropperProperty =
+            DependencyProperty.Register("IsForCropper", typeof(bool), typeof(PaintObjectTemplatedControl), new PropertyMetadata(false));
+
         public string ImageFilePath
         {
             get { return (string)GetValue(ImageFilePathProperty); }
@@ -300,8 +310,11 @@ namespace WaveformOverlaysPlus.Controls
 
         private void _myWindow_PointerExited(object sender, PointerRoutedEventArgs e)
         {
-            _myWindow.BorderBrush = new SolidColorBrush(Colors.Transparent);
-            _closeButton.Visibility = Visibility.Collapsed;
+            if (_closeButton.Visibility == Visibility.Visible)
+            {
+                _myWindow.BorderBrush = new SolidColorBrush(Colors.Transparent);
+                _closeButton.Visibility = Visibility.Collapsed;
+            }
 
             if (_spanelOpacity.Visibility == Visibility.Visible)
             {
@@ -311,9 +324,11 @@ namespace WaveformOverlaysPlus.Controls
 
         private void _myWindow_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            _myWindow.BorderBrush = GetColorFromHex("#B2007ACC");
-            _closeButton.Visibility = Visibility.Visible;
-
+            if (IsForCropper == false)
+            {
+                _myWindow.BorderBrush = GetColorFromHex("#B2007ACC");
+                _closeButton.Visibility = Visibility.Visible;
+            }
             if (OpacitySliderIsVisible == true)
             {
                 _spanelOpacity.Visibility = Visibility.Visible;

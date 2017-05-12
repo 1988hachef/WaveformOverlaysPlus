@@ -1304,5 +1304,32 @@ namespace WaveformOverlaysPlus
         {
             gridForCrop.Visibility = Visibility.Collapsed;
         }
+
+        private void btnBack_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void PaintObjectTemplatedControl_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            foreach (Rectangle r in gridCrop.Children)
+            {
+                if (r.Width == 12)
+                {
+                    r.Visibility = Visibility.Collapsed;
+                }
+            }
+        }
+
+        private void PaintObjectTemplatedControl_PointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            foreach (Rectangle r in gridCrop.Children)
+            {
+                if (r.Visibility == Visibility.Collapsed)
+                {
+                    r.Visibility = Visibility.Visible;
+                }
+            }
+        }
     }
 }
