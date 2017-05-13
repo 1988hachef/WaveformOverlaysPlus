@@ -174,7 +174,7 @@ namespace WaveformOverlaysPlus
         private void menuNew_Click(object sender, RoutedEventArgs e)
         {
             gridMain.Children.Clear();
-            
+
             if (!(gridMain.Background.Equals(Colors.White)))
             {
                 gridMain.Background = new SolidColorBrush(Colors.White);
@@ -248,31 +248,6 @@ namespace WaveformOverlaysPlus
                 await imgFile.CopyAsync(ApplicationData.Current.LocalFolder, name, NameCollisionOption.ReplaceExisting);
 
                 imageCollection.Add(new StoredImage { FileName = name, FilePath = path });
-            }
-        }
-
-        private void PaintObject_Unloaded(object sender, RoutedEventArgs e)
-        {
-            var paintObj = sender as PaintObjectTemplatedControl;
-
-            if (paintObj.Content is Image)
-            {
-                int index = 0;
-                int pos = 0;
-
-                foreach (StoredImage storedImage in imageCollection)
-                {
-                    if (storedImage.FileName == paintObj.ImageFileName)
-                    {
-                        pos = index;
-                    }
-                    else
-                    {
-                        index++;
-                    }
-                }
-
-                imageCollection.RemoveAt(pos);
             }
         }
 
@@ -968,7 +943,7 @@ namespace WaveformOverlaysPlus
 
                 gridMain.Children.Add(arrowHead);
                 BringToFront(arrowHead);
-                
+
                 (sender as Grid).ReleasePointerCapture(e.Pointer);
             }
         }
@@ -1294,20 +1269,120 @@ namespace WaveformOverlaysPlus
             }
         }
 
-        private void crop_Click(object sender, RoutedEventArgs e)
+        private async void crop_Click(object sender, RoutedEventArgs e)
         {
-            gridForCrop.Visibility = Visibility.Visible;
-            gridviewImages.ItemsSource = imageCollection;
-        }
+            if (imageCollection.Count == 0)
+            {
+                var dialog = await new MessageDialog("Please open an image first.").ShowAsync();
+            }
+            else if (imageCollection.Count == 1)
+            {
+                gridForCrop.Visibility = Visibility.Visible;
 
-        private void btnCloseCrop_Click(object sender, RoutedEventArgs e)
-        {
-            gridForCrop.Visibility = Visibility.Collapsed;
+                var path = imageCollection[0].FilePath;
+                LoadImageIntoCropper(path);
+            }
+            else if (imageCollection.Count > 1)
+            {
+                gridForCrop.Visibility = Visibility.Visible;
+                gridviewImages.ItemsSource = imageCollection;
+                gridviewImages.Visibility = Visibility.Visible;
+                btnCrop.IsEnabled = false;
+            }
         }
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
         {
+            btnCrop.IsEnabled = false;
+            btnBack.IsEnabled = false;
+            if (gridImageContainer.Children.Count > 1)
+            {
+                gridImageContainer.Children.RemoveAt(1);
+            }
+            gridviewImages.Visibility = Visibility.Visible;
+        }
 
+        private void btnCrop_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnClose_Click(object sender, RoutedEventArgs e)
+        {
+            btnCrop.IsEnabled = true;
+            btnBack.IsEnabled = false;
+            if (gridImageContainer.Children.Count > 1)
+            {
+                gridImageContainer.Children.RemoveAt(1);
+            }
+            gridviewImages.Visibility = Visibility.Collapsed;
+            gridForCrop.Visibility = Visibility.Collapsed;
+        }
+
+        private void gridviewImages_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            StoredImage storedImage = e.ClickedItem as StoredImage;
+            string filePath = storedImage.FilePath;
+            LoadImageIntoCropper(filePath);
+            gridviewImages.Visibility = Visibility.Collapsed;
+            btnBack.IsEnabled = true;
+            btnCrop.IsEnabled = true;
+        }
+
+        async void LoadImageIntoCropper(string filePath)
+        {
+            string path = filePath.Substring(20);
+
+            StorageFile imgFile = await ApplicationData.Current.LocalFolder.GetFileAsync(path);
+
+            double height = 0;
+            double width = 0;
+
+            Image img = new Image();
+            using (IRandomAccessStream IRASstream = await imgFile.OpenAsync(FileAccessMode.Read))
+            {
+                BitmapImage bitmapImage = new BitmapImage();
+                await bitmapImage.SetSourceAsync(IRASstream);
+                height = bitmapImage.PixelHeight;
+                width = bitmapImage.PixelWidth;
+                img.Source = bitmapImage;
+            }
+
+            if (width > gridCropping.ActualWidth || height > gridCropping.ActualHeight)
+            {
+                double scale = Math.Min(gridCropping.ActualWidth / width, gridCropping.ActualHeight / height);
+                width = (width * scale) - 1;
+                height = (height * scale) - 1;
+            }
+
+            gridImageContainer.Children.Add(img);
+            gridImageContainer.Width = width;
+            gridImageContainer.Height = height;
+        }
+
+        private void PaintObject_Unloaded(object sender, RoutedEventArgs e)
+        {
+            var paintObj = sender as PaintObjectTemplatedControl;
+
+            if (paintObj.Content is Image)
+            {
+                int index = 0;
+                int pos = 0;
+
+                foreach (StoredImage storedImage in imageCollection)
+                {
+                    if (storedImage.FileName == paintObj.ImageFileName)
+                    {
+                        pos = index;
+                    }
+                    else
+                    {
+                        index++;
+                    }
+                }
+
+                imageCollection.RemoveAt(pos);
+            }
         }
 
         private void PaintObjectTemplatedControl_PointerPressed(object sender, PointerRoutedEventArgs e)
