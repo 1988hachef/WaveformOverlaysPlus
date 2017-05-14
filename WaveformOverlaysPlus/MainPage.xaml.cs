@@ -218,36 +218,38 @@ namespace WaveformOverlaysPlus
                     image.Source = bitmapImage;
                 }
 
-                if (_width < 40 || _height < 40)
+                if (_width < 42 || _height < 42)
                 {
                     MessageDialog tooSmallMessage = new MessageDialog("Image too small. Please choose a larger image.");
                     await tooSmallMessage.ShowAsync();
                 }
-
-                if (_width > gridMain.ActualWidth || _height > gridMain.ActualHeight)
+                else
                 {
-                    double scale = Math.Min(gridMain.ActualWidth / _width, gridMain.ActualHeight / _height);
-                    _width = (_width * scale) - 1;
-                    _height = (_height * scale) - 1;
+                    if (_width > gridMain.ActualWidth || _height > gridMain.ActualHeight)
+                    {
+                        double scale = Math.Min(gridMain.ActualWidth / _width, gridMain.ActualHeight / _height);
+                        _width = (_width * scale) - 1;
+                        _height = (_height * scale) - 1;
+                    }
+
+                    string name = imgFile.Name;
+                    string path = "ms-appdata:///local/" + name;
+
+                    PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
+                    paintObject.Width = _width;
+                    paintObject.Height = _height;
+                    paintObject.Content = image;
+                    paintObject.ImageFileName = name;
+                    paintObject.ImageFilePath = path;
+                    paintObject.OpacitySliderIsVisible = true;
+                    paintObject.Unloaded += PaintObject_Unloaded;
+
+                    gridMain.Children.Add(paintObject);
+
+                    await imgFile.CopyAsync(ApplicationData.Current.LocalFolder, name, NameCollisionOption.ReplaceExisting);
+
+                    imageCollection.Add(new StoredImage { FileName = name, FilePath = path });
                 }
-
-                string name = imgFile.Name;
-                string path = "ms-appdata:///local/" + name;
-
-                PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
-                paintObject.Width = _width;
-                paintObject.Height = _height;
-                paintObject.Content = image;
-                paintObject.ImageFileName = name;
-                paintObject.ImageFilePath = path;
-                paintObject.OpacitySliderIsVisible = true;
-                paintObject.Unloaded += PaintObject_Unloaded;
-
-                gridMain.Children.Add(paintObject);
-
-                await imgFile.CopyAsync(ApplicationData.Current.LocalFolder, name, NameCollisionOption.ReplaceExisting);
-
-                imageCollection.Add(new StoredImage { FileName = name, FilePath = path });
             }
         }
 
@@ -1278,7 +1280,8 @@ namespace WaveformOverlaysPlus
             else if (imageCollection.Count == 1)
             {
                 gridForCrop.Visibility = Visibility.Visible;
-
+                controlCropOutline.transform_myControl.TranslateX = 0;
+                controlCropOutline.transform_myControl.TranslateY = 0;
                 var path = imageCollection[0].FilePath;
                 LoadImageIntoCropper(path);
             }
@@ -1355,9 +1358,30 @@ namespace WaveformOverlaysPlus
                 height = (height * scale) - 1;
             }
 
+            if (width < 82 || height < 82)
+            {
+                controlCropOutline.Width = 41;
+                controlCropOutline.Height = 41;
+            }
+            else
+            {
+                controlCropOutline.Width = width / 2;
+                controlCropOutline.Height = height / 2;
+            }
+
             gridImageContainer.Children.Add(img);
             gridImageContainer.Width = width;
             gridImageContainer.Height = height;
+            controlCropOutline.transform_myControl.TranslateX = 0;
+            controlCropOutline.transform_myControl.TranslateY = 0;
+
+            foreach (Rectangle r in gridCrop.Children)
+            {
+                if (r.Visibility == Visibility.Collapsed)
+                {
+                    r.Visibility = Visibility.Visible;
+                }
+            }
         }
 
         private void PaintObject_Unloaded(object sender, RoutedEventArgs e)

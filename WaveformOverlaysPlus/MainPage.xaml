@@ -297,7 +297,7 @@
 
                 <Grid Name="gridCropping" Grid.Row="1" Margin="10,0,10,10" Background="White">
                     <Grid Name="gridImageContainer">
-                        <local1:PaintObjectTemplatedControl Width="200" Height="200" IsForCropper="True" PointerPressed="PaintObjectTemplatedControl_PointerPressed" PointerReleased="PaintObjectTemplatedControl_PointerReleased">
+                        <local1:PaintObjectTemplatedControl x:Name="controlCropOutline" Width="200" Height="200" IsForCropper="True" PointerPressed="PaintObjectTemplatedControl_PointerPressed" PointerReleased="PaintObjectTemplatedControl_PointerReleased">
                             <Grid Name="gridCrop" Background="#19000000">
                                 <Rectangle Width="12" Height="12" Fill="White" Stroke="Black" StrokeThickness="1" HorizontalAlignment="Left" VerticalAlignment="Top" />
                                 <Rectangle Width="12" Height="12" Fill="White" Stroke="Black" StrokeThickness="1" HorizontalAlignment="Right" VerticalAlignment="Top"/>

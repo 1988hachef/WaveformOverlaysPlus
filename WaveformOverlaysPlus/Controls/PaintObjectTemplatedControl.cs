@@ -18,7 +18,7 @@ namespace WaveformOverlaysPlus.Controls
             this.DefaultStyleKey = typeof(PaintObjectTemplatedControl);
         }
 
-        CompositeTransform transform_myControl;
+        public CompositeTransform transform_myControl;
         CompositeTransform transform_rectForFlyout;
         Button _closeButton;
         Grid _myWindow;
