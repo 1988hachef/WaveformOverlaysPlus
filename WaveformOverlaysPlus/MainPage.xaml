@@ -282,21 +282,23 @@
             <Image Name="imageForPrint" Margin="10,0,0,0" />
         </Grid>
 
-        <Grid Grid.RowSpan="3" Name="gridForCrop" Background="#B2000000" Visibility="Collapsed">
+        <Grid Grid.RowSpan="3" Name="gridForCrop" Background="#B2000000" Visibility="Visible">
             <Grid Margin="30" Background="LightGray" BorderBrush="Black" BorderThickness="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                
+
+                <TextBlock Name="tblockFileName" Text="Please choose an image" FontSize="{StaticResource myFontSize}" VerticalAlignment="Center" Margin="10,0,0,0" Width="200" HorizontalAlignment="Left"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button Name="btnCrop" Content="Crop" Background="#6600FF00" Margin="5" FontSize="{StaticResource myFontSize}" Click="btnCrop_Click"/>
                     <Button Name="btnBack" Content="Back" Background="#66E8FF00" Margin="5" FontSize="{StaticResource myFontSize}" IsEnabled="False" Click="btnBack_Click"/>
                     <Button Name="btnClose" Content="Close" Background="#66FF0000" Margin="5" FontSize="{StaticResource myFontSize}" Click="btnClose_Click"/>
                 </StackPanel>
 
-                <Grid Name="gridCropping" Grid.Row="1" Margin="10,0,10,10" Background="White">
+                <Grid Name="gridCropping" Grid.Row="1" Margin="10,0,10,10" Background="Beige">
                     <Grid Name="gridImageContainer">
+                        <!--<Image Source="Assets/Square150x150Logo.scale-200.png" Stretch="None"/>-->
                         <local1:PaintObjectTemplatedControl x:Name="controlCropOutline" Width="200" Height="200" IsForCropper="True" PointerPressed="PaintObjectTemplatedControl_PointerPressed" PointerReleased="PaintObjectTemplatedControl_PointerReleased">
                             <Grid Name="gridCrop" Background="#19000000">
                                 <Rectangle Width="12" Height="12" Fill="White" Stroke="Black" StrokeThickness="1" HorizontalAlignment="Left" VerticalAlignment="Top" />
@@ -308,25 +310,25 @@
                                 <Rectangle Width="12" Height="12" Fill="White" Stroke="Black" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
                                 <Rectangle Width="12" Height="12" Fill="White" Stroke="Black" StrokeThickness="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                 <Rectangle Stroke="DodgerBlue" StrokeThickness="1"/>
-                                <Rectangle Stroke="White" StrokeDashArray="6,6" StrokeThickness="1"/>
+                                <Rectangle Name="rectCropArea" Stroke="White" StrokeDashArray="6,6" StrokeThickness="1"/>
                             </Grid>
                         </local1:PaintObjectTemplatedControl>
                     </Grid>
                 </Grid>
-                
+
                 <GridView Grid.Row="1" Name="gridviewImages" Margin="10,0,10,10" Background="White" Visibility="Collapsed" IsItemClickEnabled="True" ItemClick="gridviewImages_ItemClick">
                     <GridView.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Width="300" Height="220" Background="White">
-                                <Image Source="{Binding FilePath}"  Width="200"/>
-                                <Border Background="LightGray">
-                                    <TextBlock FontSize="12" Text="{Binding FileName}"/>
+                            <StackPanel Width="300" Height="220" Background="Beige">
+                                <Image Source="{Binding FilePath}"  Width="300" Height="200"/>
+                                <Border Background="LightGray" Height="20">
+                                    <TextBlock FontSize="12" Text="{Binding FileName}" VerticalAlignment="Center" Margin="5,0,0,0"/>
                                 </Border>
                             </StackPanel>
                         </DataTemplate>
                     </GridView.ItemTemplate>
                 </GridView>
-
+                
             </Grid>
         </Grid>
 

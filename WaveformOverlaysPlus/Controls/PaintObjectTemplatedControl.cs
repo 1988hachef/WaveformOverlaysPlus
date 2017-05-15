@@ -43,43 +43,47 @@ namespace WaveformOverlaysPlus.Controls
 
         #region Dependency Properties
 
+        public double ImageScale
+        {
+            get { return (double)GetValue(ImageScaleProperty); }
+            set { SetValue(ImageScaleProperty, value); }
+        }
+        public static readonly DependencyProperty ImageScaleProperty =
+            DependencyProperty.Register("ImageScale", typeof(double), typeof(PaintObjectTemplatedControl), new PropertyMetadata(1));
+
+
         public bool IsForCropper
         {
             get { return (bool)GetValue(IsForCropperProperty); }
             set { SetValue(IsForCropperProperty, value); }
         }
-
-        // Using a DependencyProperty as the backing store for IsForCropper.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IsForCropperProperty =
             DependencyProperty.Register("IsForCropper", typeof(bool), typeof(PaintObjectTemplatedControl), new PropertyMetadata(false));
+
 
         public string ImageFilePath
         {
             get { return (string)GetValue(ImageFilePathProperty); }
             set { SetValue(ImageFilePathProperty, value); }
         }
-
-        // Using a DependencyProperty as the backing store for ImageFilePath.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ImageFilePathProperty =
             DependencyProperty.Register("ImageFilePath", typeof(string), typeof(PaintObjectTemplatedControl), new PropertyMetadata(""));
+
 
         public string ImageFileName
         {
             get { return (string)GetValue(ImageFileNameProperty); }
             set { SetValue(ImageFileNameProperty, value); }
         }
-
-        // Using a DependencyProperty as the backing store for ImageFileName.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ImageFileNameProperty =
             DependencyProperty.Register("ImageFileName", typeof(string), typeof(PaintObjectTemplatedControl), new PropertyMetadata(""));
+
 
         public bool OpacitySliderIsVisible
         {
             get { return (bool)GetValue(OpacitySliderIsVisibleProperty); }
             set { SetValue(OpacitySliderIsVisibleProperty, value); }
         }
-
-        // Using a DependencyProperty as the backing store for OpacitySliderIsVisible.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty OpacitySliderIsVisibleProperty =
             DependencyProperty.Register("OpacitySliderIsVisible", typeof(bool), typeof(PaintObjectTemplatedControl), new PropertyMetadata(false));
 
