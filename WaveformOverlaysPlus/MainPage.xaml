@@ -282,7 +282,7 @@
             <Image Name="imageForPrint" Margin="10,0,0,0" />
         </Grid>
 
-        <Grid Grid.RowSpan="3" Name="gridForCrop" Background="#B2000000" Visibility="Visible">
+        <Grid Grid.RowSpan="3" Name="gridForCrop" Background="#B2000000" Visibility="Collapsed">
             <Grid Margin="30" Background="LightGray" BorderBrush="Black" BorderThickness="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>

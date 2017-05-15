@@ -142,6 +142,68 @@ namespace WaveformOverlaysPlus
             imageCollection = new ObservableCollection<StoredImage>();
         }
 
+        private void tool_Checked(object sender, RoutedEventArgs e)
+        {
+            string name = (sender as RadioButton).Name;
+            switch (name)
+            {
+                case "cursor":
+                    currentToolChosen = "cursor";
+                    UnBindLast();
+                    break;
+                case "text":
+                    currentToolChosen = "text";
+                    break;
+                case "arrow":
+                    currentToolChosen = "arrow";
+                    gridForOtherInput.Visibility = Visibility.Visible;
+                    break;
+                case "ellipse":
+                    currentToolChosen = "ellipse";
+                    break;
+                case "roundedRectangle":
+                    currentToolChosen = "roundedRectangle";
+                    break;
+                case "rectangle":
+                    currentToolChosen = "rectangle";
+                    break;
+                case "line":
+                    currentToolChosen = "line";
+                    gridForOtherInput.Visibility = Visibility.Visible;
+                    break;
+                case "eraser":
+                    currentToolChosen = "eraser";
+                    break;
+                case "crop":
+                    currentToolChosen = "crop";
+                    break;
+                case "pen":
+                    currentToolChosen = "pen";
+                    break;
+            }
+            // Collapse stuff that may be in the way
+            if (currentToolChosen != "arrow" && currentToolChosen != "line")
+            {
+                if (gridForOtherInput != null)
+                {
+                    if (gridForOtherInput.Visibility == Visibility.Visible)
+                    {
+                        gridForOtherInput.Visibility = Visibility.Collapsed;
+                    }
+                }
+            }
+            if (currentToolChosen != "pen" && currentToolChosen != "eraser")
+            {
+                if (inkCanvas != null)
+                {
+                    if (inkCanvas.Visibility == Visibility.Visible)
+                    {
+                        inkCanvas.Visibility = Visibility.Collapsed;
+                    }
+                }
+            }
+        }
+
         #region OnNavigated
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -598,7 +660,7 @@ namespace WaveformOverlaysPlus
 
         #region Custom Ink Rendering with Erase
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
             // Set initial ink stroke attributes.
             InkDrawingAttributes drawingAttributes = new InkDrawingAttributes();
@@ -637,6 +699,14 @@ namespace WaveformOverlaysPlus
             unprocessedInput.PointerReleased += UnprocessedInput_PointerReleased;
             unprocessedInput.PointerExited += UnprocessedInput_PointerExited;
             unprocessedInput.PointerLost += UnprocessedInput_PointerLost;
+
+            // Delete old files from LocalFolder
+            var files = await ApplicationData.Current.LocalFolder.GetFilesAsync();
+
+            foreach (var file in files)
+            {
+                await file.DeleteAsync(StorageDeleteOption.Default);
+            }
         }
 
         private void PenOrEraser_Clicked(object sender, RoutedEventArgs e)
@@ -1213,67 +1283,7 @@ namespace WaveformOverlaysPlus
 
         #endregion
 
-        private void tool_Checked(object sender, RoutedEventArgs e)
-        {
-            string name = (sender as RadioButton).Name;
-            switch (name)
-            {
-                case "cursor":
-                    currentToolChosen = "cursor";
-                    UnBindLast();
-                    break;
-                case "text":
-                    currentToolChosen = "text";
-                    break;
-                case "arrow":
-                    currentToolChosen = "arrow";
-                    gridForOtherInput.Visibility = Visibility.Visible;
-                    break;
-                case "ellipse":
-                    currentToolChosen = "ellipse";
-                    break;
-                case "roundedRectangle":
-                    currentToolChosen = "roundedRectangle";
-                    break;
-                case "rectangle":
-                    currentToolChosen = "rectangle";
-                    break;
-                case "line":
-                    currentToolChosen = "line";
-                    gridForOtherInput.Visibility = Visibility.Visible;
-                    break;
-                case "eraser":
-                    currentToolChosen = "eraser";
-                    break;
-                case "crop":
-                    currentToolChosen = "crop";
-                    break;
-                case "pen":
-                    currentToolChosen = "pen";
-                    break;
-            }
-            // Collapse stuff that may be in the way
-            if (currentToolChosen != "arrow" && currentToolChosen != "line")
-            {
-                if (gridForOtherInput != null)
-                {
-                    if (gridForOtherInput.Visibility == Visibility.Visible)
-                    {
-                        gridForOtherInput.Visibility = Visibility.Collapsed;
-                    }
-                }
-            }
-            if (currentToolChosen != "pen" && currentToolChosen != "eraser")
-            {
-                if (inkCanvas != null)
-                {
-                    if (inkCanvas.Visibility == Visibility.Visible)
-                    {
-                        inkCanvas.Visibility = Visibility.Collapsed;
-                    }
-                }
-            }
-        }
+        #region Crop
 
         private async void crop_Click(object sender, RoutedEventArgs e)
         {
@@ -1551,5 +1561,8 @@ namespace WaveformOverlaysPlus
                 imageCollection.RemoveAt(pos);
             }
         }
+
+        #endregion
+
     }
 }
