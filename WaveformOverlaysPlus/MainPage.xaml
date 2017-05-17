@@ -8,6 +8,9 @@
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     xmlns:local1="using:WaveformOverlaysPlus.Controls"
     mc:Ignorable="d" Loaded="Page_Loaded">
+    <Page.Resources>
+        
+    </Page.Resources>
 
     <!--<Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -89,6 +92,29 @@
                 </StackPanel.Background>
 
                 <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource styleMenuButton}" Width="38" Padding="0" Margin="8,0,0,0" Height="38">
+                        <Button.Content>
+                            <Image Source="/Assets/IconCompDivs.bmp" Height="30" Width="30"/>
+                        </Button.Content>
+                    </Button>
+                    <Button Style="{StaticResource styleMenuButton}" Width="38" Padding="0" Margin="8,0,0,0" Height="38">
+                        <Button.Content>
+                            <Image Source="/Assets/IconCylinderIDOverlay.bmp" Width="30" Height="30"/>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource styleMenuButton}" Width="38" Padding="0" Margin="8,0,0,0" Height="38">
+                        <Button.Content>
+                            <Image Source="/Assets/IconValveOverlap.bmp" Width="30" Height="30"/>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+
+                <Rectangle Fill="Gray" Height="1" Margin="8,5,10,5"/>
+
+                <StackPanel Orientation="Horizontal">
                     <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE7C9;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="cursor" IsChecked="True"/>
                     <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE123;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="crop" Click="crop_Click"/>
                 </StackPanel>
@@ -116,7 +142,7 @@
                 <Rectangle Fill="Gray" Height="1" Margin="8,5,10,5"/>
 
                 <StackPanel Margin="0">
-                    
+
                     <RadioButton Tag="1" GroupName="sizes" Style="{StaticResource styleToolRadioButton}" Margin="5,0" Width="88"  Height="17" HorizontalAlignment="Center" Checked="sizes_Checked">
                         <RadioButton.Content>
                             <Rectangle Width="56" Height="1" Fill="Black"/>
@@ -225,16 +251,73 @@
                     <Button Background="Black" Style="{StaticResource styleColorButton}" Click="color_Click"/>
                     <Button Background="#FF3F48CC" Style="{StaticResource styleColorButton}" Click="color_Click"/>
                 </StackPanel>
-                
+
             </StackPanel>
 
             <Grid Name="gridForOverall" Grid.Column="1" Background="#FFD7E0EE">
-                <Grid Name="gridToContainOthers" Margin="20,5,5,20">
+                <Grid Name="gridToContainOthers" Margin="50,15,20,40">
 
                     <Grid Name="gridMain" Background="{Binding Background, ElementName=borderForPageColor}">
-                        
+
                     </Grid>
                     <canvas:CanvasControl Draw="DrawCanvas" x:Name="DrawingCanvas" IsHitTestVisible="False"/>
+
+                    <Grid Name="gridHrulerVac" VerticalAlignment="Bottom" Margin="-46,0,0,-10" Visibility="Collapsed">
+                        <Line VerticalAlignment="Center" Stroke="HotPink" Height="1" StrokeThickness="1" StrokeDashArray="10" Margin="40,0,0,0" X2="{Binding ActualWidth, ElementName=gridMain, Mode=OneWay}"/>
+                        <StackPanel Orientation="Horizontal" Width="47" HorizontalAlignment="Left" VerticalAlignment="Center" FlowDirection="RightToLeft">
+                            <Polygon Points="0,0 14,10, 0,20" Fill="HotPink" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Margin="0,0,1,0">
+                                <Polygon.RenderTransform>
+                                    <CompositeTransform Rotation="180"/>
+                                </Polygon.RenderTransform>
+                            </Polygon>
+                            <TextBox Text="-26" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource styleTextBoxRulers}" />
+                        </StackPanel>
+                    </Grid>
+                    <Grid Name="gridHrulerPres" VerticalAlignment="Top" Margin="-46,-10,0,0">
+                        <Line VerticalAlignment="Center" Stroke="HotPink" StrokeThickness="1" StrokeDashArray="10" Margin="40,0,0,0" X2="{Binding ActualWidth, ElementName=gridMain, Mode=OneWay}"/>
+                        <StackPanel Orientation="Horizontal" Width="47" HorizontalAlignment="Left" VerticalAlignment="Center" FlowDirection="RightToLeft">
+                            <Polygon Points="0,0 14,10, 0,20" Fill="HotPink" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Margin="0,0,1,0">
+                                <Polygon.RenderTransform>
+                                    <CompositeTransform Rotation="180"/>
+                                </Polygon.RenderTransform>
+                            </Polygon>
+                            <TextBox Text="100" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource styleTextBoxRulers}" />
+                        </StackPanel>
+                    </Grid>
+                    <Grid Name="gridHrulerZero" VerticalAlignment="Bottom" Margin="-46,0,0,-10">
+                        <Line VerticalAlignment="Center" Stroke="HotPink" Height="1" StrokeThickness="1" StrokeDashArray="10" Margin="40,0,0,0" X2="{Binding ActualWidth, ElementName=gridMain, Mode=OneWay}"/>
+                        <StackPanel Orientation="Horizontal" Width="47" HorizontalAlignment="Left" VerticalAlignment="Center" FlowDirection="RightToLeft">
+                            <Polygon Points="0,0 14,10, 0,20" Fill="HotPink" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Margin="0,0,1,0">
+                                <Polygon.RenderTransform>
+                                    <CompositeTransform Rotation="180"/>
+                                </Polygon.RenderTransform>
+                            </Polygon>
+                            <TextBox Text="0" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource styleTextBoxRulers}" />
+                        </StackPanel>
+                    </Grid>
+                    <Grid Name="gridVrulerZero" HorizontalAlignment="Left" Margin="-16,0,0,-35" Width="32" >
+                        <Line Stroke="MediumPurple" StrokeThickness="1" StrokeDashArray="10" HorizontalAlignment="Center" Y2="{Binding ActualHeight, ElementName=gridMain, Mode=OneWay}"/>
+                        <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                            <Polygon Points="0,0 14,10, 0,20" Fill="MediumPurple" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" Margin="0">
+                                <Polygon.RenderTransform>
+                                    <CompositeTransform Rotation="-90"/>
+                                </Polygon.RenderTransform>
+                            </Polygon>
+                            <TextBox Text="0" HorizontalAlignment="Center" Style="{StaticResource styleTextBoxRulers}" Margin="0,-2,0,0" />
+                        </StackPanel>
+                    </Grid>
+                    <Grid Name="gridVruler720" HorizontalAlignment="Right" Margin="0,0,-16,-35" Width="32" >
+                        <Line Stroke="MediumPurple" StrokeThickness="1" StrokeDashArray="10" HorizontalAlignment="Center" Y2="{Binding ActualHeight, ElementName=gridMain, Mode=OneWay}"/>
+                        <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                            <Polygon Points="0,0 14,10, 0,20" Fill="MediumPurple" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" Margin="0">
+                                <Polygon.RenderTransform>
+                                    <CompositeTransform Rotation="-90"/>
+                                </Polygon.RenderTransform>
+                            </Polygon>
+                            <TextBox Text="720" HorizontalAlignment="Center" Style="{StaticResource styleTextBoxRulers}" Margin="0,-2,0,0" />
+                        </StackPanel>
+                    </Grid>
+
                     <Grid Name="gridForOtherInput" Background="Transparent" Visibility="Collapsed" PointerPressed="gridForOtherInput_PointerPressed" PointerReleased="gridForOtherInput_PointerReleased"/>
                     <InkCanvas x:Name="inkCanvas" Visibility="Collapsed"/>
 
@@ -243,7 +326,7 @@
 
         </Grid>
 
-        <StackPanel Grid.Row="2">
+        <!--<StackPanel Grid.Row="2" Height="45">
             <StackPanel.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FFF0F0F0" Offset="1"/>
@@ -251,22 +334,7 @@
                     <GradientStop Color="#FFF0F0F0" Offset="0.108"/>
                 </LinearGradientBrush>
             </StackPanel.Background>
-
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Background="#FFE8EFF7" BorderBrush="#FFA4CEF9">
-                    <Button.Content>
-                        <Image Source="/Assets/IconCompressionOverlay.bmp" Width="32" Height="32"/>
-                    </Button.Content>
-                </Button>
-                <Button Content="Valve timing" Background="#FFC9E0F7" BorderBrush="#FF62A2E4"/>
-                <Button BorderBrush="#FFE2E3E4" Background="#FFF5F6F7">
-                    <Button.Content>
-                        <Image Source="/Assets/IconCylinderIDOverlay.bmp"/>
-                    </Button.Content>
-                </Button>
-            </StackPanel>
-
-        </StackPanel>
+        </StackPanel>-->
 
         <Grid Name="gridCover" Visibility="Collapsed" Grid.RowSpan="3" Background="#B2000000">
             <Grid Name="gridDialog" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" Margin="30">
@@ -328,7 +396,7 @@
                         </DataTemplate>
                     </GridView.ItemTemplate>
                 </GridView>
-                
+
             </Grid>
         </Grid>
 
