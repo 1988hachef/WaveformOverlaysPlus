@@ -55,6 +55,13 @@ namespace WaveformOverlaysPlus
     {
         ObservableCollection<StoredImage> imageCollection;
 
+        #region For Rulers
+        Line rulerLine;
+        Shape gripShape;
+        Char nameStartsWith;
+        CompositeTransform rulerTransform;
+        #endregion
+
         string ColorChangerBox;
         string currentToolChosen;
 
@@ -1564,5 +1571,116 @@ namespace WaveformOverlaysPlus
 
         #endregion
 
+        #region Ruler Manipulations
+
+        void MoveSideToSide(Shape shape, CompositeTransform transform, ManipulationDeltaRoutedEventArgs e)
+        {
+            GeneralTransform gt = shape.TransformToVisual(gridMain);
+            Point prisonerTopLeftPoint = gt.TransformPoint(new Point(0, 0));
+
+            double left = prisonerTopLeftPoint.X;
+            double right = left + shape.ActualWidth;
+            double leftAdjust = left + e.Delta.Translation.X;
+            double rightAdjust = right + e.Delta.Translation.X;
+
+            if ((leftAdjust >= 0) && (rightAdjust <= gridMain.ActualWidth))
+            {
+                transform.TranslateX += e.Delta.Translation.X;
+            }
+        }
+
+        void MoveUpAndDown(Shape shape, CompositeTransform transform, ManipulationDeltaRoutedEventArgs e)
+        {
+            GeneralTransform gt = shape.TransformToVisual(gridMain);
+            Point prisonerTopLeftPoint = gt.TransformPoint(new Point(0, 0));
+
+            double top = prisonerTopLeftPoint.Y;
+            double bottom = top + shape.ActualHeight;
+            double topAdjust = top + e.Delta.Translation.Y;
+            double bottomAdjust = bottom + e.Delta.Translation.Y;
+
+            if ((topAdjust >= 0) && (bottomAdjust <= gridMain.ActualHeight))
+            {
+                transform.TranslateY += e.Delta.Translation.Y;
+            }
+        }
+
+        private void vertical_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+            if (nameStartsWith == 'r')
+            {
+                MoveSideToSide(gripShape, rulerTransform, e);
+            }
+            else
+            {
+                MoveSideToSide(rulerLine, rulerTransform, e);
+            }
+        }
+
+        private void horizontal_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+            if (nameStartsWith == 'r')
+            {
+                MoveUpAndDown(gripShape, rulerTransform, e);
+            }
+            else
+            {
+                MoveUpAndDown(rulerLine, rulerTransform, e);
+            }
+        }
+
+        private void rulers_ManipulationStarting(object sender, ManipulationStartingRoutedEventArgs e)
+        {
+            gripShape = sender as Shape;
+            nameStartsWith = gripShape.Name.First();
+            Grid rulerContainer;
+
+            if (nameStartsWith == 'r')
+            {
+                rulerContainer = gripShape.Parent as Grid;
+                rulerLine = rulerContainer.Children[0] as Line;
+            }
+            else
+            {
+                var parent = gripShape.Parent as StackPanel;
+                rulerContainer = parent.Parent as Grid;
+                rulerLine = rulerContainer.Children[0] as Line;
+            }
+
+            rulerTransform = rulerContainer.RenderTransform as CompositeTransform;
+            rulerLine.Visibility = Visibility.Visible;
+        }
+
+        private void rulers_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
+        {
+            GeneralTransform gt;
+            Point p;
+
+            if (nameStartsWith == 'r')
+            {
+                gt = gripShape.TransformToVisual(gridMain);
+                p = gt.TransformPoint(new Point(0, 0));
+
+                if ((p.X < 2 && p.Y > (gridMain.ActualHeight - 12)) ||
+                    (p.X < 2 && p.Y < 2) ||
+                    (p.X > (gridMain.ActualWidth - 12) && p.Y > (gridMain.ActualHeight - 12)))
+                {
+                    rulerLine.Visibility = Visibility.Collapsed;
+                }
+            }
+            else
+            {
+                gt = rulerLine.TransformToVisual(gridMain);
+                p = gt.TransformPoint(new Point(0, 0));
+
+                if ((p.X < 2 && p.Y > (gridMain.ActualHeight - 2)) ||
+                    (p.X > (gridMain.ActualWidth - 2) && p.Y < 2) ||
+                    (p.X < 2 && p.Y < 2))
+                {
+                    rulerLine.Visibility = Visibility.Collapsed;
+                }
+            }
+        }
+        #endregion
     }
 }
