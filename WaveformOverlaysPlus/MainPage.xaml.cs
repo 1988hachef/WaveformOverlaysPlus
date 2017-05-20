@@ -56,6 +56,7 @@ namespace WaveformOverlaysPlus
         ObservableCollection<StoredImage> imageCollection;
 
         #region For Rulers
+        string gripName;
         Line rulerLine;
         Shape gripShape;
         Char nameStartsWith;
@@ -1626,13 +1627,35 @@ namespace WaveformOverlaysPlus
             else
             {
                 MoveUpAndDown(rulerLine, rulerTransform, e);
+
+                if (gripName == "polygonHzero")
+                {
+                    GeneralTransform gt = rulerLine.TransformToVisual(gridMain);
+                    Point p = gt.TransformPoint(new Point(0, 0));
+
+                    if (p.X < 3 && p.Y > (gridMain.ActualHeight - 3))
+                    {
+                        if (gridHrulerVac.Visibility == Visibility.Visible)
+                        {
+                            gridHrulerVac.Visibility = Visibility.Collapsed;
+                        }
+                    }
+                    else
+                    {
+                        if (gridHrulerVac.Visibility == Visibility.Collapsed)
+                        {
+                            gridHrulerVac.Visibility = Visibility.Visible;
+                        }
+                    }
+                }
             }
         }
 
         private void rulers_ManipulationStarting(object sender, ManipulationStartingRoutedEventArgs e)
         {
             gripShape = sender as Shape;
-            nameStartsWith = gripShape.Name.First();
+            gripName = gripShape.Name;
+            nameStartsWith = gripName.First();
             Grid rulerContainer;
 
             if (nameStartsWith == 'r')
@@ -1681,6 +1704,7 @@ namespace WaveformOverlaysPlus
                 }
             }
         }
+
         #endregion
     }
 }
