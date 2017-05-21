@@ -55,14 +55,6 @@ namespace WaveformOverlaysPlus
     {
         ObservableCollection<StoredImage> imageCollection;
 
-        #region For Rulers
-        string gripName;
-        Line rulerLine;
-        Shape gripShape;
-        Char nameStartsWith;
-        CompositeTransform rulerTransform;
-        #endregion
-
         string ColorChangerBox;
         string currentToolChosen;
 
@@ -97,6 +89,21 @@ namespace WaveformOverlaysPlus
         double rightLineLimiter;
         double firstY;
         double firstX;
+        #endregion
+
+        #region For Rulers
+
+        string gripName;
+        Line rulerLine;
+        Shape gripShape;
+        CompositeTransform rulerTransform;
+        double UnitsPerX;
+        double UnitsPerY;
+        double amountBetweenVs;
+        double amountBetweenHs;
+        double VstartValue;
+        double HstartValue;
+
         #endregion
 
         #region Dependency Properties
@@ -715,6 +722,12 @@ namespace WaveformOverlaysPlus
             {
                 await file.DeleteAsync(StorageDeleteOption.Default);
             }
+
+            // Set these to initial values
+            SetAmountBetween(tboxHpos);
+            SetAmountBetween(tboxVpos);
+            SetUnitsPerX();
+            SetUnitsPerY();
         }
 
         private void PenOrEraser_Clicked(object sender, RoutedEventArgs e)
@@ -1574,6 +1587,156 @@ namespace WaveformOverlaysPlus
 
         #region Ruler Manipulations
 
+        void SetUnitsPerX()
+        {
+            GeneralTransform gt = lineVruler720.TransformToVisual(lineVrulerZero);
+            Point pt = gt.TransformPoint(new Point(0, 0));
+
+            if (pt.X != 0)
+            {
+                UnitsPerX = amountBetweenVs / pt.X;
+            }
+            else
+            {
+                UnitsPerX = 0;
+            }
+        }
+
+        void SetUnitsPerY()
+        {
+            GeneralTransform gt = lineHrulerPres.TransformToVisual(lineHrulerZero);
+            Point pt = gt.TransformPoint(new Point(0, 0));
+
+            if (pt.Y != 0)
+            {
+                UnitsPerY = amountBetweenHs / pt.Y;
+            }
+            else
+            {
+                UnitsPerY = 0;
+            }
+        }
+
+        void SetTextofPink(bool IsColoredRuler)
+        {
+            if (IsColoredRuler == true)
+            {
+                if (gripName != null)
+                {
+                    GeneralTransform gt1 = rulerLine.TransformToVisual(lineVrulerZero);
+                    Point point = gt1.TransformPoint(new Point(0, 0));
+
+                    if (gripName == "rectV1") { tblockPink1.Text = (Math.Round((point.X * UnitsPerX) + VstartValue)).ToString(); }
+                    if (gripName == "rectV2") { tblockPink2.Text = (Math.Round((point.X * UnitsPerX) + VstartValue)).ToString(); }
+                    if (tblockPink1.Text != "--" && tblockPink2.Text != "--") { tblockPinkDelta.Text = Math.Round(Math.Abs((Convert.ToDouble(tblockPink1.Text) - Convert.ToDouble(tblockPink2.Text)))).ToString(); }
+                }
+            }
+            else
+            {
+                if (tblockPink1.Text != "--")
+                {
+                    GeneralTransform gt1 = lineV1.TransformToVisual(lineVrulerZero);
+                    Point point = gt1.TransformPoint(new Point(0, 0));
+
+                    tblockPink1.Text = (Math.Round((point.X * UnitsPerX) + VstartValue)).ToString();
+                }
+                if (tblockPink2.Text != "--")
+                {
+                    GeneralTransform gt1 = lineV2.TransformToVisual(lineVrulerZero);
+                    Point point = gt1.TransformPoint(new Point(0, 0));
+
+                    tblockPink2.Text = (Math.Round((point.X * UnitsPerX) + VstartValue)).ToString();
+                }
+                if (tblockPink1.Text != "--" && tblockPink2.Text != "--")
+                {
+                    tblockPinkDelta.Text = Math.Round(Math.Abs((Convert.ToDouble(tblockPink1.Text) - Convert.ToDouble(tblockPink2.Text)))).ToString();
+                }
+            }
+        }
+
+        void SetTextofPurple(bool IsColoredRuler)
+        {
+            if (IsColoredRuler == true)
+            {
+                if (gripName != null)
+                {
+                    GeneralTransform gt1 = rulerLine.TransformToVisual(lineHrulerZero);
+                    Point point = gt1.TransformPoint(new Point(0, 0));
+
+                    if (gripName == "rectH1") { tblockPurple1.Text = (Math.Round((point.Y * UnitsPerY) + HstartValue)).ToString(); }
+                    if (gripName == "rectH2") { tblockPurple2.Text = (Math.Round((point.Y * UnitsPerY) + HstartValue)).ToString(); }
+                    if (tblockPurple1.Text != "--" && tblockPurple2.Text != "--") { tblockPurpleDelta.Text = Math.Round(Math.Abs((Convert.ToDouble(tblockPurple1.Text) - Convert.ToDouble(tblockPurple2.Text)))).ToString(); }
+                }
+            }
+            else
+            {
+                if (tblockPurple1.Text != "--")
+                {
+                    GeneralTransform gt1 = lineH1.TransformToVisual(lineHrulerZero);
+                    Point point = gt1.TransformPoint(new Point(0, 0));
+
+                    tblockPurple1.Text = (Math.Round((point.Y * UnitsPerY) + HstartValue)).ToString();
+                }
+                if (tblockPurple2.Text != "--")
+                {
+                    GeneralTransform gt1 = lineH2.TransformToVisual(lineHrulerZero);
+                    Point point = gt1.TransformPoint(new Point(0, 0));
+
+                    tblockPurple2.Text = (Math.Round((point.Y * UnitsPerY) + HstartValue)).ToString();
+                }
+                if (tblockPurple1.Text != "--" && tblockPurple2.Text != "--")
+                {
+                    tblockPurpleDelta.Text = Math.Round(Math.Abs((Convert.ToDouble(tblockPurple1.Text) - Convert.ToDouble(tblockPurple2.Text)))).ToString();
+                }
+            }
+        }
+
+        private void tbox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var textbox = sender as TextBox;
+            SetAmountBetween(textbox);
+        }
+
+        void SetAmountBetween(TextBox textbox)
+        {
+            if (textbox.Name.StartsWith("tboxV"))
+            {
+                try
+                {
+                    double low = Convert.ToDouble(tboxVzero.Text);
+                    double high = Convert.ToDouble(tboxVpos.Text);
+                    amountBetweenVs = high - low;
+                    VstartValue = low;
+                }
+                catch
+                {
+                    amountBetweenVs = 0;
+                    VstartValue = 0;
+                }
+
+                SetUnitsPerX();
+                SetTextofPink(false);
+            }
+            else if (textbox.Name.StartsWith("tboxH"))
+            {
+                try
+                {
+                    double low = Convert.ToDouble(tboxHzero.Text);
+                    double high = Convert.ToDouble(tboxHpos.Text);
+                    amountBetweenHs = high - low;
+                    HstartValue = low;
+                }
+                catch
+                {
+                    amountBetweenHs = 0;
+                    HstartValue = 0;
+                }
+
+                SetUnitsPerY();
+                SetTextofPurple(false);
+            }
+        }
+
         void MoveSideToSide(Shape shape, CompositeTransform transform, ManipulationDeltaRoutedEventArgs e)
         {
             GeneralTransform gt = shape.TransformToVisual(gridMain);
@@ -1587,6 +1750,16 @@ namespace WaveformOverlaysPlus
             if ((leftAdjust >= 0) && (rightAdjust <= gridMain.ActualWidth))
             {
                 transform.TranslateX += e.Delta.Translation.X;
+            }
+
+            if (gripName.StartsWith("r"))
+            {
+                SetTextofPink(true);
+            }
+            else
+            {
+                SetUnitsPerX();
+                SetTextofPink(false);
             }
         }
 
@@ -1604,11 +1777,21 @@ namespace WaveformOverlaysPlus
             {
                 transform.TranslateY += e.Delta.Translation.Y;
             }
+
+            if (gripName.StartsWith("r"))
+            {
+                SetTextofPurple(true);
+            }
+            else
+            {
+                SetUnitsPerY();
+                SetTextofPurple(false);
+            }
         }
 
         private void vertical_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
-            if (nameStartsWith == 'r')
+            if (gripName.StartsWith("r"))
             {
                 MoveSideToSide(gripShape, rulerTransform, e);
             }
@@ -1620,34 +1803,13 @@ namespace WaveformOverlaysPlus
 
         private void horizontal_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
-            if (nameStartsWith == 'r')
+            if (gripName.StartsWith("r"))
             {
                 MoveUpAndDown(gripShape, rulerTransform, e);
             }
             else
             {
                 MoveUpAndDown(rulerLine, rulerTransform, e);
-
-                if (gripName == "polygonHzero")
-                {
-                    GeneralTransform gt = rulerLine.TransformToVisual(gridMain);
-                    Point p = gt.TransformPoint(new Point(0, 0));
-
-                    if (p.X < 3 && p.Y > (gridMain.ActualHeight - 3))
-                    {
-                        if (gridHrulerVac.Visibility == Visibility.Visible)
-                        {
-                            gridHrulerVac.Visibility = Visibility.Collapsed;
-                        }
-                    }
-                    else
-                    {
-                        if (gridHrulerVac.Visibility == Visibility.Collapsed)
-                        {
-                            gridHrulerVac.Visibility = Visibility.Visible;
-                        }
-                    }
-                }
             }
         }
 
@@ -1655,23 +1817,23 @@ namespace WaveformOverlaysPlus
         {
             gripShape = sender as Shape;
             gripName = gripShape.Name;
-            nameStartsWith = gripName.First();
             Grid rulerContainer;
 
-            if (nameStartsWith == 'r')
+            if (gripName.StartsWith("r"))
             {
                 rulerContainer = gripShape.Parent as Grid;
                 rulerLine = rulerContainer.Children[0] as Line;
+                gridDelta.Visibility = Visibility.Visible;
+                rulerLine.Visibility = Visibility.Visible;
             }
             else
             {
                 var parent = gripShape.Parent as StackPanel;
                 rulerContainer = parent.Parent as Grid;
                 rulerLine = rulerContainer.Children[0] as Line;
+                rulerLine.Stroke = new SolidColorBrush(Colors.Gray);
             }
-
             rulerTransform = rulerContainer.RenderTransform as CompositeTransform;
-            rulerLine.Visibility = Visibility.Visible;
         }
 
         private void rulers_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
@@ -1679,7 +1841,7 @@ namespace WaveformOverlaysPlus
             GeneralTransform gt;
             Point p;
 
-            if (nameStartsWith == 'r')
+            if (gripName.StartsWith("r"))
             {
                 gt = gripShape.TransformToVisual(gridMain);
                 p = gt.TransformPoint(new Point(0, 0));
@@ -1689,6 +1851,28 @@ namespace WaveformOverlaysPlus
                     (p.X > (gridMain.ActualWidth - 12) && p.Y > (gridMain.ActualHeight - 12)))
                 {
                     rulerLine.Visibility = Visibility.Collapsed;
+                    if (rulerLine.Name.StartsWith("lineV"))
+                    {
+                        tblockPinkDelta.Text = "--";
+
+                        if (rulerLine.Name == "lineV1") { tblockPink1.Text = "--"; }
+                        if (rulerLine.Name == "lineV2") { tblockPink2.Text = "--"; }
+                    }
+                    else if (rulerLine.Name.StartsWith("lineH"))
+                    {
+                        tblockPurpleDelta.Text = "--";
+
+                        if (rulerLine.Name == "lineH1") { tblockPurple1.Text = "--"; }
+                        if (rulerLine.Name == "lineH2") { tblockPurple2.Text = "--"; }
+                    }
+                }
+
+                if (lineV1.Visibility == Visibility.Collapsed &&
+                    lineV2.Visibility == Visibility.Collapsed &&
+                    lineH1.Visibility == Visibility.Collapsed &&
+                    lineH2.Visibility == Visibility.Collapsed)
+                {
+                    gridDelta.Visibility = Visibility.Collapsed;
                 }
             }
             else
@@ -1700,11 +1884,12 @@ namespace WaveformOverlaysPlus
                     (p.X > (gridMain.ActualWidth - 2) && p.Y < 2) ||
                     (p.X < 2 && p.Y < 2))
                 {
-                    rulerLine.Visibility = Visibility.Collapsed;
+                    rulerLine.Stroke = new SolidColorBrush(Colors.Transparent);
                 }
             }
         }
 
         #endregion
+        
     }
 }

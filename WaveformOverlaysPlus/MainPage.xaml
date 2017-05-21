@@ -237,7 +237,7 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,2,0">
                     <Button Background="#FFA349A4" Style="{StaticResource styleColorButton}" Click="color_Click"/>
                     <Button Background="SaddleBrown" Style="{StaticResource styleColorButton}" Click="color_Click"/>
-                    <Button Background="#FF7F7F7F" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                    <Button Background="LightGray" Style="{StaticResource styleColorButton}" Click="color_Click"/>
                     <Button Background="#FF00A2E8" Style="{StaticResource styleColorButton}" Click="color_Click"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,2,0">
@@ -253,45 +253,48 @@
 
             <Grid Name="gridForOverall" Grid.Column="1" Background="#FFD7E0EE">
 
-                <Grid Name="gridPinkDelta" Height="16" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,-25,40,0" Background="White">
+                <Grid Name="gridDelta" Height="32" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,-25,40,0" Background="White" Visibility="Collapsed">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="20"/>
                         <ColumnDefinition Width="50"/>
                         <ColumnDefinition Width="50"/>
                         <ColumnDefinition Width="50"/>
                     </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="16"/>
+                        <RowDefinition Height="16"/>
+                    </Grid.RowDefinitions>
+                    
                     <Border Grid.Column="0" BorderBrush="Black" BorderThickness="1">
                         <Rectangle Width="7" Height="7" Stroke="Black" Fill="#FF00FF"/>
                     </Border>
                     <Border Grid.Column="1" BorderBrush="Black" BorderThickness="0,1,1,1">
-                        <TextBlock  Name="tblockPink1" Text="888.8" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock  Name="tblockPink1" Text="--" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                     <Border Grid.Column="2" BorderBrush="Black" BorderThickness="0,1,1,1">
-                        <TextBlock  Name="tblockPink2" Text="888.8" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock  Name="tblockPink2" Text="--" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                     <Border Grid.Column="3" BorderBrush="Black" BorderThickness="0,1,1,1">
-                        <TextBlock  Name="tblockPinkDelta" Text="&#916; 888.8" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Grid>
+                            <TextBlock  Text="&#916;" FontSize="12" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4,0,0,0"/>
+                            <TextBlock  Name="tblockPinkDelta" Text="--" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                        </Grid>
                     </Border>
-                </Grid>
-
-                <Grid Name="gridPurpleDelta" Height="16" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,-10,40,0" Background="White">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="20"/>
-                        <ColumnDefinition Width="50"/>
-                        <ColumnDefinition Width="50"/>
-                        <ColumnDefinition Width="50"/>
-                    </Grid.ColumnDefinitions>
-                    <Border Grid.Column="0" BorderBrush="Black" BorderThickness="1">
+                    
+                    <Border Grid.Row="1" Grid.Column="0" BorderBrush="Black" BorderThickness="1" Margin="0,-1,0,0">
                         <Rectangle Width="7" Height="7" Stroke="Black" Fill="#9D00FF"/>
                     </Border>
-                    <Border Grid.Column="1" BorderBrush="Black" BorderThickness="0,1,1,1">
-                        <TextBlock  Name="tblockPurple1" Text="888.8" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Border Grid.Row="1" Grid.Column="1" BorderBrush="Black" BorderThickness="0,1,1,1" Margin="0,-1,0,0">
+                        <TextBlock  Name="tblockPurple1" Text="--" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
-                    <Border Grid.Column="2" BorderBrush="Black" BorderThickness="0,1,1,1">
-                        <TextBlock  Name="tblockPurple2" Text="888.8" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Border Grid.Row="1" Grid.Column="2" BorderBrush="Black" BorderThickness="0,1,1,1" Margin="0,-1,0,0">
+                        <TextBlock  Name="tblockPurple2" Text="--" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
-                    <Border Grid.Column="3" BorderBrush="Black" BorderThickness="0,1,1,1">
-                        <TextBlock  Name="tblockPurpleDelta" Text="&#916; 888.8" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Border Grid.Row="1" Grid.Column="3" BorderBrush="Black" BorderThickness="0,1,1,1" Margin="0,-1,0,0">
+                        <Grid>
+                            <TextBlock  Text="&#916;" FontSize="12" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4,0,0,0"/>
+                            <TextBlock  Name="tblockPurpleDelta" Text="--" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                        </Grid>
                     </Border>
                 </Grid>
 
@@ -306,99 +309,85 @@
                         <Grid.RenderTransform>
                             <CompositeTransform x:Name="transformV2"/>
                         </Grid.RenderTransform>
-                        <Line Visibility="Collapsed" Name="lineV2" Stroke="#FF00FF" Y2="{Binding ActualHeight, ElementName=gridMain, Mode=OneWay}" HorizontalAlignment="Center" StrokeDashArray="10"/>
+                        <Line StrokeThickness="2" Visibility="Collapsed" Name="lineV2" Stroke="#FF00FF" Y2="{Binding ActualHeight, ElementName=gridMain, Mode=OneWay}" HorizontalAlignment="Center" StrokeDashArray="4" IsHitTestVisible="False"/>
                         <Rectangle Name="rectV2" Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Fill="#FF00FF" Stroke="Black" ManipulationMode="TranslateX" ManipulationDelta="vertical_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted"/>
                     </Grid>
                     <Grid Name="gridVline1" HorizontalAlignment="Right" ManipulationMode="TranslateX">
                         <Grid.RenderTransform>
                             <CompositeTransform x:Name="transformV1"/>
                         </Grid.RenderTransform>
-                        <Line Visibility="Collapsed" Name="lineV1" Stroke="#FF00FF" Y2="{Binding ActualHeight, ElementName=gridMain, Mode=OneWay}" HorizontalAlignment="Center" StrokeDashArray="10"/>
+                        <Line IsHitTestVisible="False" StrokeThickness="2" Visibility="Collapsed" Name="lineV1" Stroke="#FF00FF" Y2="{Binding ActualHeight, ElementName=gridMain, Mode=OneWay}" HorizontalAlignment="Center" StrokeDashArray="4"/>
                         <Rectangle Name="rectV1" Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Fill="#FF00FF" Stroke="Black" ManipulationMode="TranslateX" ManipulationDelta="vertical_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted"/>
-                    </Grid>
-                    <Grid Name="gridHline1" VerticalAlignment="Top" ManipulationMode="TranslateY">
-                        <Grid.RenderTransform>
-                            <CompositeTransform x:Name="transformH1"/>
-                        </Grid.RenderTransform>
-                        <Line Visibility="Collapsed" Name="lineH1" Stroke="#9D00FF" StrokeDashArray="10" VerticalAlignment="Center" X2="{Binding ActualWidth, ElementName=gridMain, Mode=OneWay}"/>
-                        <Rectangle Name="rectH1" Width="10" Height="10" Fill="#9D00FF" Stroke="Black" HorizontalAlignment="Left" ManipulationMode="TranslateY" ManipulationDelta="horizontal_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted"/>
                     </Grid>
                     <Grid Name="gridHline2" VerticalAlignment="Top" ManipulationMode="TranslateY">
                         <Grid.RenderTransform>
                             <CompositeTransform x:Name="transformH2"/>
                         </Grid.RenderTransform>
-                        <Line Visibility="Collapsed" Name="lineH2" Stroke="#9D00FF" StrokeDashArray="10" VerticalAlignment="Center" X2="{Binding ActualWidth, ElementName=gridMain, Mode=OneWay}"/>
+                        <Line IsHitTestVisible="False" Visibility="Collapsed" Name="lineH2" Stroke="#9D00FF" StrokeDashArray="4" VerticalAlignment="Center" X2="{Binding ActualWidth, ElementName=gridMain, Mode=OneWay}" StrokeThickness="2"/>
                         <Rectangle Name="rectH2" Width="10" Height="10" Fill="#9D00FF" Stroke="Black" HorizontalAlignment="Left" ManipulationMode="TranslateY" ManipulationDelta="horizontal_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted"/>
                     </Grid>
-                    
-                    <Grid Name="gridHrulerVac" VerticalAlignment="Bottom" Margin="-46,0,0,-10" Visibility="Collapsed" ManipulationMode="TranslateY">
+                    <Grid Name="gridHline1" VerticalAlignment="Top" ManipulationMode="TranslateY">
                         <Grid.RenderTransform>
-                            <CompositeTransform x:Name="transformHvac"/>
+                            <CompositeTransform x:Name="transformH1"/>
                         </Grid.RenderTransform>
-                        <Line Visibility="Collapsed" Name="lineHrulerVac" VerticalAlignment="Center" Stroke="Gray" StrokeThickness="2" StrokeDashArray="10,5" Margin="40,0,0,0" X2="{Binding ActualWidth, ElementName=gridMain, Mode=OneWay}"/>
-                        <StackPanel Orientation="Horizontal" Width="47" HorizontalAlignment="Left" VerticalAlignment="Center" FlowDirection="RightToLeft">
-                            <Polygon Name="polygonHvac" Points="0,0 14,10, 0,20" Fill="Black" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Margin="0,0,1,0" ManipulationMode="TranslateY" ManipulationDelta="horizontal_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted">
-                                <Polygon.RenderTransform>
-                                    <CompositeTransform Rotation="180"/>
-                                </Polygon.RenderTransform>
-                            </Polygon>
-                            <TextBox Text="-26" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource styleTextBoxRulers}" />
-                        </StackPanel>
+                        <Line IsHitTestVisible="False" StrokeThickness="2" Visibility="Collapsed" Name="lineH1" Stroke="#9D00FF" StrokeDashArray="4" VerticalAlignment="Center" X2="{Binding ActualWidth, ElementName=gridMain, Mode=OneWay}"/>
+                        <Rectangle Name="rectH1" Width="10" Height="10" Fill="#9D00FF" Stroke="Black" HorizontalAlignment="Left" ManipulationMode="TranslateY" ManipulationDelta="horizontal_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted"/>
                     </Grid>
+                    
                     <Grid Name="gridHrulerPres" VerticalAlignment="Top" Margin="-46,-10,0,0" ManipulationMode="TranslateY">
                         <Grid.RenderTransform>
                             <CompositeTransform x:Name="transformHpres"/>
                         </Grid.RenderTransform>
-                        <Line Visibility="Collapsed" Name="lineHrulerPres" VerticalAlignment="Center" Stroke="Gray" StrokeThickness="2" StrokeDashArray="10,5" Margin="40,0,0,0" X2="{Binding ActualWidth, ElementName=gridMain, Mode=OneWay}" />
+                        <Line IsHitTestVisible="False" Name="lineHrulerPres" VerticalAlignment="Center" Stroke="Transparent" StrokeThickness="2" StrokeDashArray="10,5" Margin="40,0,0,0" X2="{Binding ActualWidth, ElementName=gridMain, Mode=OneWay}" />
                         <StackPanel Orientation="Horizontal" Width="47" HorizontalAlignment="Left" VerticalAlignment="Center" FlowDirection="RightToLeft">
                             <Polygon Name="polygonHpres" Points="0,0 14,10, 0,20" Fill="Black" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Margin="0,0,1,0" ManipulationMode="TranslateY" ManipulationDelta="horizontal_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted">
                                 <Polygon.RenderTransform>
                                     <CompositeTransform Rotation="180"/>
                                 </Polygon.RenderTransform>
                             </Polygon>
-                            <TextBox Text="100" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource styleTextBoxRulers}" />
+                            <TextBox Name="tboxHpos" Text="100" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource styleTextBoxRulers}" TextChanged="tbox_TextChanged" />
                         </StackPanel>
                     </Grid>
                     <Grid Name="gridHrulerZero" VerticalAlignment="Bottom" Margin="-46,0,0,-10" ManipulationMode="TranslateY">
                         <Grid.RenderTransform>
                             <CompositeTransform x:Name="transformHzero"/>
                         </Grid.RenderTransform>
-                        <Line Visibility="Collapsed" Name="lineHrulerZero" VerticalAlignment="Center" Stroke="Gray" StrokeThickness="2" StrokeDashArray="10,5" Margin="40,0,0,0" X2="{Binding ActualWidth, ElementName=gridMain, Mode=OneWay}"/>
+                        <Line IsHitTestVisible="False" Name="lineHrulerZero" VerticalAlignment="Center" Stroke="Transparent" StrokeThickness="2" StrokeDashArray="10,5" Margin="40,0,0,0" X2="{Binding ActualWidth, ElementName=gridMain, Mode=OneWay}"/>
                         <StackPanel Orientation="Horizontal" Width="47" HorizontalAlignment="Left" VerticalAlignment="Center" FlowDirection="RightToLeft">
                             <Polygon Name="polygonHzero" Points="0,0 14,10, 0,20" Fill="Black" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Margin="0,0,1,0" ManipulationMode="TranslateY" ManipulationDelta="horizontal_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted" >
                                 <Polygon.RenderTransform>
                                     <CompositeTransform Rotation="180"/>
                                 </Polygon.RenderTransform>
                             </Polygon>
-                            <TextBox Text="0" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource styleTextBoxRulers}" />
+                            <TextBox TextChanged="tbox_TextChanged" Name="tboxHzero" Text="0" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource styleTextBoxRulers}" />
                         </StackPanel>
                     </Grid>
                     <Grid Name="gridVrulerZero" HorizontalAlignment="Left" Margin="-16,0,0,-35" Width="32" ManipulationMode="TranslateX">
                         <Grid.RenderTransform>
                             <CompositeTransform x:Name="transformVzero"/>
                         </Grid.RenderTransform>
-                        <Line Visibility="Collapsed" Name="lineVrulerZero" Stroke="Gray" StrokeThickness="2" StrokeDashArray="10,5" HorizontalAlignment="Center" Y2="{Binding ActualHeight, ElementName=gridMain, Mode=OneWay}"/>
+                        <Line IsHitTestVisible="False" Name="lineVrulerZero" Stroke="Transparent" StrokeThickness="2" StrokeDashArray="10,5" HorizontalAlignment="Center" Y2="{Binding ActualHeight, ElementName=gridMain, Mode=OneWay}"/>
                         <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center">
                             <Polygon Name="polygonVzero" Points="0,0 14,10, 0,20" Fill="Black" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" Margin="0" ManipulationMode="TranslateX" ManipulationDelta="vertical_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted">
                                 <Polygon.RenderTransform>
                                     <CompositeTransform Rotation="-90"/>
                                 </Polygon.RenderTransform>
                             </Polygon>
-                            <TextBox Text="0" HorizontalAlignment="Center" Style="{StaticResource styleTextBoxRulers}" Margin="0,-2,0,0" />
+                            <TextBox TextChanged="tbox_TextChanged" Name="tboxVzero" Text="0" HorizontalAlignment="Center" Style="{StaticResource styleTextBoxRulers}" Margin="0,-2,0,0" />
                         </StackPanel>
                     </Grid>
-                    <Grid Name="gridVruler720" HorizontalAlignment="Right" Margin="0,0,-16,-35" Width="32" ManipulationMode="TranslateX">
+                    <Grid Name="gridVruler720" HorizontalAlignment="Right" Margin="0,0,-16,-35" Width="32" ManipulationMode="TranslateX" >
                         <Grid.RenderTransform>
                             <CompositeTransform x:Name="transformV720"/>
                         </Grid.RenderTransform>
-                        <Line Visibility="Collapsed" Name="lineVruler720" Stroke="Gray" StrokeThickness="2" StrokeDashArray="10,5" HorizontalAlignment="Center" Y2="{Binding ActualHeight, ElementName=gridMain, Mode=OneWay}"/>
+                        <Line IsHitTestVisible="False" Name="lineVruler720" Stroke="Transparent" StrokeThickness="2" StrokeDashArray="10,5" HorizontalAlignment="Center" Y2="{Binding ActualHeight, ElementName=gridMain, Mode=OneWay}"/>
                         <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center">
                             <Polygon Name="polygonV720" Points="0,0 14,10, 0,20" Fill="Black" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" Margin="0" ManipulationMode="TranslateX" ManipulationDelta="vertical_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted">
                                 <Polygon.RenderTransform>
                                     <CompositeTransform Rotation="-90"/>
                                 </Polygon.RenderTransform>
                             </Polygon>
-                            <TextBox Text="720" HorizontalAlignment="Center" Style="{StaticResource styleTextBoxRulers}" Margin="0,-2,0,0" />
+                            <TextBox TextChanged="tbox_TextChanged" Name="tboxVpos" Text="720" HorizontalAlignment="Center" Style="{StaticResource styleTextBoxRulers}" Margin="0,-2,0,0" />
                         </StackPanel>
                     </Grid>
 
