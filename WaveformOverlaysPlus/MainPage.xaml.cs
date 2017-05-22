@@ -728,6 +728,10 @@ namespace WaveformOverlaysPlus
             SetAmountBetween(tboxVpos);
             SetUnitsPerX();
             SetUnitsPerY();
+            gridCompressionOverlay.Width = gridMain.ActualWidth;
+            gridCompressionOverlay.Height = gridMain.ActualHeight;
+            gridOverlap.Width = gridMain.ActualWidth;
+            gridOverlap.Height = gridMain.ActualHeight;
         }
 
         private void PenOrEraser_Clicked(object sender, RoutedEventArgs e)
@@ -930,6 +934,7 @@ namespace WaveformOverlaysPlus
             }
             lineForArrow.Stroke = borderForStrokeColor.Background;
             lineForArrow.StrokeThickness = currentSizeSelected;
+            lineForArrow.IsHitTestVisible = false;
             lineForArrow.X1 = e.GetCurrentPoint(gridMain).RawPosition.X;
             lineForArrow.Y1 = e.GetCurrentPoint(gridMain).RawPosition.Y;
             lineForArrow.X2 = e.GetCurrentPoint(gridMain).RawPosition.X;
@@ -1032,6 +1037,7 @@ namespace WaveformOverlaysPlus
                 arrowHead.Stroke = borderForStrokeColor.Background;
                 arrowHead.Fill = borderForStrokeColor.Background;
                 arrowHead.StrokeThickness = currentSizeSelected;
+                arrowHead.IsHitTestVisible = false;
                 arrowHead.Points.Add(pointArrow1);
                 arrowHead.Points.Add(ptB);
                 arrowHead.Points.Add(pointArrow2);
@@ -1749,9 +1755,39 @@ namespace WaveformOverlaysPlus
 
             if ((leftAdjust >= 0) && (rightAdjust <= gridMain.ActualWidth))
             {
-                transform.TranslateX += e.Delta.Translation.X;
+                if (gripName == "polygonVzero")
+                {
+                    var minWidth = (prisonerTopLeftPoint.X + gridCompressionOverlay.ActualWidth) - 5;
+                    if (rightAdjust <= minWidth)
+                    {
+                        transformComp.TranslateX += e.Delta.Translation.X;
+                        gridCompressionOverlay.Width = gridCompressionOverlay.ActualWidth - e.Delta.Translation.X;
+
+                        transformOverlap.TranslateX += e.Delta.Translation.X;
+                        gridOverlap.Width = gridOverlap.ActualWidth - e.Delta.Translation.X;
+
+                        transform.TranslateX += e.Delta.Translation.X;
+                    }
+                }
+                else if (gripName == "polygonV720")
+                {
+                    var minWidth = (prisonerTopLeftPoint.X - gridCompressionOverlay.ActualWidth) + 5;
+                    if (leftAdjust >= minWidth)
+                    {
+                        gridCompressionOverlay.Width = gridCompressionOverlay.ActualWidth + e.Delta.Translation.X;
+
+                        gridOverlap.Width = gridOverlap.ActualWidth + e.Delta.Translation.X;
+
+                        transform.TranslateX += e.Delta.Translation.X;
+                    }
+                }
+                else
+                {
+                    transform.TranslateX += e.Delta.Translation.X;
+                }
             }
 
+            // Set text and units
             if (gripName.StartsWith("r"))
             {
                 SetTextofPink(true);
@@ -1890,6 +1926,35 @@ namespace WaveformOverlaysPlus
         }
 
         #endregion
-        
+
+        #region Overlays
+
+        private void btnComp_Click(object sender, RoutedEventArgs e)
+        {
+            if (gridCompressionOverlay.Opacity < .5)
+            {
+                gridCompressionOverlay.Opacity = 1.0;
+            }
+            else
+            {
+                gridCompressionOverlay.Opacity = .001;
+            }
+        }
+
+        private void btnOverlap_Click(object sender, RoutedEventArgs e)
+        {
+            if (gridIntOverlap.Visibility == Visibility.Collapsed)
+            {
+                gridIntOverlap.Visibility = Visibility.Visible;
+                gridExhOverlap.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                gridIntOverlap.Visibility = Visibility.Collapsed;
+                gridExhOverlap.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        #endregion
     }
 }

@@ -89,7 +89,7 @@
                 </StackPanel.Background>
 
                 <StackPanel Orientation="Horizontal">
-                    <Button Style="{StaticResource styleMenuButton}" Width="38" Padding="0" Margin="8,0,0,0" Height="38">
+                    <Button Name="btnComp" Style="{StaticResource styleMenuButton}" Width="38" Padding="0" Margin="8,0,0,0" Height="38" Click="btnComp_Click">
                         <Button.Content>
                             <Image Source="/Assets/IconCompDivs.bmp" Height="30" Width="30"/>
                         </Button.Content>
@@ -102,7 +102,7 @@
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
-                    <Button Style="{StaticResource styleMenuButton}" Width="38" Padding="0" Margin="8,0,0,0" Height="38">
+                    <Button Name="btnOverlap" Style="{StaticResource styleMenuButton}" Width="38" Padding="0" Margin="8,0,0,0" Height="38" Click="btnOverlap_Click">
                         <Button.Content>
                             <Image Source="/Assets/IconValveOverlap.bmp" Width="30" Height="30"/>
                         </Button.Content>
@@ -301,40 +301,163 @@
                 <Grid Name="gridToContainOthers" Margin="50,15,20,40">
 
                     <Grid Name="gridMain" Background="{Binding Background, ElementName=borderForPageColor}">
+                        
+                    </Grid>
+
+                    <Grid Name="gridCompressionOverlay" ManipulationMode="TranslateX" HorizontalAlignment="Left" VerticalAlignment="Top" Opacity=".001" IsHitTestVisible="False">
+                        <Grid.RenderTransform>
+                            <CompositeTransform x:Name="transformComp"/>
+                        </Grid.RenderTransform>
+                        <Grid Name="gridWithOverlapTextBlocks">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="1"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="1"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="1"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="1"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="1"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="2"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="1"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="1"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="1"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="1"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="1"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="2"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="1"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="1"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="1"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="1"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="1"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="2"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="1"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="1"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="1"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="1"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="1"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="2"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="15"/>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="75"/>
+                                <RowDefinition Height="25"/>
+                            </Grid.RowDefinitions>
+
+                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="5"  Grid.Column="0"  Fill="Gray"/>
+                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="2"  Fill="Gray" Grid.Row="3"/>
+                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="4"  Fill="Gray" Grid.Row="3"/>
+                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="6"  Fill="Gray" Grid.Row="3"/>
+                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="8"  Fill="Gray" Grid.Row="3"/>
+                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="10" Fill="Gray" Grid.Row="3"/>
+                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="5"  Grid.Column="12" Fill="Gray"/>
+                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="14" Fill="Gray" Grid.Row="3"/>
+                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="16" Fill="Gray" Grid.Row="3"/>
+                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="18" Fill="Gray" Grid.Row="3"/>
+                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="20" Fill="Gray" Grid.Row="3"/>
+                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="22" Fill="Gray" Grid.Row="3"/>
+                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="5"  Grid.Column="24" Fill="Gray"/>
+                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="26" Fill="Gray" Grid.Row="3"/>
+                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="28" Fill="Gray" Grid.Row="3"/>
+                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="30" Fill="Gray" Grid.Row="3"/>
+                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="32" Fill="Gray" Grid.Row="3"/>
+                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="34" Fill="Gray" Grid.Row="3"/>
+                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="5"  Grid.Column="36" Fill="Gray"/>
+                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="38" Fill="Gray" Grid.Row="3"/>
+                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="40" Fill="Gray" Grid.Row="3"/>
+                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="42" Fill="Gray" Grid.Row="3"/>
+                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="44" Fill="Gray" Grid.Row="3"/>
+                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="46" Fill="Gray" Grid.Row="3"/>
+                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="5"  Grid.Column="48" Fill="Gray"/>
+
+                            <Rectangle Grid.ColumnSpan="13" Grid.RowSpan="1"  Grid.Column="0" Fill="Gray" Grid.Row="4" Stroke="Black"/>
+                            <Rectangle Grid.ColumnSpan="13" Grid.RowSpan="1"  Grid.Column="12" Fill="Gray" Grid.Row="4" Stroke="Black"/>
+                            <Rectangle Grid.ColumnSpan="13" Grid.RowSpan="1"  Grid.Column="24" Fill="Gray" Grid.Row="4" Stroke="Black"/>
+                            <Rectangle Grid.ColumnSpan="13" Grid.RowSpan="1"  Grid.Column="36" Fill="Gray" Grid.Row="4" Stroke="Black"/>
+
+                            <TextBlock Name="tblockExp" Grid.Column="0" Grid.ColumnSpan="13" HorizontalAlignment="Center" Grid.Row="4" TextWrapping="Wrap" Text="Expansion" VerticalAlignment="Center" FontWeight="Bold" FontSize="12"/>
+                            <TextBlock Name="tblockExh" Grid.Column="12" Grid.ColumnSpan="13" HorizontalAlignment="Center" Grid.Row="4" TextWrapping="Wrap" Text="Exhaust" VerticalAlignment="Center" FontWeight="Bold" FontSize="12"/>
+                            <TextBlock Name="tblockInt" Grid.Column="24" Grid.ColumnSpan="13" HorizontalAlignment="Center" Grid.Row="4" TextWrapping="Wrap" Text="Intake" VerticalAlignment="Center" FontWeight="Bold" FontSize="12"/>
+                            <TextBlock Name="tblockComp" Grid.Column="36" Grid.ColumnSpan="13" HorizontalAlignment="Center" Grid.Row="4" TextWrapping="Wrap" Text="Compression" VerticalAlignment="Center" FontWeight="Bold" FontSize="12"/>
+                        </Grid>
+                        <Border BorderBrush="Black" BorderThickness="1"/>
+                    </Grid>
+
+                    <Grid Name="gridOverlap" ManipulationMode="TranslateX" VerticalAlignment="Top" HorizontalAlignment="Left">
+                        <Grid.RenderTransform>
+                            <CompositeTransform x:Name="transformOverlap"/>
+                        </Grid.RenderTransform>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition x:Name="exhOpen" Width="98*"/>
+                            <ColumnDefinition Width="148*"/>
+                            <ColumnDefinition Width="15*"/>
+                            <ColumnDefinition Width="152*"/>
+                            <ColumnDefinition Width="95*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="100"/>
+                            <RowDefinition Height="400"/>
+                            <RowDefinition Height="25"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Name="gridExhOverlap" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Visibility="Collapsed">
+                            <Rectangle Fill="Red" HorizontalAlignment="Left" Width="2" />
+                            <Rectangle Fill="Red" HorizontalAlignment="Right" Width="2" />
+                            <StackPanel Orientation="Horizontal" Background="Red" HorizontalAlignment="Left" VerticalAlignment="Top" Width="46" Margin="-23,0,0,0">
+                                <TextBlock Text="40" FontSize="12" Foreground="White" Padding="1,0,0,0"/>
+                                <TextBlock Text="&#186; BBC" FontSize="12" Foreground="White" Padding="0,0,1,0"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Background="Red" HorizontalAlignment="Right" VerticalAlignment="Top" Width="46" Margin="0,0,-23,0">
+                                <TextBlock Text="10" FontSize="12" Foreground="White" Padding="1,0,0,0"/>
+                                <TextBlock Text="&#186; BTC" FontSize="12" Foreground="White" Padding="0,0,1,0"/>
+                            </StackPanel>
+                            <Rectangle Fill="Red" Opacity="0.4" Margin="0,30,0,0"/>
+                        </Grid>
+
+                        <Grid Name="gridIntOverlap" Grid.ColumnSpan="2" Grid.Column="2" Grid.Row="2" Grid.RowSpan="1" Visibility="Collapsed">
+                            <Rectangle Fill="Blue" HorizontalAlignment="Left" Width="2" />
+                            <Rectangle Fill="Blue" HorizontalAlignment="Right" Width="2" />
+                            <StackPanel Orientation="Horizontal" Background="Blue" HorizontalAlignment="Left" VerticalAlignment="Top" Width="46" Margin="-23,0,0,0">
+                                <TextBlock Text="10" FontSize="12" Foreground="White" Padding="1,0,0,0"/>
+                                <TextBlock Text="&#186; BTC" FontSize="12" Foreground="White" Padding="0,0,1,0"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Background="Blue" HorizontalAlignment="Right" VerticalAlignment="Top" Width="46" Margin="0,0,-23,0">
+                                <TextBlock Text="45" FontSize="12" Foreground="White" Padding="1,0,0,0"/>
+                                <TextBlock Text="&#186; ABC" FontSize="12" Foreground="White" Padding="0,0,1,0"/>
+                            </StackPanel>
+                            <Rectangle Fill="Blue" Opacity="0.4" Margin="0,30,0,0" />
+                        </Grid>
 
                     </Grid>
+
                     <canvas:CanvasControl Draw="DrawCanvas" x:Name="DrawingCanvas" IsHitTestVisible="False"/>
 
-                    <Grid Name="gridVline2" HorizontalAlignment="Right" ManipulationMode="TranslateX">
-                        <Grid.RenderTransform>
-                            <CompositeTransform x:Name="transformV2"/>
-                        </Grid.RenderTransform>
-                        <Line StrokeThickness="2" Visibility="Collapsed" Name="lineV2" Stroke="#FF00FF" Y2="{Binding ActualHeight, ElementName=gridMain, Mode=OneWay}" HorizontalAlignment="Center" StrokeDashArray="4" IsHitTestVisible="False"/>
-                        <Rectangle Name="rectV2" Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Fill="#FF00FF" Stroke="Black" ManipulationMode="TranslateX" ManipulationDelta="vertical_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted"/>
-                    </Grid>
-                    <Grid Name="gridVline1" HorizontalAlignment="Right" ManipulationMode="TranslateX">
-                        <Grid.RenderTransform>
-                            <CompositeTransform x:Name="transformV1"/>
-                        </Grid.RenderTransform>
-                        <Line IsHitTestVisible="False" StrokeThickness="2" Visibility="Collapsed" Name="lineV1" Stroke="#FF00FF" Y2="{Binding ActualHeight, ElementName=gridMain, Mode=OneWay}" HorizontalAlignment="Center" StrokeDashArray="4"/>
-                        <Rectangle Name="rectV1" Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Fill="#FF00FF" Stroke="Black" ManipulationMode="TranslateX" ManipulationDelta="vertical_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted"/>
-                    </Grid>
-                    <Grid Name="gridHline2" VerticalAlignment="Top" ManipulationMode="TranslateY">
-                        <Grid.RenderTransform>
-                            <CompositeTransform x:Name="transformH2"/>
-                        </Grid.RenderTransform>
-                        <Line IsHitTestVisible="False" Visibility="Collapsed" Name="lineH2" Stroke="#9D00FF" StrokeDashArray="4" VerticalAlignment="Center" X2="{Binding ActualWidth, ElementName=gridMain, Mode=OneWay}" StrokeThickness="2"/>
-                        <Rectangle Name="rectH2" Width="10" Height="10" Fill="#9D00FF" Stroke="Black" HorizontalAlignment="Left" ManipulationMode="TranslateY" ManipulationDelta="horizontal_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted"/>
-                    </Grid>
-                    <Grid Name="gridHline1" VerticalAlignment="Top" ManipulationMode="TranslateY">
-                        <Grid.RenderTransform>
-                            <CompositeTransform x:Name="transformH1"/>
-                        </Grid.RenderTransform>
-                        <Line IsHitTestVisible="False" StrokeThickness="2" Visibility="Collapsed" Name="lineH1" Stroke="#9D00FF" StrokeDashArray="4" VerticalAlignment="Center" X2="{Binding ActualWidth, ElementName=gridMain, Mode=OneWay}"/>
-                        <Rectangle Name="rectH1" Width="10" Height="10" Fill="#9D00FF" Stroke="Black" HorizontalAlignment="Left" ManipulationMode="TranslateY" ManipulationDelta="horizontal_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted"/>
-                    </Grid>
-                    
-                    <Grid Name="gridHrulerPres" VerticalAlignment="Top" Margin="-46,-10,0,0" ManipulationMode="TranslateY">
+                    <Grid Name="gridHrulerPres" VerticalAlignment="Top" Margin="-48,-10,0,0" ManipulationMode="TranslateY">
                         <Grid.RenderTransform>
                             <CompositeTransform x:Name="transformHpres"/>
                         </Grid.RenderTransform>
@@ -348,7 +471,7 @@
                             <TextBox Name="tboxHpos" Text="100" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource styleTextBoxRulers}" TextChanged="tbox_TextChanged" />
                         </StackPanel>
                     </Grid>
-                    <Grid Name="gridHrulerZero" VerticalAlignment="Bottom" Margin="-46,0,0,-10" ManipulationMode="TranslateY">
+                    <Grid Name="gridHrulerZero" VerticalAlignment="Bottom" Margin="-48,0,0,-10" ManipulationMode="TranslateY">
                         <Grid.RenderTransform>
                             <CompositeTransform x:Name="transformHzero"/>
                         </Grid.RenderTransform>
@@ -389,6 +512,35 @@
                             </Polygon>
                             <TextBox TextChanged="tbox_TextChanged" Name="tboxVpos" Text="720" HorizontalAlignment="Center" Style="{StaticResource styleTextBoxRulers}" Margin="0,-2,0,0" />
                         </StackPanel>
+                    </Grid>
+
+                    <Grid Name="gridVline2" HorizontalAlignment="Right" ManipulationMode="TranslateX">
+                        <Grid.RenderTransform>
+                            <CompositeTransform x:Name="transformV2"/>
+                        </Grid.RenderTransform>
+                        <Line StrokeThickness="2" Visibility="Collapsed" Name="lineV2" Stroke="#FF00FF" Y2="{Binding ActualHeight, ElementName=gridMain, Mode=OneWay}" HorizontalAlignment="Center" StrokeDashArray="4" IsHitTestVisible="False"/>
+                        <Rectangle Name="rectV2" Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Fill="#FF00FF" Stroke="Black" ManipulationMode="TranslateX" ManipulationDelta="vertical_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted"/>
+                    </Grid>
+                    <Grid Name="gridVline1" HorizontalAlignment="Right" ManipulationMode="TranslateX">
+                        <Grid.RenderTransform>
+                            <CompositeTransform x:Name="transformV1"/>
+                        </Grid.RenderTransform>
+                        <Line IsHitTestVisible="False" StrokeThickness="2" Visibility="Collapsed" Name="lineV1" Stroke="#FF00FF" Y2="{Binding ActualHeight, ElementName=gridMain, Mode=OneWay}" HorizontalAlignment="Center" StrokeDashArray="4"/>
+                        <Rectangle Name="rectV1" Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Fill="#FF00FF" Stroke="Black" ManipulationMode="TranslateX" ManipulationDelta="vertical_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted"/>
+                    </Grid>
+                    <Grid Name="gridHline2" VerticalAlignment="Top" ManipulationMode="TranslateY">
+                        <Grid.RenderTransform>
+                            <CompositeTransform x:Name="transformH2"/>
+                        </Grid.RenderTransform>
+                        <Line IsHitTestVisible="False" Visibility="Collapsed" Name="lineH2" Stroke="#9D00FF" StrokeDashArray="4" VerticalAlignment="Center" X2="{Binding ActualWidth, ElementName=gridMain, Mode=OneWay}" StrokeThickness="2"/>
+                        <Rectangle Name="rectH2" Width="10" Height="10" Fill="#9D00FF" Stroke="Black" HorizontalAlignment="Left" ManipulationMode="TranslateY" ManipulationDelta="horizontal_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted"/>
+                    </Grid>
+                    <Grid Name="gridHline1" VerticalAlignment="Top" ManipulationMode="TranslateY">
+                        <Grid.RenderTransform>
+                            <CompositeTransform x:Name="transformH1"/>
+                        </Grid.RenderTransform>
+                        <Line IsHitTestVisible="False" StrokeThickness="2" Visibility="Collapsed" Name="lineH1" Stroke="#9D00FF" StrokeDashArray="4" VerticalAlignment="Center" X2="{Binding ActualWidth, ElementName=gridMain, Mode=OneWay}"/>
+                        <Rectangle Name="rectH1" Width="10" Height="10" Fill="#9D00FF" Stroke="Black" HorizontalAlignment="Left" ManipulationMode="TranslateY" ManipulationDelta="horizontal_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted"/>
                     </Grid>
 
                     <Grid Name="gridForOtherInput" Background="Transparent" Visibility="Collapsed" PointerPressed="gridForOtherInput_PointerPressed" PointerReleased="gridForOtherInput_PointerReleased"/>
