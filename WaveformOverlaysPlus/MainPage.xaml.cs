@@ -726,12 +726,23 @@ namespace WaveformOverlaysPlus
             // Set these to initial values
             SetAmountBetween(tboxHpos);
             SetAmountBetween(tboxVpos);
-            SetUnitsPerX();
-            SetUnitsPerY();
+            //SetUnitsPerX(); //these methods are called from the two above
+            //SetUnitsPerY();
             gridCompressionOverlay.Width = gridMain.ActualWidth;
             gridCompressionOverlay.Height = gridMain.ActualHeight;
             gridOverlap.Width = gridMain.ActualWidth;
             gridOverlap.Height = gridMain.ActualHeight;
+
+            var evo = 140 / UnitsPerX;
+            var ivo = 210 / UnitsPerX;
+            var evc = 20 / UnitsPerX;
+            var ivc = 215 / UnitsPerX;
+            var not = 135 / UnitsPerX;
+            exhOpen.Width = new GridLength(evo, GridUnitType.Star);
+            intOpen.Width = new GridLength(ivo, GridUnitType.Star);
+            exhClose.Width = new GridLength(evc, GridUnitType.Star);
+            intClose.Width = new GridLength(ivc, GridUnitType.Star);
+            nothing.Width = new GridLength(not, GridUnitType.Star);
         }
 
         private void PenOrEraser_Clicked(object sender, RoutedEventArgs e)
@@ -1956,5 +1967,17 @@ namespace WaveformOverlaysPlus
         }
 
         #endregion
+
+        //private void Button_Click(object sender, RoutedEventArgs e)
+        //{
+        //    if (exhOpen.ActualWidth > 90)
+        //    {
+        //        exhOpen.Width = new GridLength(65, GridUnitType.Pixel);
+        //    }
+        //    else
+        //    {
+        //        exhOpen.Width = new GridLength(100, GridUnitType.Pixel);
+        //    }
+        //}
     }
 }

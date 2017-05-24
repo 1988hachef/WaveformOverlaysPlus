@@ -407,25 +407,19 @@
                         <Border BorderBrush="Black" BorderThickness="1"/>
                     </Grid>
 
-                    <Grid Name="gridOverlap" ManipulationMode="TranslateX" VerticalAlignment="Top" HorizontalAlignment="Left">
+                    <Grid Name="gridOverlap" ManipulationMode="TranslateX" HorizontalAlignment="Left" VerticalAlignment="Top" >
                         <Grid.RenderTransform>
                             <CompositeTransform x:Name="transformOverlap"/>
                         </Grid.RenderTransform>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition x:Name="exhOpen" Width="98*"/>
-                            <ColumnDefinition Width="148*"/>
-                            <ColumnDefinition Width="15*"/>
-                            <ColumnDefinition Width="152*"/>
-                            <ColumnDefinition Width="95*"/>
+                            <ColumnDefinition x:Name="exhOpen"  Width="98*"/>
+                            <ColumnDefinition x:Name="intOpen"  Width="148*"/>
+                            <ColumnDefinition x:Name="exhClose" Width="15*"/>
+                            <ColumnDefinition x:Name="intClose" Width="152*"/>
+                            <ColumnDefinition x:Name="nothing"  Width="95*"/>
                         </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="100"/>
-                            <RowDefinition Height="400"/>
-                            <RowDefinition Height="25"/>
-                        </Grid.RowDefinitions>
 
-                        <Grid Name="gridExhOverlap" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Visibility="Collapsed">
+                        <Grid Name="gridExhOverlap" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Visibility="Visible" Height="550" VerticalAlignment="Bottom">
                             <Rectangle Fill="Red" HorizontalAlignment="Left" Width="2" />
                             <Rectangle Fill="Red" HorizontalAlignment="Right" Width="2" />
                             <StackPanel Orientation="Horizontal" Background="Red" HorizontalAlignment="Left" VerticalAlignment="Top" Width="46" Margin="-23,0,0,0">
@@ -434,12 +428,12 @@
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Background="Red" HorizontalAlignment="Right" VerticalAlignment="Top" Width="46" Margin="0,0,-23,0">
                                 <TextBlock Text="10" FontSize="12" Foreground="White" Padding="1,0,0,0"/>
-                                <TextBlock Text="&#186; BTC" FontSize="12" Foreground="White" Padding="0,0,1,0"/>
+                                <TextBlock Text="&#186; ATC" FontSize="12" Foreground="White" Padding="0,0,1,0"/>
                             </StackPanel>
                             <Rectangle Fill="Red" Opacity="0.4" Margin="0,30,0,0"/>
                         </Grid>
 
-                        <Grid Name="gridIntOverlap" Grid.ColumnSpan="2" Grid.Column="2" Grid.Row="2" Grid.RowSpan="1" Visibility="Collapsed">
+                        <Grid Name="gridIntOverlap" Grid.ColumnSpan="2" Grid.Column="2" Grid.Row="2" Grid.RowSpan="1" Visibility="Visible" Height="450" VerticalAlignment="Bottom">
                             <Rectangle Fill="Blue" HorizontalAlignment="Left" Width="2" />
                             <Rectangle Fill="Blue" HorizontalAlignment="Right" Width="2" />
                             <StackPanel Orientation="Horizontal" Background="Blue" HorizontalAlignment="Left" VerticalAlignment="Top" Width="46" Margin="-23,0,0,0">
@@ -452,7 +446,7 @@
                             </StackPanel>
                             <Rectangle Fill="Blue" Opacity="0.4" Margin="0,30,0,0" />
                         </Grid>
-
+                        
                     </Grid>
 
                     <canvas:CanvasControl Draw="DrawCanvas" x:Name="DrawingCanvas" IsHitTestVisible="False"/>
