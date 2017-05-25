@@ -724,25 +724,17 @@ namespace WaveformOverlaysPlus
             }
 
             // Set these to initial values
-            SetAmountBetween(tboxHpos);
-            SetAmountBetween(tboxVpos);
-            //SetUnitsPerX(); //these methods are called from the two above
-            //SetUnitsPerY();
             gridCompressionOverlay.Width = gridMain.ActualWidth;
             gridCompressionOverlay.Height = gridMain.ActualHeight;
-            gridOverlap.Width = gridMain.ActualWidth;
-            gridOverlap.Height = gridMain.ActualHeight;
+            SetAmountBetween(tboxHpos);
+            SetAmountBetween(tboxVpos);
+            
 
-            var evo = 140 / UnitsPerX;
-            var ivo = 210 / UnitsPerX;
-            var evc = 20 / UnitsPerX;
-            var ivc = 215 / UnitsPerX;
-            var not = 135 / UnitsPerX;
-            exhOpen.Width = new GridLength(evo, GridUnitType.Star);
-            intOpen.Width = new GridLength(ivo, GridUnitType.Star);
-            exhClose.Width = new GridLength(evc, GridUnitType.Star);
-            intClose.Width = new GridLength(ivc, GridUnitType.Star);
-            nothing.Width = new GridLength(not, GridUnitType.Star);
+            transformExh.TranslateX = 140 / UnitsPerX;
+            gridExhOverlap.Width = 230 / UnitsPerX;
+            transformInt.TranslateX = 350 / UnitsPerX;
+            gridIntOverlap.Width = 235 / UnitsPerX;
+
         }
 
         private void PenOrEraser_Clicked(object sender, RoutedEventArgs e)
@@ -1640,7 +1632,7 @@ namespace WaveformOverlaysPlus
             {
                 if (gripName != null)
                 {
-                    GeneralTransform gt1 = rulerLine.TransformToVisual(lineVrulerZero);
+                    GeneralTransform gt1 = rulerLine.TransformToVisual(rectZeroDegrees);
                     Point point = gt1.TransformPoint(new Point(0, 0));
 
                     if (gripName == "rectV1") { tblockPink1.Text = (Math.Round((point.X * UnitsPerX) + VstartValue)).ToString(); }
@@ -1652,14 +1644,14 @@ namespace WaveformOverlaysPlus
             {
                 if (tblockPink1.Text != "--")
                 {
-                    GeneralTransform gt1 = lineV1.TransformToVisual(lineVrulerZero);
+                    GeneralTransform gt1 = lineV1.TransformToVisual(rectZeroDegrees);
                     Point point = gt1.TransformPoint(new Point(0, 0));
 
                     tblockPink1.Text = (Math.Round((point.X * UnitsPerX) + VstartValue)).ToString();
                 }
                 if (tblockPink2.Text != "--")
                 {
-                    GeneralTransform gt1 = lineV2.TransformToVisual(lineVrulerZero);
+                    GeneralTransform gt1 = lineV2.TransformToVisual(rectZeroDegrees);
                     Point point = gt1.TransformPoint(new Point(0, 0));
 
                     tblockPink2.Text = (Math.Round((point.X * UnitsPerX) + VstartValue)).ToString();
@@ -1774,9 +1766,6 @@ namespace WaveformOverlaysPlus
                         transformComp.TranslateX += e.Delta.Translation.X;
                         gridCompressionOverlay.Width = gridCompressionOverlay.ActualWidth - e.Delta.Translation.X;
 
-                        transformOverlap.TranslateX += e.Delta.Translation.X;
-                        gridOverlap.Width = gridOverlap.ActualWidth - e.Delta.Translation.X;
-
                         transform.TranslateX += e.Delta.Translation.X;
                     }
                 }
@@ -1786,8 +1775,6 @@ namespace WaveformOverlaysPlus
                     if (leftAdjust >= minWidth)
                     {
                         gridCompressionOverlay.Width = gridCompressionOverlay.ActualWidth + e.Delta.Translation.X;
-
-                        gridOverlap.Width = gridOverlap.ActualWidth + e.Delta.Translation.X;
 
                         transform.TranslateX += e.Delta.Translation.X;
                     }
@@ -1966,18 +1953,57 @@ namespace WaveformOverlaysPlus
             }
         }
 
-        #endregion
+        private void spEVO_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+            GeneralTransform gt = rectEVO.TransformToVisual(gridToContainOthers);
+            Point p = gt.TransformPoint(new Point(0, 0));
 
-        //private void Button_Click(object sender, RoutedEventArgs e)
-        //{
-        //    if (exhOpen.ActualWidth > 90)
-        //    {
-        //        exhOpen.Width = new GridLength(65, GridUnitType.Pixel);
-        //    }
-        //    else
-        //    {
-        //        exhOpen.Width = new GridLength(100, GridUnitType.Pixel);
-        //    }
-        //}
+            var currentXposition = p.X;
+            var xAdjust = currentXposition + e.Delta.Translation.X;
+            var rightLimit = currentXposition + rectRed.ActualWidth - 25;
+
+            var currentYposition = p.Y;
+            var yAdjust = currentYposition + e.Delta.Translation.Y;
+            var bottomLimit = gridToContainOthers.ActualHeight - gridIntOverlap.ActualHeight - 45;
+
+            if (xAdjust > 25 && xAdjust < rightLimit)
+            {
+                transformExh.TranslateX += e.Delta.Translation.X;
+                gridExhOverlap.Width -= e.Delta.Translation.X;
+
+                SetEVOText();
+            }
+            if (yAdjust > 1 && yAdjust < bottomLimit)
+            {
+                gridExhOverlap.Height -= e.Delta.Translation.Y;
+            }
+        }
+
+        void SetEVOText()
+        {
+            GeneralTransform gt = rectEVO.TransformToVisual(rectZeroDegrees);
+            Point p = gt.TransformPoint(new Point(0, 0));
+
+            var numForText = (p.X * UnitsPerX) + VstartValue;
+
+            if (numForText <= 180)
+            {
+                tblockExhOpen.Text = Math.Round(180 - numForText).ToString();
+                if (tblockEVO.Text != "\u00BA BBC")
+                {
+                    tblockEVO.Text = "\u00BA BBC";
+                }
+            }
+            else
+            {
+                tblockExhOpen.Text = Math.Round(numForText - 180).ToString();
+                if (tblockEVO.Text != "\u00BA ABC")
+                {
+                    tblockEVO.Text = "\u00BA ABC";
+                }
+            }
+        }
+
+        #endregion
     }
 }

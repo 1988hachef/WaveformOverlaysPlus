@@ -304,149 +304,138 @@
                         
                     </Grid>
 
-                    <Grid Name="gridCompressionOverlay" ManipulationMode="TranslateX" HorizontalAlignment="Left" VerticalAlignment="Top" Opacity=".001" IsHitTestVisible="False">
+                    <Grid Name="gridCompressionOverlay" ManipulationMode="TranslateX" HorizontalAlignment="Left" VerticalAlignment="Top" Opacity="0.001" IsHitTestVisible="False" Width="721">
                         <Grid.RenderTransform>
                             <CompositeTransform x:Name="transformComp"/>
                         </Grid.RenderTransform>
-                        <Grid Name="gridWithOverlapTextBlocks">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="1"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="1"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="1"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="1"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="1"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="2"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="1"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="1"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="1"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="1"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="1"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="2"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="1"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="1"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="1"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="1"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="1"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="2"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="1"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="1"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="1"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="1"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="1"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="2"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition Height="15"/>
-                                <RowDefinition Height="30"/>
-                                <RowDefinition Height="75"/>
-                                <RowDefinition Height="25"/>
-                            </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="29*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="29*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="29*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="29*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="29*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="29*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="29*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="29*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="29*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="29*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="29*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="29*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="29*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="29*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="29*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="29*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="29*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="29*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="29*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="29*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="29*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="29*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="29*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="29*"/>
+                            <ColumnDefinition Width="1"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="15"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="75"/>
+                            <RowDefinition Height="25"/>
+                        </Grid.RowDefinitions>
 
-                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="5"  Grid.Column="0"  Fill="Gray"/>
-                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="2"  Fill="Gray" Grid.Row="3"/>
-                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="4"  Fill="Gray" Grid.Row="3"/>
-                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="6"  Fill="Gray" Grid.Row="3"/>
-                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="8"  Fill="Gray" Grid.Row="3"/>
-                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="10" Fill="Gray" Grid.Row="3"/>
-                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="5"  Grid.Column="12" Fill="Gray"/>
-                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="14" Fill="Gray" Grid.Row="3"/>
-                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="16" Fill="Gray" Grid.Row="3"/>
-                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="18" Fill="Gray" Grid.Row="3"/>
-                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="20" Fill="Gray" Grid.Row="3"/>
-                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="22" Fill="Gray" Grid.Row="3"/>
-                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="5"  Grid.Column="24" Fill="Gray"/>
-                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="26" Fill="Gray" Grid.Row="3"/>
-                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="28" Fill="Gray" Grid.Row="3"/>
-                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="30" Fill="Gray" Grid.Row="3"/>
-                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="32" Fill="Gray" Grid.Row="3"/>
-                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="34" Fill="Gray" Grid.Row="3"/>
-                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="5"  Grid.Column="36" Fill="Gray"/>
-                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="38" Fill="Gray" Grid.Row="3"/>
-                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="40" Fill="Gray" Grid.Row="3"/>
-                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="42" Fill="Gray" Grid.Row="3"/>
-                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="44" Fill="Gray" Grid.Row="3"/>
-                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="46" Fill="Gray" Grid.Row="3"/>
-                            <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="5"  Grid.Column="48" Fill="Gray"/>
+                        <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="5"  Grid.Column="0"  Fill="Gray" Name="rectZeroDegrees"/>
+                        <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="2"  Fill="Gray" Grid.Row="3"/>
+                        <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="4"  Fill="Gray" Grid.Row="3"/>
+                        <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="6"  Fill="Gray" Grid.Row="3"/>
+                        <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="8"  Fill="Gray" Grid.Row="3"/>
+                        <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="10" Fill="Gray" Grid.Row="3"/>
+                        <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="5"  Grid.Column="12" Fill="Gray" />
+                        <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="14" Fill="Gray" Grid.Row="3"/>
+                        <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="16" Fill="Gray" Grid.Row="3"/>
+                        <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="18" Fill="Gray" Grid.Row="3"/>
+                        <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="20" Fill="Gray" Grid.Row="3"/>
+                        <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="22" Fill="Gray" Grid.Row="3"/>
+                        <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="5"  Grid.Column="24" Fill="Gray" />
+                        <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="26" Fill="Gray" Grid.Row="3"/>
+                        <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="28" Fill="Gray" Grid.Row="3"/>
+                        <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="30" Fill="Gray" Grid.Row="3"/>
+                        <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="32" Fill="Gray" Grid.Row="3"/>
+                        <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="34" Fill="Gray" Grid.Row="3"/>
+                        <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="5"  Grid.Column="36" Fill="Gray" />
+                        <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="38" Fill="Gray" Grid.Row="3"/>
+                        <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="40" Fill="Gray" Grid.Row="3"/>
+                        <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="42" Fill="Gray" Grid.Row="3"/>
+                        <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="44" Fill="Gray" Grid.Row="3"/>
+                        <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="1"  Grid.Column="46" Fill="Gray" Grid.Row="3"/>
+                        <Rectangle Grid.ColumnSpan="1" Grid.RowSpan="5"  Grid.Column="48" Fill="Gray" />
 
-                            <Rectangle Grid.ColumnSpan="13" Grid.RowSpan="1"  Grid.Column="0" Fill="Gray" Grid.Row="4" Stroke="Black"/>
-                            <Rectangle Grid.ColumnSpan="13" Grid.RowSpan="1"  Grid.Column="12" Fill="Gray" Grid.Row="4" Stroke="Black"/>
-                            <Rectangle Grid.ColumnSpan="13" Grid.RowSpan="1"  Grid.Column="24" Fill="Gray" Grid.Row="4" Stroke="Black"/>
-                            <Rectangle Grid.ColumnSpan="13" Grid.RowSpan="1"  Grid.Column="36" Fill="Gray" Grid.Row="4" Stroke="Black"/>
+                        <Rectangle Grid.ColumnSpan="13" Grid.RowSpan="1"  Grid.Column="0" Fill="Gray" Grid.Row="4" Stroke="Black"/>
+                        <Rectangle Grid.ColumnSpan="13" Grid.RowSpan="1"  Grid.Column="12" Fill="Gray" Grid.Row="4" Stroke="Black"/>
+                        <Rectangle Grid.ColumnSpan="13" Grid.RowSpan="1"  Grid.Column="24" Fill="Gray" Grid.Row="4" Stroke="Black"/>
+                        <Rectangle Grid.ColumnSpan="13" Grid.RowSpan="1"  Grid.Column="36" Fill="Gray" Grid.Row="4" Stroke="Black"/>
 
-                            <TextBlock Name="tblockExp" Grid.Column="0" Grid.ColumnSpan="13" HorizontalAlignment="Center" Grid.Row="4" TextWrapping="Wrap" Text="Expansion" VerticalAlignment="Center" FontWeight="Bold" FontSize="12"/>
-                            <TextBlock Name="tblockExh" Grid.Column="12" Grid.ColumnSpan="13" HorizontalAlignment="Center" Grid.Row="4" TextWrapping="Wrap" Text="Exhaust" VerticalAlignment="Center" FontWeight="Bold" FontSize="12"/>
-                            <TextBlock Name="tblockInt" Grid.Column="24" Grid.ColumnSpan="13" HorizontalAlignment="Center" Grid.Row="4" TextWrapping="Wrap" Text="Intake" VerticalAlignment="Center" FontWeight="Bold" FontSize="12"/>
-                            <TextBlock Name="tblockComp" Grid.Column="36" Grid.ColumnSpan="13" HorizontalAlignment="Center" Grid.Row="4" TextWrapping="Wrap" Text="Compression" VerticalAlignment="Center" FontWeight="Bold" FontSize="12"/>
-                        </Grid>
-                        <Border BorderBrush="Black" BorderThickness="1"/>
+                        <TextBlock Name="tblockExp" Grid.Column="0" Grid.ColumnSpan="13" HorizontalAlignment="Center" Grid.Row="4" TextWrapping="Wrap" Text="Expansion" VerticalAlignment="Center" FontWeight="Bold" FontSize="12"/>
+                        <TextBlock Name="tblockExh" Grid.Column="12" Grid.ColumnSpan="13" HorizontalAlignment="Center" Grid.Row="4" TextWrapping="Wrap" Text="Exhaust" VerticalAlignment="Center" FontWeight="Bold" FontSize="12"/>
+                        <TextBlock Name="tblockInt" Grid.Column="24" Grid.ColumnSpan="13" HorizontalAlignment="Center" Grid.Row="4" TextWrapping="Wrap" Text="Intake" VerticalAlignment="Center" FontWeight="Bold" FontSize="12"/>
+                        <TextBlock Name="tblockComp" Grid.Column="36" Grid.ColumnSpan="13" HorizontalAlignment="Center" Grid.Row="4" TextWrapping="Wrap" Text="Compression" VerticalAlignment="Center" FontWeight="Bold" FontSize="12"/>
                     </Grid>
 
-                    <Grid Name="gridOverlap" ManipulationMode="TranslateX" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                    <Grid Name="gridExhOverlap" Visibility="Visible" Height="550" VerticalAlignment="Bottom" ManipulationMode="TranslateX, TranslateY" HorizontalAlignment="Left">
                         <Grid.RenderTransform>
-                            <CompositeTransform x:Name="transformOverlap"/>
+                            <CompositeTransform x:Name="transformExh"/>
                         </Grid.RenderTransform>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition x:Name="exhOpen"  Width="98*"/>
-                            <ColumnDefinition x:Name="intOpen"  Width="148*"/>
-                            <ColumnDefinition x:Name="exhClose" Width="15*"/>
-                            <ColumnDefinition x:Name="intClose" Width="152*"/>
-                            <ColumnDefinition x:Name="nothing"  Width="95*"/>
-                        </Grid.ColumnDefinitions>
+                        <Rectangle Name="rectEVO" Fill="Red" HorizontalAlignment="Left" Width="1" />
+                        <Rectangle Name="rectEVC" Fill="Red" HorizontalAlignment="Right" Width="1" />
+                        <StackPanel Name="spEVO" Orientation="Horizontal" Background="Red" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-23,0,0,0" ManipulationMode="TranslateX, TranslateY" ManipulationDelta="spEVO_ManipulationDelta">
+                            <TextBlock Name="tblockExhOpen" Text="40" FontSize="12" Foreground="White" Padding="1,0,0,0"/>
+                            <TextBlock Name="tblockEVO" Text="&#186; BBC" FontSize="12" Foreground="White" Padding="0,0,1,0"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Background="Red" HorizontalAlignment="Right" VerticalAlignment="Top" Width="46" Margin="0,0,-23,0">
+                            <TextBlock Text="10" FontSize="12" Foreground="White" Padding="1,0,0,0"/>
+                            <TextBlock Text="&#186; ATC" FontSize="12" Foreground="White" Padding="0,0,1,0"/>
+                        </StackPanel>
+                        <Rectangle Name="rectRed" Fill="Red" Opacity="0.4" Margin="0,30,0,0"/>
+                    </Grid>
 
-                        <Grid Name="gridExhOverlap" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Visibility="Visible" Height="550" VerticalAlignment="Bottom">
-                            <Rectangle Fill="Red" HorizontalAlignment="Left" Width="2" />
-                            <Rectangle Fill="Red" HorizontalAlignment="Right" Width="2" />
-                            <StackPanel Orientation="Horizontal" Background="Red" HorizontalAlignment="Left" VerticalAlignment="Top" Width="46" Margin="-23,0,0,0">
-                                <TextBlock Text="40" FontSize="12" Foreground="White" Padding="1,0,0,0"/>
-                                <TextBlock Text="&#186; BBC" FontSize="12" Foreground="White" Padding="0,0,1,0"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal" Background="Red" HorizontalAlignment="Right" VerticalAlignment="Top" Width="46" Margin="0,0,-23,0">
-                                <TextBlock Text="10" FontSize="12" Foreground="White" Padding="1,0,0,0"/>
-                                <TextBlock Text="&#186; ATC" FontSize="12" Foreground="White" Padding="0,0,1,0"/>
-                            </StackPanel>
-                            <Rectangle Fill="Red" Opacity="0.4" Margin="0,30,0,0"/>
-                        </Grid>
-
-                        <Grid Name="gridIntOverlap" Grid.ColumnSpan="2" Grid.Column="2" Grid.Row="2" Grid.RowSpan="1" Visibility="Visible" Height="450" VerticalAlignment="Bottom">
-                            <Rectangle Fill="Blue" HorizontalAlignment="Left" Width="2" />
-                            <Rectangle Fill="Blue" HorizontalAlignment="Right" Width="2" />
-                            <StackPanel Orientation="Horizontal" Background="Blue" HorizontalAlignment="Left" VerticalAlignment="Top" Width="46" Margin="-23,0,0,0">
-                                <TextBlock Text="10" FontSize="12" Foreground="White" Padding="1,0,0,0"/>
-                                <TextBlock Text="&#186; BTC" FontSize="12" Foreground="White" Padding="0,0,1,0"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal" Background="Blue" HorizontalAlignment="Right" VerticalAlignment="Top" Width="46" Margin="0,0,-23,0">
-                                <TextBlock Text="45" FontSize="12" Foreground="White" Padding="1,0,0,0"/>
-                                <TextBlock Text="&#186; ABC" FontSize="12" Foreground="White" Padding="0,0,1,0"/>
-                            </StackPanel>
-                            <Rectangle Fill="Blue" Opacity="0.4" Margin="0,30,0,0" />
-                        </Grid>
-                        
+                    <Grid Name="gridIntOverlap" Visibility="Visible" Height="450" VerticalAlignment="Bottom" HorizontalAlignment="Left" ManipulationMode="TranslateX, TranslateY">
+                        <Grid.RenderTransform>
+                            <CompositeTransform x:Name="transformInt"/>
+                        </Grid.RenderTransform>
+                        <Rectangle Name="rectIVO" Fill="Blue" HorizontalAlignment="Left" Width="1" />
+                        <Rectangle Name="rectIVC" Fill="Blue" HorizontalAlignment="Right" Width="1" />
+                        <StackPanel Orientation="Horizontal" Background="Blue" HorizontalAlignment="Left" VerticalAlignment="Top" Width="46" Margin="-23,0,0,0">
+                            <TextBlock Text="10" FontSize="12" Foreground="White" Padding="1,0,0,0"/>
+                            <TextBlock Text="&#186; BTC" FontSize="12" Foreground="White" Padding="0,0,1,0"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Background="Blue" HorizontalAlignment="Right" VerticalAlignment="Top" Width="46" Margin="0,0,-23,0">
+                            <TextBlock Text="45" FontSize="12" Foreground="White" Padding="1,0,0,0"/>
+                            <TextBlock Text="&#186; ABC" FontSize="12" Foreground="White" Padding="0,0,1,0"/>
+                        </StackPanel>
+                        <Rectangle Fill="Blue" Opacity="0.4" Margin="0,30,0,0" />
                     </Grid>
 
                     <canvas:CanvasControl Draw="DrawCanvas" x:Name="DrawingCanvas" IsHitTestVisible="False"/>
