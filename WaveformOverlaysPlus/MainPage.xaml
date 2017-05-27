@@ -44,7 +44,6 @@
                 </Button.Flyout>
             </Button>
 
-
             <Button Content="Edit" Style="{StaticResource styleMenuButton}" Height="25" Padding="8,-2,8,0" >
                 <Button.Flyout>
                     <MenuFlyout>
@@ -68,8 +67,8 @@
 
             <Rectangle Margin="10,0" Width="1" Height="20" Fill="#FF909090"/>
 
-            <Button Style="{StaticResource styleMenuButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE7A7;" FontSize="14" Height="25" />
-            <Button Style="{StaticResource styleMenuButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE7A6;" FontSize="14" Height="25"/>
+            <Button Name="btnUndo" Style="{StaticResource styleMenuButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE7A7;" FontSize="14" Height="25" />
+            <Button Name="btnRedo" Style="{StaticResource styleMenuButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE7A6;" FontSize="14" Height="25"/>
 
         </StackPanel>
 
@@ -94,7 +93,7 @@
                             <Image Source="/Assets/IconCompDivs.bmp" Height="30" Width="30"/>
                         </Button.Content>
                     </Button>
-                    <Button Style="{StaticResource styleMenuButton}" Width="38" Padding="0" Margin="8,0,0,0" Height="38">
+                    <Button Name="btnCyl" Style="{StaticResource styleMenuButton}" Width="38" Padding="0" Margin="8,0,0,0" Height="38" Click="btnCyl_Click">
                         <Button.Content>
                             <Image Source="/Assets/IconCylinderIDOverlay.bmp" Width="30" Height="30"/>
                         </Button.Content>
@@ -253,7 +252,7 @@
 
             <Grid Name="gridForOverall" Grid.Column="1" Background="#FFD7E0EE">
 
-                <Grid Name="gridDelta" Height="32" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,-25,40,0" Background="White" Visibility="Collapsed">
+                <Grid Name="gridDelta" Height="32" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,-25,250,0" Background="White" Visibility="Collapsed">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="20"/>
                         <ColumnDefinition Width="50"/>
@@ -296,6 +295,40 @@
                             <TextBlock  Name="tblockPurpleDelta" Text="--" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="8,0,0,0"/>
                         </Grid>
                     </Border>
+                </Grid>
+
+                <Grid Name="colorKey" Height="32" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,-25,40,0" Background="White" Visibility="Collapsed" Width="170">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="16"/>
+                        <RowDefinition Height="16"/>
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Column="0" Grid.ColumnSpan="4" BorderBrush="Black" BorderThickness="1">
+                        <TextBlock Text="Cyl ID color key" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,-3,0,0"/>
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="0" BorderBrush="Black" BorderThickness="1,0,1,1" Background="Yellow">
+                        <TextBlock Text="Int" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-3,0,0"/>
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="1" BorderBrush="Black" BorderThickness="0,0,1,1" Background="Orange">
+                        <TextBlock Text="Cmp" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-3,0,0"/>
+                    </Border>
+                    
+                    <Border Grid.Row="1" Grid.Column="2" BorderBrush="Black" BorderThickness="0,0,1,1" Background="OrangeRed">
+                        <TextBlock Text="Exp" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-3,0,0"/>
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="3" BorderBrush="Black" BorderThickness="0,0,1,1" Background="SaddleBrown">
+                        <TextBlock Text="Exh" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-3,0,0"/>
+                    </Border>
+                    
                 </Grid>
 
                 <Grid Name="gridToContainOthers" Margin="50,15,20,40">
@@ -404,7 +437,7 @@
                         <TextBlock Name="tblockComp" Grid.Column="36" Grid.ColumnSpan="13" HorizontalAlignment="Center" Grid.Row="4" TextWrapping="Wrap" Text="Compression" VerticalAlignment="Center" FontWeight="Bold" FontSize="12"/>
                     </Grid>
 
-                    <Grid Name="gridExhOverlap" Visibility="Visible" Height="550" VerticalAlignment="Bottom" ManipulationMode="TranslateX, TranslateY" HorizontalAlignment="Left">
+                    <Grid Name="gridExhOverlap" Visibility="Collapsed" Height="550" VerticalAlignment="Bottom" ManipulationMode="TranslateX, TranslateY" HorizontalAlignment="Left">
                         <Grid.RenderTransform>
                             <CompositeTransform x:Name="transformExh"/>
                         </Grid.RenderTransform>
@@ -414,28 +447,28 @@
                             <TextBlock Name="tblockExhOpen" Text="40" FontSize="12" Foreground="White" Padding="1,0,0,0"/>
                             <TextBlock Name="tblockEVO" Text="&#186; BBC" FontSize="12" Foreground="White" Padding="0,0,1,0"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" Background="Red" HorizontalAlignment="Right" VerticalAlignment="Top" Width="46" Margin="0,0,-23,0">
-                            <TextBlock Text="10" FontSize="12" Foreground="White" Padding="1,0,0,0"/>
-                            <TextBlock Text="&#186; ATC" FontSize="12" Foreground="White" Padding="0,0,1,0"/>
+                        <StackPanel Name="spEVC" Orientation="Horizontal" Background="Red" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,-23,0" ManipulationMode="TranslateX, TranslateY" ManipulationDelta="spEVC_ManipulationDelta">
+                            <TextBlock Name="tblockExhClose" Text="10" FontSize="12" Foreground="White" Padding="1,0,0,0"/>
+                            <TextBlock Name="tblockEVC" Text="&#186; ATC" FontSize="12" Foreground="White" Padding="0,0,1,0"/>
                         </StackPanel>
-                        <Rectangle Name="rectRed" Fill="Red" Opacity="0.4" Margin="0,30,0,0"/>
+                        <Rectangle Name="rectRed" Fill="Red" Opacity="0.2" Margin="0,30,0,0"/>
                     </Grid>
 
-                    <Grid Name="gridIntOverlap" Visibility="Visible" Height="450" VerticalAlignment="Bottom" HorizontalAlignment="Left" ManipulationMode="TranslateX, TranslateY">
+                    <Grid Name="gridIntOverlap" Visibility="Collapsed" Height="450" VerticalAlignment="Bottom" HorizontalAlignment="Left" ManipulationMode="TranslateX, TranslateY">
                         <Grid.RenderTransform>
                             <CompositeTransform x:Name="transformInt"/>
                         </Grid.RenderTransform>
                         <Rectangle Name="rectIVO" Fill="Blue" HorizontalAlignment="Left" Width="1" />
                         <Rectangle Name="rectIVC" Fill="Blue" HorizontalAlignment="Right" Width="1" />
-                        <StackPanel Orientation="Horizontal" Background="Blue" HorizontalAlignment="Left" VerticalAlignment="Top" Width="46" Margin="-23,0,0,0">
-                            <TextBlock Text="10" FontSize="12" Foreground="White" Padding="1,0,0,0"/>
-                            <TextBlock Text="&#186; BTC" FontSize="12" Foreground="White" Padding="0,0,1,0"/>
+                        <StackPanel Name="spIVO" Orientation="Horizontal" Background="Blue" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-23,0,0,0" ManipulationMode="TranslateX, TranslateY" ManipulationDelta="spIVO_ManipulationDelta">
+                            <TextBlock Name="tblockIntOpen" Text="10" FontSize="12" Foreground="White" Padding="1,0,0,0"/>
+                            <TextBlock Name="tblockIVO" Text="&#186; BTC" FontSize="12" Foreground="White" Padding="0,0,1,0"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" Background="Blue" HorizontalAlignment="Right" VerticalAlignment="Top" Width="46" Margin="0,0,-23,0">
-                            <TextBlock Text="45" FontSize="12" Foreground="White" Padding="1,0,0,0"/>
-                            <TextBlock Text="&#186; ABC" FontSize="12" Foreground="White" Padding="0,0,1,0"/>
+                        <StackPanel Name="spIVC" Orientation="Horizontal" Background="Blue" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,-23,0" ManipulationMode="TranslateX, TranslateY" ManipulationDelta="spIVC_ManipulationDelta">
+                            <TextBlock Name="tblockIntClose" Text="45" FontSize="12" Foreground="White" Padding="1,0,0,0"/>
+                            <TextBlock Name="tblockIVC" Text="&#186; ABC" FontSize="12" Foreground="White" Padding="0,0,1,0"/>
                         </StackPanel>
-                        <Rectangle Fill="Blue" Opacity="0.4" Margin="0,30,0,0" />
+                        <Rectangle Name="rectBlue" Fill="Blue" Opacity="0.2" Margin="0,30,0,0" />
                     </Grid>
 
                     <canvas:CanvasControl Draw="DrawCanvas" x:Name="DrawingCanvas" IsHitTestVisible="False"/>
@@ -527,6 +560,7 @@
                     </Grid>
 
                     <Grid Name="gridForOtherInput" Background="Transparent" Visibility="Collapsed" PointerPressed="gridForOtherInput_PointerPressed" PointerReleased="gridForOtherInput_PointerReleased"/>
+                    
                     <InkCanvas x:Name="inkCanvas" Visibility="Collapsed"/>
 
                 </Grid>
@@ -606,6 +640,231 @@
                 </GridView>
 
             </Grid>
+        </Grid>
+
+        <Grid Name="gridCylinderIDSelections" Grid.RowSpan="2" Background="#B2000000" Visibility="Collapsed">
+            <Border Background="White" VerticalAlignment="Center" HorizontalAlignment="Center" Width="355">
+                <StackPanel>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,4,0">
+                        <TextBlock Text="Number of cylinders:" Margin="0,15,15,15" />
+                        <ComboBox Name="comboBoxCylinders" VerticalAlignment="Center" DropDownClosed="comboBoxCylinders_DropDownClosed" DropDownOpened="box_DropDownOpened">
+                            <ComboBoxItem Content="1"/>
+                            <ComboBoxItem Content="2"/>
+                            <ComboBoxItem Content="3"/>
+                            <ComboBoxItem Content="4"/>
+                            <ComboBoxItem Content="5"/>
+                            <ComboBoxItem Content="6"/>
+                            <ComboBoxItem Content="7"/>
+                            <ComboBoxItem Content="8"/>
+                            <ComboBoxItem Content="9"/>
+                            <ComboBoxItem Content="10"/>
+                            <ComboBoxItem Content="11"/>
+                            <ComboBoxItem Content="12"/>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,4,0">
+                        <TextBlock Text="Sync. cylinder:" Margin="0,15,15,15" />
+                        <ComboBox Name="comboBoxSync" VerticalAlignment="Center" Foreground="Red" Margin="45,0,0,0" DropDownClosed="comboBoxSync_DropDownClosed" DropDownOpened="box_DropDownOpened"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,2,0">
+                        <TextBlock Text="Firing order:" Margin="0,15,10,15" />
+                        <TextBox Name="textBox1" Height="32" MinWidth="23" Padding="5,3,5,5" Margin="5,0,0,0" Visibility="Collapsed" KeyUp="textBox1_KeyUp" MaxLength="1" KeyDown="textBox1_KeyDown"/>
+                        <TextBox Name="textBox2" Height="32" MinWidth="23" Padding="5,3,5,5" Margin="5,0,0,0" Visibility="Collapsed" KeyUp="textBox2_KeyUp" MaxLength="1" KeyDown="textBox2_KeyDown"/>
+                        <TextBox Name="textBox3" Height="32" MinWidth="23" Padding="5,3,5,5" Margin="5,0,0,0" Visibility="Collapsed" KeyUp="textBox3_KeyUp" MaxLength="1" KeyDown="textBox3_KeyDown"/>
+                        <TextBox Name="textBox4" Height="32" MinWidth="23" Padding="5,3,5,5" Margin="5,0,0,0" Visibility="Collapsed" KeyUp="textBox4_KeyUp" MaxLength="1" KeyDown="textBox4_KeyDown"/>
+                        <TextBox Name="textBox5" Height="32" MinWidth="23" Padding="5,3,5,5" Margin="5,0,0,0" Visibility="Collapsed" KeyUp="textBox5_KeyUp" MaxLength="1" KeyDown="textBox5_KeyDown"/>
+                        <TextBox Name="textBox6" Height="32" MinWidth="23" Padding="5,3,5,5" Margin="5,0,0,0" Visibility="Collapsed" KeyUp="textBox6_KeyUp" MaxLength="1" KeyDown="textBox6_KeyDown"/>
+                        <TextBox Name="textBox7" Height="32" MinWidth="23" Padding="5,3,5,5" Margin="5,0,0,0" Visibility="Collapsed" KeyUp="textBox7_KeyUp" MaxLength="1" KeyDown="textBox7_KeyDown"/>
+                        <TextBox Name="textBox8" Height="32" MinWidth="23" Padding="5,3,5,5" Margin="5,0,0,0" Visibility="Collapsed" KeyUp="textBox8_KeyUp" MaxLength="1" KeyDown="textBox8_KeyDown"/>
+                        <StackPanel Margin="0,10,0,0">
+                            <ComboBox Name="comboBox1" MinWidth="53" Visibility="Collapsed" Margin="0,0,0,2" DropDownOpened="box_DropDownOpened">
+                                <ComboBoxItem Content="1"/>
+                                <ComboBoxItem Content="2"/>
+                                <ComboBoxItem Content="3"/>
+                                <ComboBoxItem Content="4"/>
+                                <ComboBoxItem Content="5"/>
+                                <ComboBoxItem Content="6"/>
+                                <ComboBoxItem Content="7"/>
+                                <ComboBoxItem Content="8"/>
+                                <ComboBoxItem Content="9"/>
+                                <ComboBoxItem Content="10"/>
+                                <ComboBoxItem Content="11"/>
+                                <ComboBoxItem Content="12"/>
+                            </ComboBox>
+                            <ComboBox Name="comboBox2" MinWidth="53" Visibility="Collapsed" Margin="0,0,0,2" DropDownOpened="box_DropDownOpened">
+                                <ComboBoxItem Content="1"/>
+                                <ComboBoxItem Content="2"/>
+                                <ComboBoxItem Content="3"/>
+                                <ComboBoxItem Content="4"/>
+                                <ComboBoxItem Content="5"/>
+                                <ComboBoxItem Content="6"/>
+                                <ComboBoxItem Content="7"/>
+                                <ComboBoxItem Content="8"/>
+                                <ComboBoxItem Content="9"/>
+                                <ComboBoxItem Content="10"/>
+                                <ComboBoxItem Content="11"/>
+                                <ComboBoxItem Content="12"/>
+                            </ComboBox>
+                            <ComboBox Name="comboBox3" MinWidth="53" Visibility="Collapsed" Margin="0,0,0,2" DropDownOpened="box_DropDownOpened">
+                                <ComboBoxItem Content="1"/>
+                                <ComboBoxItem Content="2"/>
+                                <ComboBoxItem Content="3"/>
+                                <ComboBoxItem Content="4"/>
+                                <ComboBoxItem Content="5"/>
+                                <ComboBoxItem Content="6"/>
+                                <ComboBoxItem Content="7"/>
+                                <ComboBoxItem Content="8"/>
+                                <ComboBoxItem Content="9"/>
+                                <ComboBoxItem Content="10"/>
+                                <ComboBoxItem Content="11"/>
+                                <ComboBoxItem Content="12"/>
+                            </ComboBox>
+                            <ComboBox Name="comboBox4" MinWidth="53" Visibility="Collapsed" Margin="0,0,0,2" DropDownOpened="box_DropDownOpened">
+                                <ComboBoxItem Content="1"/>
+                                <ComboBoxItem Content="2"/>
+                                <ComboBoxItem Content="3"/>
+                                <ComboBoxItem Content="4"/>
+                                <ComboBoxItem Content="5"/>
+                                <ComboBoxItem Content="6"/>
+                                <ComboBoxItem Content="7"/>
+                                <ComboBoxItem Content="8"/>
+                                <ComboBoxItem Content="9"/>
+                                <ComboBoxItem Content="10"/>
+                                <ComboBoxItem Content="11"/>
+                                <ComboBoxItem Content="12"/>
+                            </ComboBox>
+                            <ComboBox Name="comboBox5" MinWidth="53" Visibility="Collapsed" Margin="0,0,0,2" DropDownOpened="box_DropDownOpened">
+                                <ComboBoxItem Content="1"/>
+                                <ComboBoxItem Content="2"/>
+                                <ComboBoxItem Content="3"/>
+                                <ComboBoxItem Content="4"/>
+                                <ComboBoxItem Content="5"/>
+                                <ComboBoxItem Content="6"/>
+                                <ComboBoxItem Content="7"/>
+                                <ComboBoxItem Content="8"/>
+                                <ComboBoxItem Content="9"/>
+                                <ComboBoxItem Content="10"/>
+                                <ComboBoxItem Content="11"/>
+                                <ComboBoxItem Content="12"/>
+                            </ComboBox>
+                            <ComboBox Name="comboBox6" MinWidth="53" Visibility="Collapsed" Margin="0,0,0,2" DropDownOpened="box_DropDownOpened">
+                                <ComboBoxItem Content="1"/>
+                                <ComboBoxItem Content="2"/>
+                                <ComboBoxItem Content="3"/>
+                                <ComboBoxItem Content="4"/>
+                                <ComboBoxItem Content="5"/>
+                                <ComboBoxItem Content="6"/>
+                                <ComboBoxItem Content="7"/>
+                                <ComboBoxItem Content="8"/>
+                                <ComboBoxItem Content="9"/>
+                                <ComboBoxItem Content="10"/>
+                                <ComboBoxItem Content="11"/>
+                                <ComboBoxItem Content="12"/>
+                            </ComboBox>
+                            <ComboBox Name="comboBox7" MinWidth="53" Visibility="Collapsed" Margin="0,0,0,2" DropDownOpened="box_DropDownOpened">
+                                <ComboBoxItem Content="1"/>
+                                <ComboBoxItem Content="2"/>
+                                <ComboBoxItem Content="3"/>
+                                <ComboBoxItem Content="4"/>
+                                <ComboBoxItem Content="5"/>
+                                <ComboBoxItem Content="6"/>
+                                <ComboBoxItem Content="7"/>
+                                <ComboBoxItem Content="8"/>
+                                <ComboBoxItem Content="9"/>
+                                <ComboBoxItem Content="10"/>
+                                <ComboBoxItem Content="11"/>
+                                <ComboBoxItem Content="12"/>
+                            </ComboBox>
+                            <ComboBox Name="comboBox8" MinWidth="53" Visibility="Collapsed" Margin="0,0,0,2" DropDownOpened="box_DropDownOpened">
+                                <ComboBoxItem Content="1"/>
+                                <ComboBoxItem Content="2"/>
+                                <ComboBoxItem Content="3"/>
+                                <ComboBoxItem Content="4"/>
+                                <ComboBoxItem Content="5"/>
+                                <ComboBoxItem Content="6"/>
+                                <ComboBoxItem Content="7"/>
+                                <ComboBoxItem Content="8"/>
+                                <ComboBoxItem Content="9"/>
+                                <ComboBoxItem Content="10"/>
+                                <ComboBoxItem Content="11"/>
+                                <ComboBoxItem Content="12"/>
+                            </ComboBox>
+                            <ComboBox Name="comboBox9" MinWidth="53" Visibility="Collapsed" Margin="0,0,0,2" DropDownOpened="box_DropDownOpened">
+                                <ComboBoxItem Content="1"/>
+                                <ComboBoxItem Content="2"/>
+                                <ComboBoxItem Content="3"/>
+                                <ComboBoxItem Content="4"/>
+                                <ComboBoxItem Content="5"/>
+                                <ComboBoxItem Content="6"/>
+                                <ComboBoxItem Content="7"/>
+                                <ComboBoxItem Content="8"/>
+                                <ComboBoxItem Content="9"/>
+                                <ComboBoxItem Content="10"/>
+                                <ComboBoxItem Content="11"/>
+                                <ComboBoxItem Content="12"/>
+                            </ComboBox>
+                            <ComboBox Name="comboBox10" MinWidth="53" Visibility="Collapsed" Margin="0,0,0,2" DropDownOpened="box_DropDownOpened">
+                                <ComboBoxItem Content="1"/>
+                                <ComboBoxItem Content="2"/>
+                                <ComboBoxItem Content="3"/>
+                                <ComboBoxItem Content="4"/>
+                                <ComboBoxItem Content="5"/>
+                                <ComboBoxItem Content="6"/>
+                                <ComboBoxItem Content="7"/>
+                                <ComboBoxItem Content="8"/>
+                                <ComboBoxItem Content="9"/>
+                                <ComboBoxItem Content="10"/>
+                                <ComboBoxItem Content="11"/>
+                                <ComboBoxItem Content="12"/>
+                            </ComboBox>
+                            <ComboBox Name="comboBox11" MinWidth="53" Visibility="Collapsed" Margin="0,0,0,2" DropDownOpened="box_DropDownOpened">
+                                <ComboBoxItem Content="1"/>
+                                <ComboBoxItem Content="2"/>
+                                <ComboBoxItem Content="3"/>
+                                <ComboBoxItem Content="4"/>
+                                <ComboBoxItem Content="5"/>
+                                <ComboBoxItem Content="6"/>
+                                <ComboBoxItem Content="7"/>
+                                <ComboBoxItem Content="8"/>
+                                <ComboBoxItem Content="9"/>
+                                <ComboBoxItem Content="10"/>
+                                <ComboBoxItem Content="11"/>
+                                <ComboBoxItem Content="12"/>
+                            </ComboBox>
+                            <ComboBox Name="comboBox12" MinWidth="53" Visibility="Collapsed" Margin="0,0,0,2" DropDownOpened="box_DropDownOpened">
+                                <ComboBoxItem Content="1"/>
+                                <ComboBoxItem Content="2"/>
+                                <ComboBoxItem Content="3"/>
+                                <ComboBoxItem Content="4"/>
+                                <ComboBoxItem Content="5"/>
+                                <ComboBoxItem Content="6"/>
+                                <ComboBoxItem Content="7"/>
+                                <ComboBoxItem Content="8"/>
+                                <ComboBoxItem Content="9"/>
+                                <ComboBoxItem Content="10"/>
+                                <ComboBoxItem Content="11"/>
+                                <ComboBoxItem Content="12"/>
+                            </ComboBox>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Name="btnCancelCylinderID" Content="Cancel" Width="96" Height="45" Margin="15,15,15,15" Click="btnCancelCylinderID_Click"/>
+                        <Button Name="btnGoCylinderID" Margin="15,15,15,15" Width="96" Height="45" Click="btnGoCylinderID_Click">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/Assets/IconCylinderIDOverlay.bmp" Width="32" Height="32"/>
+                                    <TextBlock Text="Go" VerticalAlignment="Center" Margin="4,0,0,0"/>
+                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE72A;" VerticalAlignment="Center" Margin="4,0,0,0"/>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
         </Grid>
 
     </Grid>

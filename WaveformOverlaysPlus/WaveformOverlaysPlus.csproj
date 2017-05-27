@@ -116,6 +116,18 @@
     <Content Include="Assets\IconCompressionOverlay.bmp" />
     <Content Include="Assets\IconCylinderIDOverlay.bmp" />
     <Content Include="Assets\IconValveOverlap.bmp" />
+    <Content Include="MyXamlTextFiles\EightGridXamlText.txt" />
+    <Content Include="MyXamlTextFiles\ElevenGridXamlText.txt" />
+    <Content Include="MyXamlTextFiles\FiveGridXamlText.txt" />
+    <Content Include="MyXamlTextFiles\FourGridXamlText.txt" />
+    <Content Include="MyXamlTextFiles\NineGridXamlText.txt" />
+    <Content Include="MyXamlTextFiles\OneGridXamlText.txt" />
+    <Content Include="MyXamlTextFiles\SevenGridXamlText.txt" />
+    <Content Include="MyXamlTextFiles\SixGridXamlText.txt" />
+    <Content Include="MyXamlTextFiles\TenGridXamlText.txt" />
+    <Content Include="MyXamlTextFiles\ThreeGridXamlText.txt" />
+    <Content Include="MyXamlTextFiles\TwelveGridXamlText.txt" />
+    <Content Include="MyXamlTextFiles\TwoGridXamlText.txt" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -139,9 +151,7 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="MyXamlTextFiles\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <SDKReference Include="Microsoft.Services.Store.Engagement, Version=10.0">
       <Name>Microsoft Engagement Framework</Name>

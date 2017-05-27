@@ -1,0 +1,113 @@
+﻿<Grid xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Name="grids" Width="340" Height="340" HorizontalAlignment="Left" VerticalAlignment="Top">
+
+    <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="45"/>
+        <ColumnDefinition Width="2"/>
+        <ColumnDefinition/>
+        <ColumnDefinition/>
+        <ColumnDefinition/>
+        <ColumnDefinition/>
+        <ColumnDefinition Width="2"/>
+        <ColumnDefinition/>
+        <ColumnDefinition/>
+        <ColumnDefinition/>
+        <ColumnDefinition/>
+        <ColumnDefinition Width="2"/>
+        <ColumnDefinition/>
+        <ColumnDefinition/>
+        <ColumnDefinition/>
+        <ColumnDefinition/>
+        <ColumnDefinition Width="2"/>
+        <ColumnDefinition/>
+        <ColumnDefinition/>
+        <ColumnDefinition/>
+        <ColumnDefinition/>
+        <ColumnDefinition Width="2"/>
+        <ColumnDefinition/>
+        <ColumnDefinition/>
+        <ColumnDefinition/>
+        <ColumnDefinition/>
+        <ColumnDefinition Width="2"/>
+    </Grid.ColumnDefinitions>
+
+    <Grid.RowDefinitions>
+        <RowDefinition/>
+        <RowDefinition/>
+        <RowDefinition/>
+        <RowDefinition/>
+        <RowDefinition/>
+    </Grid.RowDefinitions>
+
+    <Border>
+        <Border.Background>
+            <SolidColorBrush Color="LightGray" Opacity="0.4"/>
+        </Border.Background>
+    </Border>
+    <Border Grid.Row="1" BorderBrush="Black" BorderThickness="0,1,0,0">
+        <Border.Background>
+            <SolidColorBrush Color="LightGray" Opacity="0.4"/>
+        </Border.Background>
+    </Border>
+    <Border Grid.Row="2" BorderBrush="Black" BorderThickness="0,1,0,0">
+        <Border.Background>
+            <SolidColorBrush Color="LightGray" Opacity="0.4"/>
+        </Border.Background>
+    </Border>
+    <Border Grid.Row="3" BorderBrush="Black" BorderThickness="0,1,0,0">
+        <Border.Background>
+            <SolidColorBrush Color="LightGray" Opacity="0.4"/>
+        </Border.Background>
+    </Border>
+    <Border Grid.Row="4" BorderBrush="Black" BorderThickness="0,1,0,0">
+        <Border.Background>
+            <SolidColorBrush Color="LightGray" Opacity="0.4"/>
+        </Border.Background>
+    </Border>
+
+
+    <TextBlock Name="label" Text="N" HorizontalAlignment="Center" Grid.Row="0" VerticalAlignment="Center" Padding="0"/>
+    <TextBlock Name="label1" Text="N" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Center" Padding="0"/>
+    <TextBlock Name="label2" Text="N" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Center" Padding="0"/>
+    <TextBlock Name="label3" Text="N" HorizontalAlignment="Center" Grid.Row="3" VerticalAlignment="Center" Padding="0"/>
+    <TextBlock Name="label4" Text="N" HorizontalAlignment="Center" Grid.Row="4" VerticalAlignment="Center" Padding="0" Foreground="Red" FontWeight="Bold"/>
+    <TextBlock Name="labelUpArrow" Text="↑" HorizontalAlignment="Right" Grid.Row="4" VerticalAlignment="Center" Padding="0" Foreground="Red" Margin="0,0,5,5" FontSize="21.333"/>
+
+    <Rectangle Opacity="0.5" Grid.Column="1"  Grid.Row="4" Grid.ColumnSpan="7" Stroke="White" Fill="OrangeRed"/>
+    <Rectangle Opacity="0.5" Grid.Column="8"  Grid.Row="4" Grid.ColumnSpan="6" Stroke="White" Fill="SaddleBrown"/>
+    <Rectangle Opacity="0.5" Grid.Column="14" Grid.Row="4" Grid.ColumnSpan="6" Stroke="White" Fill="Yellow"/>
+    <Rectangle Opacity="0.5" Grid.Column="20" Grid.Row="4" Grid.ColumnSpan="7" Stroke="White" Fill="Orange"/>
+
+    <Rectangle Opacity="0.5" Grid.Column="1"  Grid.Row="3" Grid.ColumnSpan="6" Stroke="White" Fill="Orange"/>
+    <Rectangle Opacity="0.5" Grid.Column="6"  Grid.Row="3" Grid.ColumnSpan="7" Stroke="White" Fill="OrangeRed"/>
+    <Rectangle Opacity="0.5" Grid.Column="13" Grid.Row="3" Grid.ColumnSpan="6" Stroke="White" Fill="SaddleBrown"/>
+    <Rectangle Opacity="0.5" Grid.Column="19" Grid.Row="3" Grid.ColumnSpan="6" Stroke="White" Fill="Yellow"/>
+    <Rectangle Opacity="0.5" Grid.Column="25" Grid.Row="3" Grid.ColumnSpan="2" Stroke="White" Fill="Orange"/>
+
+    <Rectangle Opacity="0.5" Grid.Column="1"  Grid.Row="2" Grid.ColumnSpan="4" Stroke="White" Fill="Yellow"/>
+    <Rectangle Opacity="0.5" Grid.Column="5"  Grid.Row="2" Grid.ColumnSpan="7" Stroke="White" Fill="Orange"/>
+    <Rectangle Opacity="0.5" Grid.Column="11" Grid.Row="2" Grid.ColumnSpan="7" Stroke="White" Fill="OrangeRed"/>
+    <Rectangle Opacity="0.5" Grid.Column="18" Grid.Row="2" Grid.ColumnSpan="6" Stroke="White" Fill="SaddleBrown"/>
+    <Rectangle Opacity="0.5" Grid.Column="24" Grid.Row="2" Grid.ColumnSpan="3" Stroke="White" Fill="Yellow"/>
+
+    <Rectangle Opacity="0.5" Grid.Column="1"  Grid.Row="1" Grid.ColumnSpan="3" Stroke="White" Fill="SaddleBrown"/>
+    <Rectangle Opacity="0.5" Grid.Column="4"  Grid.Row="1" Grid.ColumnSpan="6" Stroke="White" Fill="Yellow"/>
+    <Rectangle Opacity="0.5" Grid.Column="10" Grid.Row="1" Grid.ColumnSpan="7" Stroke="White" Fill="Orange"/>
+    <Rectangle Opacity="0.5" Grid.Column="16" Grid.Row="1" Grid.ColumnSpan="7" Stroke="White" Fill="OrangeRed"/>
+    <Rectangle Opacity="0.5" Grid.Column="23" Grid.Row="1" Grid.ColumnSpan="4" Stroke="White" Fill="SaddleBrown"/>
+
+    <Rectangle Opacity="0.5" Grid.Column="1"  Grid.Row="0" Grid.ColumnSpan="2" Stroke="White" Fill="OrangeRed"/>
+    <Rectangle Opacity="0.5" Grid.Column="3"  Grid.Row="0" Grid.ColumnSpan="6" Stroke="White" Fill="SaddleBrown"/>
+    <Rectangle Opacity="0.5" Grid.Column="9"  Grid.Row="0" Grid.ColumnSpan="6" Stroke="White" Fill="Yellow"/>
+    <Rectangle Opacity="0.5" Grid.Column="15" Grid.Row="0" Grid.ColumnSpan="7" Stroke="White" Fill="Orange"/>
+    <Rectangle Opacity="0.5" Grid.Column="21" Grid.Row="0" Grid.ColumnSpan="6" Stroke="White" Fill="OrangeRed"/>
+
+    <Rectangle Grid.Column="1"  Grid.Row="0" Grid.RowSpan="5" Fill="Black" Margin="0,1"/>
+    <Rectangle Grid.Column="6"  Grid.Row="0" Grid.RowSpan="5" Fill="Black" Margin="0,1"/>
+    <Rectangle Grid.Column="11" Grid.Row="0" Grid.RowSpan="5" Fill="Black" Margin="0,1"/>
+    <Rectangle Grid.Column="16" Grid.Row="0" Grid.RowSpan="5" Fill="Black" Margin="0,1"/>
+    <Rectangle Grid.Column="21" Grid.Row="0" Grid.RowSpan="5" Fill="Black" Margin="0,1"/>
+    <Rectangle Grid.Column="26" Grid.Row="0" Grid.RowSpan="5" Fill="Black" Margin="0,1"/>
+
+    <Border BorderBrush="Black" BorderThickness="1" Grid.ColumnSpan="27" Grid.RowSpan="5"/>
+
+</Grid>

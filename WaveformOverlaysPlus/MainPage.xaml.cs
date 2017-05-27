@@ -42,6 +42,7 @@ using Microsoft.Graphics.Canvas.Effects;
 using System.Numerics;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Markup;
 
 namespace WaveformOverlaysPlus
 {
@@ -57,6 +58,20 @@ namespace WaveformOverlaysPlus
 
         string ColorChangerBox;
         string currentToolChosen;
+        string nameOfFile;
+        Grid gridCylinderIdOverlay;
+        TextBlock label;
+        TextBlock label1;
+        TextBlock label2;
+        TextBlock label3;
+        TextBlock label4;
+        TextBlock label5;
+        TextBlock label6;
+        TextBlock label7;
+        TextBlock label8;
+        TextBlock label9;
+        TextBlock label10;
+        TextBlock label11;
 
         #region For Custom Ink Rendering and Erase
         private readonly List<InkStrokeContainer> _strokes = new List<InkStrokeContainer>();
@@ -1794,6 +1809,10 @@ namespace WaveformOverlaysPlus
             {
                 SetUnitsPerX();
                 SetTextofPink(false);
+                SetEVOText();
+                SetEVCText();
+                SetIVOText();
+                SetIVCText();
             }
         }
 
@@ -1925,7 +1944,7 @@ namespace WaveformOverlaysPlus
 
         #endregion
 
-        #region Overlays
+        #region Comp overlays
 
         private void btnComp_Click(object sender, RoutedEventArgs e)
         {
@@ -1945,11 +1964,15 @@ namespace WaveformOverlaysPlus
             {
                 gridIntOverlap.Visibility = Visibility.Visible;
                 gridExhOverlap.Visibility = Visibility.Visible;
+                tblockExh.Foreground = new SolidColorBrush(Colors.Red);
+                tblockInt.Foreground = new SolidColorBrush(Colors.Blue);
             }
             else
             {
                 gridIntOverlap.Visibility = Visibility.Collapsed;
                 gridExhOverlap.Visibility = Visibility.Collapsed;
+                tblockExh.Foreground = new SolidColorBrush(Colors.Black);
+                tblockInt.Foreground = new SolidColorBrush(Colors.Black);
             }
         }
 
@@ -1960,7 +1983,7 @@ namespace WaveformOverlaysPlus
 
             var currentXposition = p.X;
             var xAdjust = currentXposition + e.Delta.Translation.X;
-            var rightLimit = currentXposition + rectRed.ActualWidth - 25;
+            var rightLimit = currentXposition + rectRed.ActualWidth - 60;
 
             var currentYposition = p.Y;
             var yAdjust = currentYposition + e.Delta.Translation.Y;
@@ -2002,6 +2025,1869 @@ namespace WaveformOverlaysPlus
                     tblockEVO.Text = "\u00BA ABC";
                 }
             }
+        }
+
+        private void spEVC_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+            GeneralTransform gt = rectEVC.TransformToVisual(gridToContainOthers);
+            Point p = gt.TransformPoint(new Point(0, 0));
+
+            var currentXposition = p.X;
+            var xAdjust = currentXposition + e.Delta.Translation.X;
+            var leftLimit = currentXposition - rectRed.ActualWidth + 60;
+
+            var currentYposition = p.Y;
+            var yAdjust = currentYposition + e.Delta.Translation.Y;
+            var bottomLimit = gridToContainOthers.ActualHeight - gridIntOverlap.ActualHeight - 45;
+
+            if (xAdjust > leftLimit && xAdjust < gridToContainOthers.ActualWidth - 35)
+            {
+                gridExhOverlap.Width += e.Delta.Translation.X;
+
+                SetEVCText();
+            }
+            if (yAdjust > 1 && yAdjust < bottomLimit)
+            {
+                gridExhOverlap.Height -= e.Delta.Translation.Y;
+            }
+        }
+
+        void SetEVCText()
+        {
+            GeneralTransform gt = rectEVC.TransformToVisual(rectZeroDegrees);
+            Point p = gt.TransformPoint(new Point(0, 0));
+
+            var numForText = (p.X * UnitsPerX) + VstartValue;
+
+            if (numForText >= 360)
+            {
+                tblockExhClose.Text = Math.Round(numForText - 360).ToString();
+                if (tblockEVC.Text != "\u00BA ATC")
+                {
+                    tblockEVC.Text = "\u00BA ATC";
+                }
+            }
+            else
+            {
+                tblockExhClose.Text = Math.Round(360 - numForText).ToString();
+                if (tblockEVC.Text != "\u00BA BTC")
+                {
+                    tblockEVC.Text = "\u00BA BTC";
+                }
+            }
+        }
+
+        private void spIVO_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+            GeneralTransform gt = rectIVO.TransformToVisual(gridToContainOthers);
+            Point p = gt.TransformPoint(new Point(0, 0));
+
+            var currentXposition = p.X;
+            var xAdjust = currentXposition + e.Delta.Translation.X;
+            var rightLimit = currentXposition + rectBlue.ActualWidth - 60;
+
+            var currentYposition = p.Y;
+            var yAdjust = currentYposition + e.Delta.Translation.Y;
+            var topLimit = gridToContainOthers.ActualHeight - gridExhOverlap.ActualHeight + 45;
+
+            if (xAdjust > 25 && xAdjust < rightLimit)
+            {
+                transformInt.TranslateX += e.Delta.Translation.X;
+                gridIntOverlap.Width -= e.Delta.Translation.X;
+
+                SetIVOText();
+            }
+            if (yAdjust > topLimit && yAdjust < gridToContainOthers.ActualHeight - 75)
+            {
+                gridIntOverlap.Height -= e.Delta.Translation.Y;
+            }
+        }
+
+        void SetIVOText()
+        {
+            GeneralTransform gt = rectIVO.TransformToVisual(rectZeroDegrees);
+            Point p = gt.TransformPoint(new Point(0, 0));
+
+            var numForText = (p.X * UnitsPerX) + VstartValue;
+
+            if (numForText <= 360)
+            {
+                tblockIntOpen.Text = Math.Round(360 - numForText).ToString();
+                if (tblockIVO.Text != "\u00BA BTC")
+                {
+                    tblockIVO.Text = "\u00BA BTC";
+                }
+            }
+            else
+            {
+                tblockIntOpen.Text = Math.Round(numForText - 360).ToString();
+                if (tblockIVO.Text != "\u00BA ATC")
+                {
+                    tblockIVO.Text = "\u00BA ATC";
+                }
+            }
+        }
+
+        private void spIVC_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+            GeneralTransform gt = rectIVC.TransformToVisual(gridToContainOthers);
+            Point p = gt.TransformPoint(new Point(0, 0));
+
+            var currentXposition = p.X;
+            var xAdjust = currentXposition + e.Delta.Translation.X;
+            var leftLimit = currentXposition - rectBlue.ActualWidth + 60;
+
+            var currentYposition = p.Y;
+            var yAdjust = currentYposition + e.Delta.Translation.Y;
+            var topLimit = gridToContainOthers.ActualHeight - gridExhOverlap.ActualHeight + 45;
+
+            if (xAdjust > leftLimit && xAdjust < gridToContainOthers.ActualWidth - 35)
+            {
+                gridIntOverlap.Width += e.Delta.Translation.X;
+
+                SetIVCText();
+            }
+            if (yAdjust > topLimit && yAdjust < gridToContainOthers.ActualHeight - 75)
+            {
+                gridIntOverlap.Height -= e.Delta.Translation.Y;
+            }
+        }
+
+        void SetIVCText()
+        {
+            GeneralTransform gt = rectIVC.TransformToVisual(rectZeroDegrees);
+            Point p = gt.TransformPoint(new Point(0, 0));
+
+            var numForText = (p.X * UnitsPerX) + VstartValue;
+
+            if (numForText >= 540)
+            {
+                tblockIntClose.Text = Math.Round(numForText - 540).ToString();
+                if (tblockIVC.Text != "\u00BA ABC")
+                {
+                    tblockIVC.Text = "\u00BA ABC";
+                }
+            }
+            else
+            {
+                tblockIntClose.Text = Math.Round(540 - numForText).ToString();
+                if (tblockIVC.Text != "\u00BA BBC")
+                {
+                    tblockIVC.Text = "\u00BA BBC";
+                }
+            }
+        }
+
+        #endregion
+
+        #region Cyl overlay
+
+        private void btnCyl_Click(object sender, RoutedEventArgs e)
+        {
+            gridCylinderIDSelections.Visibility = Visibility.Visible;
+        }
+
+        private void btnCancelCylinderID_Click(object sender, RoutedEventArgs e)
+        {
+            gridCylinderIDSelections.Visibility = Visibility.Collapsed;
+        }
+
+        private void comboBoxCylinders_DropDownClosed(object sender, object e)
+        {
+            ComboBox cb = sender as ComboBox;
+            int cbNum = Convert.ToInt32(cb.SelectionBoxItem);
+
+            if (comboBoxCylinders.SelectedItem == null)
+            {
+                return;
+            }
+            else
+            {
+                // Reset and clear
+                comboBox1.Visibility = Visibility.Collapsed; comboBox2.Visibility = Visibility.Collapsed; comboBox3.Visibility = Visibility.Collapsed; comboBox4.Visibility = Visibility.Collapsed; comboBox5.Visibility = Visibility.Collapsed; comboBox6.Visibility = Visibility.Collapsed; comboBox7.Visibility = Visibility.Collapsed; comboBox8.Visibility = Visibility.Collapsed; comboBox9.Visibility = Visibility.Collapsed; comboBox10.Visibility = Visibility.Collapsed; comboBox11.Visibility = Visibility.Collapsed; comboBox12.Visibility = Visibility.Collapsed;
+                textBox1.Visibility = Visibility.Collapsed; textBox2.Visibility = Visibility.Collapsed; textBox3.Visibility = Visibility.Collapsed; textBox4.Visibility = Visibility.Collapsed; textBox5.Visibility = Visibility.Collapsed; textBox6.Visibility = Visibility.Collapsed; textBox7.Visibility = Visibility.Collapsed; textBox8.Visibility = Visibility.Collapsed;
+                textBox1.Text = ""; textBox2.Text = ""; textBox3.Text = ""; textBox4.Text = ""; textBox5.Text = ""; textBox6.Text = ""; textBox7.Text = ""; textBox8.Text = "";
+                comboBoxSync.Items.Clear();
+
+                if (cbNum == 1)
+                {
+                    textBox1.Visibility = Visibility.Visible;
+                    textBox1.Text = "1";
+
+                    comboBoxSync.Items.Add(1);
+                    comboBoxSync.SelectedIndex = 0;
+
+                    nameOfFile = "OneGridXamlText.txt";
+                }
+                else if (cbNum == 2)
+                {
+                    textBox1.Visibility = Visibility.Visible;
+                    textBox2.Visibility = Visibility.Visible;
+
+                    comboBoxSync.Items.Add(1);
+                    comboBoxSync.Items.Add(2);
+
+                    nameOfFile = "TwoGridXamlText.txt";
+                }
+                else if (cbNum == 3)
+                {
+                    textBox1.Visibility = Visibility.Visible;
+                    textBox2.Visibility = Visibility.Visible;
+                    textBox3.Visibility = Visibility.Visible;
+
+                    comboBoxSync.Items.Add(1);
+                    comboBoxSync.Items.Add(2);
+                    comboBoxSync.Items.Add(3);
+
+                    nameOfFile = "ThreeGridXamlText.txt";
+                }
+                else if (cbNum == 4)
+                {
+                    textBox1.Visibility = Visibility.Visible;
+                    textBox2.Visibility = Visibility.Visible;
+                    textBox3.Visibility = Visibility.Visible;
+                    textBox4.Visibility = Visibility.Visible;
+
+                    comboBoxSync.Items.Add(1);
+                    comboBoxSync.Items.Add(2);
+                    comboBoxSync.Items.Add(3);
+                    comboBoxSync.Items.Add(4);
+
+                    nameOfFile = "FourGridXamlText.txt";
+                }
+                else if (cbNum == 5)
+                {
+                    textBox1.Visibility = Visibility.Visible;
+                    textBox2.Visibility = Visibility.Visible;
+                    textBox3.Visibility = Visibility.Visible;
+                    textBox4.Visibility = Visibility.Visible;
+                    textBox5.Visibility = Visibility.Visible;
+
+                    comboBoxSync.Items.Add(1);
+                    comboBoxSync.Items.Add(2);
+                    comboBoxSync.Items.Add(3);
+                    comboBoxSync.Items.Add(4);
+                    comboBoxSync.Items.Add(5);
+
+                    nameOfFile = "FiveGridXamlText.txt";
+                }
+                else if (cbNum == 6)
+                {
+                    textBox1.Visibility = Visibility.Visible;
+                    textBox2.Visibility = Visibility.Visible;
+                    textBox3.Visibility = Visibility.Visible;
+                    textBox4.Visibility = Visibility.Visible;
+                    textBox5.Visibility = Visibility.Visible;
+                    textBox6.Visibility = Visibility.Visible;
+
+                    comboBoxSync.Items.Add(1);
+                    comboBoxSync.Items.Add(2);
+                    comboBoxSync.Items.Add(3);
+                    comboBoxSync.Items.Add(4);
+                    comboBoxSync.Items.Add(5);
+                    comboBoxSync.Items.Add(6);
+
+                    nameOfFile = "SixGridXamlText.txt";
+                }
+                else if (cbNum == 7)
+                {
+                    textBox1.Visibility = Visibility.Visible;
+                    textBox2.Visibility = Visibility.Visible;
+                    textBox3.Visibility = Visibility.Visible;
+                    textBox4.Visibility = Visibility.Visible;
+                    textBox5.Visibility = Visibility.Visible;
+                    textBox6.Visibility = Visibility.Visible;
+                    textBox7.Visibility = Visibility.Visible;
+
+                    comboBoxSync.Items.Add(1);
+                    comboBoxSync.Items.Add(2);
+                    comboBoxSync.Items.Add(3);
+                    comboBoxSync.Items.Add(4);
+                    comboBoxSync.Items.Add(5);
+                    comboBoxSync.Items.Add(6);
+                    comboBoxSync.Items.Add(7);
+
+                    nameOfFile = "SevenGridXamlText.txt";
+                }
+                else if (cbNum == 8)
+                {
+                    textBox1.Visibility = Visibility.Visible;
+                    textBox2.Visibility = Visibility.Visible;
+                    textBox3.Visibility = Visibility.Visible;
+                    textBox4.Visibility = Visibility.Visible;
+                    textBox5.Visibility = Visibility.Visible;
+                    textBox6.Visibility = Visibility.Visible;
+                    textBox7.Visibility = Visibility.Visible;
+                    textBox8.Visibility = Visibility.Visible;
+
+                    comboBoxSync.Items.Add(1);
+                    comboBoxSync.Items.Add(2);
+                    comboBoxSync.Items.Add(3);
+                    comboBoxSync.Items.Add(4);
+                    comboBoxSync.Items.Add(5);
+                    comboBoxSync.Items.Add(6);
+                    comboBoxSync.Items.Add(7);
+                    comboBoxSync.Items.Add(8);
+
+                    nameOfFile = "EightGridXamlText.txt";
+                }
+                else if (cbNum == 9)
+                {
+                    comboBoxSync.Items.Add(1);
+                    comboBoxSync.Items.Add(2);
+                    comboBoxSync.Items.Add(3);
+                    comboBoxSync.Items.Add(4);
+                    comboBoxSync.Items.Add(5);
+                    comboBoxSync.Items.Add(6);
+                    comboBoxSync.Items.Add(7);
+                    comboBoxSync.Items.Add(8);
+                    comboBoxSync.Items.Add(9);
+
+                    comboBox1.Visibility = Visibility.Visible;
+                    comboBox2.Visibility = Visibility.Visible;
+                    comboBox3.Visibility = Visibility.Visible;
+                    comboBox4.Visibility = Visibility.Visible;
+                    comboBox5.Visibility = Visibility.Visible;
+                    comboBox6.Visibility = Visibility.Visible;
+                    comboBox7.Visibility = Visibility.Visible;
+                    comboBox8.Visibility = Visibility.Visible;
+                    comboBox9.Visibility = Visibility.Visible;
+
+                    nameOfFile = "NineGridXamlText.txt";
+                }
+                else if (cbNum == 10)
+                {
+                    comboBox1.Visibility = Visibility.Visible;
+                    comboBox2.Visibility = Visibility.Visible;
+                    comboBox3.Visibility = Visibility.Visible;
+                    comboBox4.Visibility = Visibility.Visible;
+                    comboBox5.Visibility = Visibility.Visible;
+                    comboBox6.Visibility = Visibility.Visible;
+                    comboBox7.Visibility = Visibility.Visible;
+                    comboBox8.Visibility = Visibility.Visible;
+                    comboBox9.Visibility = Visibility.Visible;
+                    comboBox10.Visibility = Visibility.Visible;
+
+                    comboBoxSync.Items.Add(1);
+                    comboBoxSync.Items.Add(2);
+                    comboBoxSync.Items.Add(3);
+                    comboBoxSync.Items.Add(4);
+                    comboBoxSync.Items.Add(5);
+                    comboBoxSync.Items.Add(6);
+                    comboBoxSync.Items.Add(7);
+                    comboBoxSync.Items.Add(8);
+                    comboBoxSync.Items.Add(9);
+                    comboBoxSync.Items.Add(10);
+
+                    nameOfFile = "TenGridXamlText.txt";
+                }
+                else if (cbNum == 11)
+                {
+                    comboBox1.Visibility = Visibility.Visible;
+                    comboBox2.Visibility = Visibility.Visible;
+                    comboBox3.Visibility = Visibility.Visible;
+                    comboBox4.Visibility = Visibility.Visible;
+                    comboBox5.Visibility = Visibility.Visible;
+                    comboBox6.Visibility = Visibility.Visible;
+                    comboBox7.Visibility = Visibility.Visible;
+                    comboBox8.Visibility = Visibility.Visible;
+                    comboBox9.Visibility = Visibility.Visible;
+                    comboBox10.Visibility = Visibility.Visible;
+                    comboBox11.Visibility = Visibility.Visible;
+
+                    comboBoxSync.Items.Add(1);
+                    comboBoxSync.Items.Add(2);
+                    comboBoxSync.Items.Add(3);
+                    comboBoxSync.Items.Add(4);
+                    comboBoxSync.Items.Add(5);
+                    comboBoxSync.Items.Add(6);
+                    comboBoxSync.Items.Add(7);
+                    comboBoxSync.Items.Add(8);
+                    comboBoxSync.Items.Add(9);
+                    comboBoxSync.Items.Add(10);
+                    comboBoxSync.Items.Add(11);
+
+                    nameOfFile = "ElevenGridXamlText.txt";
+                }
+                else if (cbNum == 12)
+                {
+                    comboBox1.Visibility = Visibility.Visible;
+                    comboBox2.Visibility = Visibility.Visible;
+                    comboBox3.Visibility = Visibility.Visible;
+                    comboBox4.Visibility = Visibility.Visible;
+                    comboBox5.Visibility = Visibility.Visible;
+                    comboBox6.Visibility = Visibility.Visible;
+                    comboBox7.Visibility = Visibility.Visible;
+                    comboBox8.Visibility = Visibility.Visible;
+                    comboBox9.Visibility = Visibility.Visible;
+                    comboBox10.Visibility = Visibility.Visible;
+                    comboBox11.Visibility = Visibility.Visible;
+                    comboBox12.Visibility = Visibility.Visible;
+
+                    comboBoxSync.Items.Add(1);
+                    comboBoxSync.Items.Add(2);
+                    comboBoxSync.Items.Add(3);
+                    comboBoxSync.Items.Add(4);
+                    comboBoxSync.Items.Add(5);
+                    comboBoxSync.Items.Add(6);
+                    comboBoxSync.Items.Add(7);
+                    comboBoxSync.Items.Add(8);
+                    comboBoxSync.Items.Add(9);
+                    comboBoxSync.Items.Add(10);
+                    comboBoxSync.Items.Add(11);
+                    comboBoxSync.Items.Add(12);
+
+                    nameOfFile = "TwelveGridXamlText.txt";
+                }
+            }
+
+            if (cbNum == 1)
+            {
+                btnGoCylinderID.Focus(FocusState.Programmatic);
+            }
+            else
+            {
+                comboBoxSync.Focus(FocusState.Programmatic);
+            }
+        }
+
+        private async void btnGoCylinderID_Click(object sender, RoutedEventArgs e)
+        {
+            if (comboBoxCylinders.SelectionBoxItem == null || comboBoxSync.SelectionBoxItem == null)
+            {
+                var dialog = new MessageDialog("You must have a selection for NUMBER OF CYLINDERS and SYNC");
+                await dialog.ShowAsync();
+            }
+            else
+            {
+                try
+                {
+                    gridCylinderIDSelections.Visibility = Visibility.Collapsed;
+
+                    // Get your file
+                    StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(new Uri(BaseUri, "/MyXamlTextFiles/" + nameOfFile));
+
+                    // Read your file and set it to a string variable
+                    string myXamlString = await FileIO.ReadTextAsync(file);
+
+                    // Create the object from that string
+                    object myAdditionalElement = XamlReader.Load(myXamlString);
+
+                    // Initialize a new instance of it
+                    gridCylinderIdOverlay = myAdditionalElement as Grid;
+
+                    // Create the paintObject and set the xaml file object as the content
+                    PaintObjectTemplatedControl paintObjectCylID = new PaintObjectTemplatedControl();
+                    paintObjectCylID.Width = gridMain.ActualWidth / 2;
+                    paintObjectCylID.Height = gridMain.ActualHeight / 2;
+                    paintObjectCylID.Opacity = 0.6;
+                    paintObjectCylID.OpacitySliderIsVisible = true;
+                    paintObjectCylID.Content = gridCylinderIdOverlay;
+
+                    gridMain.Children.Add(paintObjectCylID);
+
+                    // Create event handler
+                    paintObjectCylID.Unloaded += PaintObjectCylID_Unloaded;
+
+                    // Show and move thumb to lower right of grid, and show color key
+                    colorKey.Visibility = Visibility.Visible;
+
+                    // Set some variables to use for the SetGridLabels method
+                    string sync = comboBoxSync.SelectionBoxItem.ToString();
+                    int cylinders = Convert.ToInt32(comboBoxCylinders.SelectionBoxItem);
+
+                    if (cylinders == 1)
+                    {
+                        return; // The label on OneGridXamlText is already defined as 1
+                    }
+                    else
+                    {
+                        SetGridLabels(sync, cylinders);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    var dialog = new MessageDialog("A problem occured when trying to load overlay.   " + ex.Message);
+                    await dialog.ShowAsync();
+
+                    StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                    logger.Log("Show CylinderID Overlay exception: " + ex.Message);
+                }
+            }
+        }
+
+        private void PaintObjectCylID_Unloaded(object sender, RoutedEventArgs e)
+        {
+            var count = 0;
+
+            foreach (var child in gridMain.Children)
+            {
+                if (child is PaintObjectTemplatedControl)
+                {
+                    var currentChild = child as PaintObjectTemplatedControl;
+                    if (currentChild.Content is Grid)
+                    {
+                        count++;
+                    }
+                }
+            }
+
+            if (count == 0)
+            {
+                if (colorKey.Visibility == Visibility.Visible)
+                {
+                    colorKey.Visibility = Visibility.Collapsed;
+                }
+            }
+        }
+
+        private async void SetGridLabels(string sync, int cylinders)
+        {
+            try
+            {
+                if (cylinders == 2)
+                {
+                    FrameworkElement labelA = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label" select someElement as FrameworkElement).FirstOrDefault();
+                    label = labelA as TextBlock;
+
+                    FrameworkElement labelB = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label1" select someElement as FrameworkElement).FirstOrDefault();
+                    label1 = labelB as TextBlock;
+
+                    if (textBox1.Text == sync)
+                    {
+                        label1.Text = textBox1.Text;
+                        label.Text = textBox2.Text;
+                    }
+                    else if (textBox2.Text == sync)
+                    {
+                        label1.Text = textBox2.Text;
+                        label.Text = textBox1.Text;
+                    }
+                }
+
+                if (cylinders == 3)
+                {
+                    FrameworkElement labelA = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label" select someElement as FrameworkElement).FirstOrDefault();
+                    label = labelA as TextBlock;
+
+                    FrameworkElement labelB = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label1" select someElement as FrameworkElement).FirstOrDefault();
+                    label1 = labelB as TextBlock;
+
+                    FrameworkElement labelC = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label2" select someElement as FrameworkElement).FirstOrDefault();
+                    label2 = labelC as TextBlock;
+
+                    if (textBox1.Text == sync)
+                    {
+                        label2.Text = textBox1.Text;
+                        label1.Text = textBox2.Text;
+                        label.Text = textBox3.Text;
+
+                    }
+                    else if (textBox2.Text == sync)
+                    {
+                        label2.Text = textBox2.Text;
+                        label1.Text = textBox3.Text;
+                        label.Text = textBox1.Text;
+                    }
+                    else if (textBox3.Text == sync)
+                    {
+                        label2.Text = textBox3.Text;
+                        label1.Text = textBox1.Text;
+                        label.Text = textBox2.Text;
+                    }
+                }
+
+                if (cylinders == 4)
+                {
+                    FrameworkElement labelA = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label" select someElement as FrameworkElement).FirstOrDefault();
+                    label = labelA as TextBlock;
+
+                    FrameworkElement labelB = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label1" select someElement as FrameworkElement).FirstOrDefault();
+                    label1 = labelB as TextBlock;
+
+                    FrameworkElement labelC = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label2" select someElement as FrameworkElement).FirstOrDefault();
+                    label2 = labelC as TextBlock;
+
+                    FrameworkElement labelD = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label3" select someElement as FrameworkElement).FirstOrDefault();
+                    label3 = labelD as TextBlock;
+
+                    if (textBox1.Text == sync)
+                    {
+                        label3.Text = textBox1.Text;
+                        label2.Text = textBox2.Text;
+                        label1.Text = textBox3.Text;
+                        label.Text = textBox4.Text;
+
+                    }
+                    else if (textBox2.Text == sync)
+                    {
+                        label3.Text = textBox2.Text;
+                        label2.Text = textBox3.Text;
+                        label1.Text = textBox4.Text;
+                        label.Text = textBox1.Text;
+                    }
+                    else if (textBox3.Text == sync)
+                    {
+                        label3.Text = textBox3.Text;
+                        label2.Text = textBox4.Text;
+                        label1.Text = textBox1.Text;
+                        label.Text = textBox2.Text;
+                    }
+                    else if (textBox4.Text == sync)
+                    {
+                        label3.Text = textBox4.Text;
+                        label2.Text = textBox1.Text;
+                        label1.Text = textBox2.Text;
+                        label.Text = textBox3.Text;
+                    }
+                }
+
+                if (cylinders == 5)
+                {
+                    FrameworkElement labelA = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label" select someElement as FrameworkElement).FirstOrDefault();
+                    label = labelA as TextBlock;
+
+                    FrameworkElement labelB = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label1" select someElement as FrameworkElement).FirstOrDefault();
+                    label1 = labelB as TextBlock;
+
+                    FrameworkElement labelC = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label2" select someElement as FrameworkElement).FirstOrDefault();
+                    label2 = labelC as TextBlock;
+
+                    FrameworkElement labelD = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label3" select someElement as FrameworkElement).FirstOrDefault();
+                    label3 = labelD as TextBlock;
+
+                    FrameworkElement labelE = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label4" select someElement as FrameworkElement).FirstOrDefault();
+                    label4 = labelE as TextBlock;
+
+                    if (textBox1.Text == sync)
+                    {
+                        label4.Text = textBox1.Text;
+                        label3.Text = textBox2.Text;
+                        label2.Text = textBox3.Text;
+                        label1.Text = textBox4.Text;
+                        label.Text = textBox5.Text;
+
+                    }
+                    else if (textBox2.Text == sync)
+                    {
+                        label4.Text = textBox2.Text;
+                        label3.Text = textBox3.Text;
+                        label2.Text = textBox4.Text;
+                        label1.Text = textBox5.Text;
+                        label.Text = textBox1.Text;
+                    }
+                    else if (textBox3.Text == sync)
+                    {
+                        label4.Text = textBox3.Text;
+                        label3.Text = textBox4.Text;
+                        label2.Text = textBox5.Text;
+                        label1.Text = textBox1.Text;
+                        label.Text = textBox2.Text;
+                    }
+                    else if (textBox4.Text == sync)
+                    {
+                        label4.Text = textBox4.Text;
+                        label3.Text = textBox5.Text;
+                        label2.Text = textBox1.Text;
+                        label1.Text = textBox2.Text;
+                        label.Text = textBox3.Text;
+                    }
+                    else if (textBox5.Text == sync)
+                    {
+                        label4.Text = textBox5.Text;
+                        label3.Text = textBox1.Text;
+                        label2.Text = textBox2.Text;
+                        label1.Text = textBox3.Text;
+                        label.Text = textBox4.Text;
+                    }
+                }
+
+                if (cylinders == 6)
+                {
+                    FrameworkElement labelA = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label" select someElement as FrameworkElement).FirstOrDefault();
+                    label = labelA as TextBlock;
+
+                    FrameworkElement labelB = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label1" select someElement as FrameworkElement).FirstOrDefault();
+                    label1 = labelB as TextBlock;
+
+                    FrameworkElement labelC = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label2" select someElement as FrameworkElement).FirstOrDefault();
+                    label2 = labelC as TextBlock;
+
+                    FrameworkElement labelD = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label3" select someElement as FrameworkElement).FirstOrDefault();
+                    label3 = labelD as TextBlock;
+
+                    FrameworkElement labelE = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label4" select someElement as FrameworkElement).FirstOrDefault();
+                    label4 = labelE as TextBlock;
+
+                    FrameworkElement labelF = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label5" select someElement as FrameworkElement).FirstOrDefault();
+                    label5 = labelF as TextBlock;
+
+                    if (textBox1.Text == sync)
+                    {
+                        label5.Text = textBox1.Text;
+                        label4.Text = textBox2.Text;
+                        label3.Text = textBox3.Text;
+                        label2.Text = textBox4.Text;
+                        label1.Text = textBox5.Text;
+                        label.Text = textBox6.Text;
+
+                    }
+                    else if (textBox2.Text == sync)
+                    {
+                        label5.Text = textBox2.Text;
+                        label4.Text = textBox3.Text;
+                        label3.Text = textBox4.Text;
+                        label2.Text = textBox5.Text;
+                        label1.Text = textBox6.Text;
+                        label.Text = textBox1.Text;
+                    }
+                    else if (textBox3.Text == sync)
+                    {
+                        label5.Text = textBox3.Text;
+                        label4.Text = textBox4.Text;
+                        label3.Text = textBox5.Text;
+                        label2.Text = textBox6.Text;
+                        label1.Text = textBox1.Text;
+                        label.Text = textBox2.Text;
+                    }
+                    else if (textBox4.Text == sync)
+                    {
+                        label5.Text = textBox4.Text;
+                        label4.Text = textBox5.Text;
+                        label3.Text = textBox6.Text;
+                        label2.Text = textBox1.Text;
+                        label1.Text = textBox2.Text;
+                        label.Text = textBox3.Text;
+                    }
+                    else if (textBox5.Text == sync)
+                    {
+                        label5.Text = textBox5.Text;
+                        label4.Text = textBox6.Text;
+                        label3.Text = textBox1.Text;
+                        label2.Text = textBox2.Text;
+                        label1.Text = textBox3.Text;
+                        label.Text = textBox4.Text;
+                    }
+                    else if (textBox6.Text == sync)
+                    {
+                        label5.Text = textBox6.Text;
+                        label4.Text = textBox1.Text;
+                        label3.Text = textBox2.Text;
+                        label2.Text = textBox3.Text;
+                        label1.Text = textBox4.Text;
+                        label.Text = textBox5.Text;
+                    }
+                }
+
+                if (cylinders == 7)
+                {
+                    FrameworkElement labelA = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label" select someElement as FrameworkElement).FirstOrDefault();
+                    label = labelA as TextBlock;
+
+                    FrameworkElement labelB = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label1" select someElement as FrameworkElement).FirstOrDefault();
+                    label1 = labelB as TextBlock;
+
+                    FrameworkElement labelC = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label2" select someElement as FrameworkElement).FirstOrDefault();
+                    label2 = labelC as TextBlock;
+
+                    FrameworkElement labelD = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label3" select someElement as FrameworkElement).FirstOrDefault();
+                    label3 = labelD as TextBlock;
+
+                    FrameworkElement labelE = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label4" select someElement as FrameworkElement).FirstOrDefault();
+                    label4 = labelE as TextBlock;
+
+                    FrameworkElement labelF = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label5" select someElement as FrameworkElement).FirstOrDefault();
+                    label5 = labelF as TextBlock;
+
+                    FrameworkElement labelG = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label6" select someElement as FrameworkElement).FirstOrDefault();
+                    label6 = labelG as TextBlock;
+
+                    if (textBox1.Text == sync)
+                    {
+                        label6.Text = textBox1.Text;
+                        label5.Text = textBox2.Text;
+                        label4.Text = textBox3.Text;
+                        label3.Text = textBox4.Text;
+                        label2.Text = textBox5.Text;
+                        label1.Text = textBox6.Text;
+                        label.Text = textBox7.Text;
+
+                    }
+                    else if (textBox2.Text == sync)
+                    {
+                        label6.Text = textBox2.Text;
+                        label5.Text = textBox3.Text;
+                        label4.Text = textBox4.Text;
+                        label3.Text = textBox5.Text;
+                        label2.Text = textBox6.Text;
+                        label1.Text = textBox7.Text;
+                        label.Text = textBox1.Text;
+                    }
+                    else if (textBox3.Text == sync)
+                    {
+                        label6.Text = textBox3.Text;
+                        label5.Text = textBox4.Text;
+                        label4.Text = textBox5.Text;
+                        label3.Text = textBox6.Text;
+                        label2.Text = textBox7.Text;
+                        label1.Text = textBox1.Text;
+                        label.Text = textBox2.Text;
+                    }
+                    else if (textBox4.Text == sync)
+                    {
+                        label6.Text = textBox4.Text;
+                        label5.Text = textBox5.Text;
+                        label4.Text = textBox6.Text;
+                        label3.Text = textBox7.Text;
+                        label2.Text = textBox1.Text;
+                        label1.Text = textBox2.Text;
+                        label.Text = textBox3.Text;
+                    }
+                    else if (textBox5.Text == sync)
+                    {
+                        label6.Text = textBox5.Text;
+                        label5.Text = textBox6.Text;
+                        label4.Text = textBox7.Text;
+                        label3.Text = textBox1.Text;
+                        label2.Text = textBox2.Text;
+                        label1.Text = textBox3.Text;
+                        label.Text = textBox4.Text;
+                    }
+                    else if (textBox6.Text == sync)
+                    {
+                        label6.Text = textBox6.Text;
+                        label5.Text = textBox7.Text;
+                        label4.Text = textBox1.Text;
+                        label3.Text = textBox2.Text;
+                        label2.Text = textBox3.Text;
+                        label1.Text = textBox4.Text;
+                        label.Text = textBox5.Text;
+                    }
+                    else if (textBox7.Text == sync)
+                    {
+                        label6.Text = textBox7.Text;
+                        label5.Text = textBox1.Text;
+                        label4.Text = textBox2.Text;
+                        label3.Text = textBox3.Text;
+                        label2.Text = textBox4.Text;
+                        label1.Text = textBox5.Text;
+                        label.Text = textBox6.Text;
+                    }
+                }
+
+                if (cylinders == 8)
+                {
+                    FrameworkElement labelA = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label" select someElement as FrameworkElement).FirstOrDefault();
+                    label = labelA as TextBlock;
+
+                    FrameworkElement labelB = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label1" select someElement as FrameworkElement).FirstOrDefault();
+                    label1 = labelB as TextBlock;
+
+                    FrameworkElement labelC = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label2" select someElement as FrameworkElement).FirstOrDefault();
+                    label2 = labelC as TextBlock;
+
+                    FrameworkElement labelD = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label3" select someElement as FrameworkElement).FirstOrDefault();
+                    label3 = labelD as TextBlock;
+
+                    FrameworkElement labelE = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label4" select someElement as FrameworkElement).FirstOrDefault();
+                    label4 = labelE as TextBlock;
+
+                    FrameworkElement labelF = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label5" select someElement as FrameworkElement).FirstOrDefault();
+                    label5 = labelF as TextBlock;
+
+                    FrameworkElement labelG = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label6" select someElement as FrameworkElement).FirstOrDefault();
+                    label6 = labelG as TextBlock;
+
+                    FrameworkElement labelH = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label7" select someElement as FrameworkElement).FirstOrDefault();
+                    label7 = labelH as TextBlock;
+
+                    if (textBox1.Text == sync)
+                    {
+                        label7.Text = textBox1.Text;
+                        label6.Text = textBox2.Text;
+                        label5.Text = textBox3.Text;
+                        label4.Text = textBox4.Text;
+                        label3.Text = textBox5.Text;
+                        label2.Text = textBox6.Text;
+                        label1.Text = textBox7.Text;
+                        label.Text = textBox8.Text;
+
+                    }
+                    else if (textBox2.Text == sync)
+                    {
+                        label7.Text = textBox2.Text;
+                        label6.Text = textBox3.Text;
+                        label5.Text = textBox4.Text;
+                        label4.Text = textBox5.Text;
+                        label3.Text = textBox6.Text;
+                        label2.Text = textBox7.Text;
+                        label1.Text = textBox8.Text;
+                        label.Text = textBox1.Text;
+                    }
+                    else if (textBox3.Text == sync)
+                    {
+                        label7.Text = textBox3.Text;
+                        label6.Text = textBox4.Text;
+                        label5.Text = textBox5.Text;
+                        label4.Text = textBox6.Text;
+                        label3.Text = textBox7.Text;
+                        label2.Text = textBox8.Text;
+                        label1.Text = textBox1.Text;
+                        label.Text = textBox2.Text;
+                    }
+                    else if (textBox4.Text == sync)
+                    {
+                        label7.Text = textBox4.Text;
+                        label6.Text = textBox5.Text;
+                        label5.Text = textBox6.Text;
+                        label4.Text = textBox7.Text;
+                        label3.Text = textBox8.Text;
+                        label2.Text = textBox1.Text;
+                        label1.Text = textBox2.Text;
+                        label.Text = textBox3.Text;
+                    }
+                    else if (textBox5.Text == sync)
+                    {
+                        label7.Text = textBox5.Text;
+                        label6.Text = textBox6.Text;
+                        label5.Text = textBox7.Text;
+                        label4.Text = textBox8.Text;
+                        label3.Text = textBox1.Text;
+                        label2.Text = textBox2.Text;
+                        label1.Text = textBox3.Text;
+                        label.Text = textBox4.Text;
+                    }
+                    else if (textBox6.Text == sync)
+                    {
+                        label7.Text = textBox6.Text;
+                        label6.Text = textBox7.Text;
+                        label5.Text = textBox8.Text;
+                        label4.Text = textBox1.Text;
+                        label3.Text = textBox2.Text;
+                        label2.Text = textBox3.Text;
+                        label1.Text = textBox4.Text;
+                        label.Text = textBox5.Text;
+                    }
+                    else if (textBox7.Text == sync)
+                    {
+                        label7.Text = textBox7.Text;
+                        label6.Text = textBox8.Text;
+                        label5.Text = textBox1.Text;
+                        label4.Text = textBox2.Text;
+                        label3.Text = textBox3.Text;
+                        label2.Text = textBox4.Text;
+                        label1.Text = textBox5.Text;
+                        label.Text = textBox6.Text;
+                    }
+                    else if (textBox8.Text == sync)
+                    {
+                        label7.Text = textBox8.Text;
+                        label6.Text = textBox1.Text;
+                        label5.Text = textBox2.Text;
+                        label4.Text = textBox3.Text;
+                        label3.Text = textBox4.Text;
+                        label2.Text = textBox5.Text;
+                        label1.Text = textBox6.Text;
+                        label.Text = textBox7.Text;
+                    }
+                }
+
+                if (cylinders == 9)
+                {
+                    FrameworkElement labelA = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label" select someElement as FrameworkElement).FirstOrDefault();
+                    label = labelA as TextBlock;
+
+                    FrameworkElement labelB = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label1" select someElement as FrameworkElement).FirstOrDefault();
+                    label1 = labelB as TextBlock;
+
+                    FrameworkElement labelC = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label2" select someElement as FrameworkElement).FirstOrDefault();
+                    label2 = labelC as TextBlock;
+
+                    FrameworkElement labelD = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label3" select someElement as FrameworkElement).FirstOrDefault();
+                    label3 = labelD as TextBlock;
+
+                    FrameworkElement labelE = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label4" select someElement as FrameworkElement).FirstOrDefault();
+                    label4 = labelE as TextBlock;
+
+                    FrameworkElement labelF = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label5" select someElement as FrameworkElement).FirstOrDefault();
+                    label5 = labelF as TextBlock;
+
+                    FrameworkElement labelG = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label6" select someElement as FrameworkElement).FirstOrDefault();
+                    label6 = labelG as TextBlock;
+
+                    FrameworkElement labelH = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label7" select someElement as FrameworkElement).FirstOrDefault();
+                    label7 = labelH as TextBlock;
+
+                    FrameworkElement labelI = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label8" select someElement as FrameworkElement).FirstOrDefault();
+                    label8 = labelI as TextBlock;
+
+                    if (Convert.ToString(comboBox1.SelectionBoxItem) == sync)
+                    {
+                        label8.Text = comboBox1.SelectionBoxItem.ToString();
+                        label7.Text = comboBox2.SelectionBoxItem.ToString();
+                        label6.Text = comboBox3.SelectionBoxItem.ToString();
+                        label5.Text = comboBox4.SelectionBoxItem.ToString();
+                        label4.Text = comboBox5.SelectionBoxItem.ToString();
+                        label3.Text = comboBox6.SelectionBoxItem.ToString();
+                        label2.Text = comboBox7.SelectionBoxItem.ToString();
+                        label1.Text = comboBox8.SelectionBoxItem.ToString();
+                        label.Text = comboBox9.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox2.SelectionBoxItem) == sync)
+                    {
+                        label8.Text = comboBox2.SelectionBoxItem.ToString();
+                        label7.Text = comboBox3.SelectionBoxItem.ToString();
+                        label6.Text = comboBox4.SelectionBoxItem.ToString();
+                        label5.Text = comboBox5.SelectionBoxItem.ToString();
+                        label4.Text = comboBox6.SelectionBoxItem.ToString();
+                        label3.Text = comboBox7.SelectionBoxItem.ToString();
+                        label2.Text = comboBox8.SelectionBoxItem.ToString();
+                        label1.Text = comboBox9.SelectionBoxItem.ToString();
+                        label.Text = comboBox1.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox3.SelectionBoxItem) == sync)
+                    {
+                        label8.Text = comboBox3.SelectionBoxItem.ToString();
+                        label7.Text = comboBox4.SelectionBoxItem.ToString();
+                        label6.Text = comboBox5.SelectionBoxItem.ToString();
+                        label5.Text = comboBox6.SelectionBoxItem.ToString();
+                        label4.Text = comboBox7.SelectionBoxItem.ToString();
+                        label3.Text = comboBox8.SelectionBoxItem.ToString();
+                        label2.Text = comboBox9.SelectionBoxItem.ToString();
+                        label1.Text = comboBox1.SelectionBoxItem.ToString();
+                        label.Text = comboBox2.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox4.SelectionBoxItem) == sync)
+                    {
+                        label8.Text = comboBox4.SelectionBoxItem.ToString();
+                        label7.Text = comboBox5.SelectionBoxItem.ToString();
+                        label6.Text = comboBox6.SelectionBoxItem.ToString();
+                        label5.Text = comboBox7.SelectionBoxItem.ToString();
+                        label4.Text = comboBox8.SelectionBoxItem.ToString();
+                        label3.Text = comboBox9.SelectionBoxItem.ToString();
+                        label2.Text = comboBox1.SelectionBoxItem.ToString();
+                        label1.Text = comboBox2.SelectionBoxItem.ToString();
+                        label.Text = comboBox3.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox5.SelectionBoxItem) == sync)
+                    {
+                        label8.Text = comboBox5.SelectionBoxItem.ToString();
+                        label7.Text = comboBox6.SelectionBoxItem.ToString();
+                        label6.Text = comboBox7.SelectionBoxItem.ToString();
+                        label5.Text = comboBox8.SelectionBoxItem.ToString();
+                        label4.Text = comboBox9.SelectionBoxItem.ToString();
+                        label3.Text = comboBox1.SelectionBoxItem.ToString();
+                        label2.Text = comboBox2.SelectionBoxItem.ToString();
+                        label1.Text = comboBox3.SelectionBoxItem.ToString();
+                        label.Text = comboBox4.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox6.SelectionBoxItem) == sync)
+                    {
+                        label8.Text = comboBox6.SelectionBoxItem.ToString();
+                        label7.Text = comboBox7.SelectionBoxItem.ToString();
+                        label6.Text = comboBox8.SelectionBoxItem.ToString();
+                        label5.Text = comboBox9.SelectionBoxItem.ToString();
+                        label4.Text = comboBox1.SelectionBoxItem.ToString();
+                        label3.Text = comboBox2.SelectionBoxItem.ToString();
+                        label2.Text = comboBox3.SelectionBoxItem.ToString();
+                        label1.Text = comboBox4.SelectionBoxItem.ToString();
+                        label.Text = comboBox5.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox7.SelectionBoxItem) == sync)
+                    {
+                        label8.Text = comboBox7.SelectionBoxItem.ToString();
+                        label7.Text = comboBox8.SelectionBoxItem.ToString();
+                        label6.Text = comboBox9.SelectionBoxItem.ToString();
+                        label5.Text = comboBox1.SelectionBoxItem.ToString();
+                        label4.Text = comboBox2.SelectionBoxItem.ToString();
+                        label3.Text = comboBox3.SelectionBoxItem.ToString();
+                        label2.Text = comboBox4.SelectionBoxItem.ToString();
+                        label1.Text = comboBox5.SelectionBoxItem.ToString();
+                        label.Text = comboBox6.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox8.SelectionBoxItem) == sync)
+                    {
+                        label8.Text = comboBox8.SelectionBoxItem.ToString();
+                        label7.Text = comboBox9.SelectionBoxItem.ToString();
+                        label6.Text = comboBox1.SelectionBoxItem.ToString();
+                        label5.Text = comboBox2.SelectionBoxItem.ToString();
+                        label4.Text = comboBox3.SelectionBoxItem.ToString();
+                        label3.Text = comboBox4.SelectionBoxItem.ToString();
+                        label2.Text = comboBox5.SelectionBoxItem.ToString();
+                        label1.Text = comboBox6.SelectionBoxItem.ToString();
+                        label.Text = comboBox7.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox9.SelectionBoxItem) == sync)
+                    {
+                        label8.Text = comboBox9.SelectionBoxItem.ToString();
+                        label7.Text = comboBox1.SelectionBoxItem.ToString();
+                        label6.Text = comboBox2.SelectionBoxItem.ToString();
+                        label5.Text = comboBox3.SelectionBoxItem.ToString();
+                        label4.Text = comboBox4.SelectionBoxItem.ToString();
+                        label3.Text = comboBox5.SelectionBoxItem.ToString();
+                        label2.Text = comboBox6.SelectionBoxItem.ToString();
+                        label1.Text = comboBox7.SelectionBoxItem.ToString();
+                        label.Text = comboBox8.SelectionBoxItem.ToString();
+                    }
+                }
+
+                if (cylinders == 10)
+                {
+                    FrameworkElement labelA = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label" select someElement as FrameworkElement).FirstOrDefault();
+                    label = labelA as TextBlock;
+
+                    FrameworkElement labelB = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label1" select someElement as FrameworkElement).FirstOrDefault();
+                    label1 = labelB as TextBlock;
+
+                    FrameworkElement labelC = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label2" select someElement as FrameworkElement).FirstOrDefault();
+                    label2 = labelC as TextBlock;
+
+                    FrameworkElement labelD = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label3" select someElement as FrameworkElement).FirstOrDefault();
+                    label3 = labelD as TextBlock;
+
+                    FrameworkElement labelE = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label4" select someElement as FrameworkElement).FirstOrDefault();
+                    label4 = labelE as TextBlock;
+
+                    FrameworkElement labelF = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label5" select someElement as FrameworkElement).FirstOrDefault();
+                    label5 = labelF as TextBlock;
+
+                    FrameworkElement labelG = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label6" select someElement as FrameworkElement).FirstOrDefault();
+                    label6 = labelG as TextBlock;
+
+                    FrameworkElement labelH = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label7" select someElement as FrameworkElement).FirstOrDefault();
+                    label7 = labelH as TextBlock;
+
+                    FrameworkElement labelI = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label8" select someElement as FrameworkElement).FirstOrDefault();
+                    label8 = labelI as TextBlock;
+
+                    FrameworkElement labelJ = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label9" select someElement as FrameworkElement).FirstOrDefault();
+                    label9 = labelJ as TextBlock;
+
+                    if (Convert.ToString(comboBox1.SelectionBoxItem) == sync)
+                    {
+                        label9.Text = comboBox1.SelectionBoxItem.ToString();
+                        label8.Text = comboBox2.SelectionBoxItem.ToString();
+                        label7.Text = comboBox3.SelectionBoxItem.ToString();
+                        label6.Text = comboBox4.SelectionBoxItem.ToString();
+                        label5.Text = comboBox5.SelectionBoxItem.ToString();
+                        label4.Text = comboBox6.SelectionBoxItem.ToString();
+                        label3.Text = comboBox7.SelectionBoxItem.ToString();
+                        label2.Text = comboBox8.SelectionBoxItem.ToString();
+                        label1.Text = comboBox9.SelectionBoxItem.ToString();
+                        label.Text = comboBox10.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox2.SelectionBoxItem) == sync)
+                    {
+                        label9.Text = comboBox2.SelectionBoxItem.ToString();
+                        label8.Text = comboBox3.SelectionBoxItem.ToString();
+                        label7.Text = comboBox4.SelectionBoxItem.ToString();
+                        label6.Text = comboBox5.SelectionBoxItem.ToString();
+                        label5.Text = comboBox6.SelectionBoxItem.ToString();
+                        label4.Text = comboBox7.SelectionBoxItem.ToString();
+                        label3.Text = comboBox8.SelectionBoxItem.ToString();
+                        label2.Text = comboBox9.SelectionBoxItem.ToString();
+                        label1.Text = comboBox10.SelectionBoxItem.ToString();
+                        label.Text = comboBox1.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox3.SelectionBoxItem) == sync)
+                    {
+                        label9.Text = comboBox3.SelectionBoxItem.ToString();
+                        label8.Text = comboBox4.SelectionBoxItem.ToString();
+                        label7.Text = comboBox5.SelectionBoxItem.ToString();
+                        label6.Text = comboBox6.SelectionBoxItem.ToString();
+                        label5.Text = comboBox7.SelectionBoxItem.ToString();
+                        label4.Text = comboBox8.SelectionBoxItem.ToString();
+                        label3.Text = comboBox9.SelectionBoxItem.ToString();
+                        label2.Text = comboBox10.SelectionBoxItem.ToString();
+                        label1.Text = comboBox1.SelectionBoxItem.ToString();
+                        label.Text = comboBox2.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox4.SelectionBoxItem) == sync)
+                    {
+                        label9.Text = comboBox4.SelectionBoxItem.ToString();
+                        label8.Text = comboBox5.SelectionBoxItem.ToString();
+                        label7.Text = comboBox6.SelectionBoxItem.ToString();
+                        label6.Text = comboBox7.SelectionBoxItem.ToString();
+                        label5.Text = comboBox8.SelectionBoxItem.ToString();
+                        label4.Text = comboBox9.SelectionBoxItem.ToString();
+                        label3.Text = comboBox10.SelectionBoxItem.ToString();
+                        label2.Text = comboBox1.SelectionBoxItem.ToString();
+                        label1.Text = comboBox2.SelectionBoxItem.ToString();
+                        label.Text = comboBox3.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox5.SelectionBoxItem) == sync)
+                    {
+                        label9.Text = comboBox5.SelectionBoxItem.ToString();
+                        label8.Text = comboBox6.SelectionBoxItem.ToString();
+                        label7.Text = comboBox7.SelectionBoxItem.ToString();
+                        label6.Text = comboBox8.SelectionBoxItem.ToString();
+                        label5.Text = comboBox9.SelectionBoxItem.ToString();
+                        label4.Text = comboBox10.SelectionBoxItem.ToString();
+                        label3.Text = comboBox1.SelectionBoxItem.ToString();
+                        label2.Text = comboBox2.SelectionBoxItem.ToString();
+                        label1.Text = comboBox3.SelectionBoxItem.ToString();
+                        label.Text = comboBox4.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox6.SelectionBoxItem) == sync)
+                    {
+                        label9.Text = comboBox6.SelectionBoxItem.ToString();
+                        label8.Text = comboBox7.SelectionBoxItem.ToString();
+                        label7.Text = comboBox8.SelectionBoxItem.ToString();
+                        label6.Text = comboBox9.SelectionBoxItem.ToString();
+                        label5.Text = comboBox10.SelectionBoxItem.ToString();
+                        label4.Text = comboBox1.SelectionBoxItem.ToString();
+                        label3.Text = comboBox2.SelectionBoxItem.ToString();
+                        label2.Text = comboBox3.SelectionBoxItem.ToString();
+                        label1.Text = comboBox4.SelectionBoxItem.ToString();
+                        label.Text = comboBox5.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox7.SelectionBoxItem) == sync)
+                    {
+                        label9.Text = comboBox7.SelectionBoxItem.ToString();
+                        label8.Text = comboBox8.SelectionBoxItem.ToString();
+                        label7.Text = comboBox9.SelectionBoxItem.ToString();
+                        label6.Text = comboBox10.SelectionBoxItem.ToString();
+                        label5.Text = comboBox1.SelectionBoxItem.ToString();
+                        label4.Text = comboBox2.SelectionBoxItem.ToString();
+                        label3.Text = comboBox3.SelectionBoxItem.ToString();
+                        label2.Text = comboBox4.SelectionBoxItem.ToString();
+                        label1.Text = comboBox5.SelectionBoxItem.ToString();
+                        label.Text = comboBox6.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox8.SelectionBoxItem) == sync)
+                    {
+                        label9.Text = comboBox8.SelectionBoxItem.ToString();
+                        label8.Text = comboBox9.SelectionBoxItem.ToString();
+                        label7.Text = comboBox10.SelectionBoxItem.ToString();
+                        label6.Text = comboBox1.SelectionBoxItem.ToString();
+                        label5.Text = comboBox2.SelectionBoxItem.ToString();
+                        label4.Text = comboBox3.SelectionBoxItem.ToString();
+                        label3.Text = comboBox4.SelectionBoxItem.ToString();
+                        label2.Text = comboBox5.SelectionBoxItem.ToString();
+                        label1.Text = comboBox6.SelectionBoxItem.ToString();
+                        label.Text = comboBox7.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox9.SelectionBoxItem) == sync)
+                    {
+                        label9.Text = comboBox9.SelectionBoxItem.ToString();
+                        label8.Text = comboBox10.SelectionBoxItem.ToString();
+                        label7.Text = comboBox1.SelectionBoxItem.ToString();
+                        label6.Text = comboBox2.SelectionBoxItem.ToString();
+                        label5.Text = comboBox3.SelectionBoxItem.ToString();
+                        label4.Text = comboBox4.SelectionBoxItem.ToString();
+                        label3.Text = comboBox5.SelectionBoxItem.ToString();
+                        label2.Text = comboBox6.SelectionBoxItem.ToString();
+                        label1.Text = comboBox7.SelectionBoxItem.ToString();
+                        label.Text = comboBox8.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox10.SelectionBoxItem) == sync)
+                    {
+                        label9.Text = comboBox10.SelectionBoxItem.ToString();
+                        label8.Text = comboBox1.SelectionBoxItem.ToString();
+                        label7.Text = comboBox2.SelectionBoxItem.ToString();
+                        label6.Text = comboBox3.SelectionBoxItem.ToString();
+                        label5.Text = comboBox4.SelectionBoxItem.ToString();
+                        label4.Text = comboBox5.SelectionBoxItem.ToString();
+                        label3.Text = comboBox6.SelectionBoxItem.ToString();
+                        label2.Text = comboBox7.SelectionBoxItem.ToString();
+                        label1.Text = comboBox8.SelectionBoxItem.ToString();
+                        label.Text = comboBox9.SelectionBoxItem.ToString();
+                    }
+                }
+
+                if (cylinders == 11)
+                {
+                    FrameworkElement labelA = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label" select someElement as FrameworkElement).FirstOrDefault();
+                    label = labelA as TextBlock;
+
+                    FrameworkElement labelB = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label1" select someElement as FrameworkElement).FirstOrDefault();
+                    label1 = labelB as TextBlock;
+
+                    FrameworkElement labelC = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label2" select someElement as FrameworkElement).FirstOrDefault();
+                    label2 = labelC as TextBlock;
+
+                    FrameworkElement labelD = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label3" select someElement as FrameworkElement).FirstOrDefault();
+                    label3 = labelD as TextBlock;
+
+                    FrameworkElement labelE = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label4" select someElement as FrameworkElement).FirstOrDefault();
+                    label4 = labelE as TextBlock;
+
+                    FrameworkElement labelF = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label5" select someElement as FrameworkElement).FirstOrDefault();
+                    label5 = labelF as TextBlock;
+
+                    FrameworkElement labelG = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label6" select someElement as FrameworkElement).FirstOrDefault();
+                    label6 = labelG as TextBlock;
+
+                    FrameworkElement labelH = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label7" select someElement as FrameworkElement).FirstOrDefault();
+                    label7 = labelH as TextBlock;
+
+                    FrameworkElement labelI = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label8" select someElement as FrameworkElement).FirstOrDefault();
+                    label8 = labelI as TextBlock;
+
+                    FrameworkElement labelJ = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label9" select someElement as FrameworkElement).FirstOrDefault();
+                    label9 = labelJ as TextBlock;
+
+                    FrameworkElement labelK = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label10" select someElement as FrameworkElement).FirstOrDefault();
+                    label10 = labelK as TextBlock;
+
+                    if (Convert.ToString(comboBox1.SelectionBoxItem) == sync)
+                    {
+                        label10.Text = comboBox1.SelectionBoxItem.ToString();
+                        label9.Text = comboBox2.SelectionBoxItem.ToString();
+                        label8.Text = comboBox3.SelectionBoxItem.ToString();
+                        label7.Text = comboBox4.SelectionBoxItem.ToString();
+                        label6.Text = comboBox5.SelectionBoxItem.ToString();
+                        label5.Text = comboBox6.SelectionBoxItem.ToString();
+                        label4.Text = comboBox7.SelectionBoxItem.ToString();
+                        label3.Text = comboBox8.SelectionBoxItem.ToString();
+                        label2.Text = comboBox9.SelectionBoxItem.ToString();
+                        label1.Text = comboBox10.SelectionBoxItem.ToString();
+                        label.Text = comboBox11.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox2.SelectionBoxItem) == sync)
+                    {
+                        label10.Text = comboBox2.SelectionBoxItem.ToString();
+                        label9.Text = comboBox3.SelectionBoxItem.ToString();
+                        label8.Text = comboBox4.SelectionBoxItem.ToString();
+                        label7.Text = comboBox5.SelectionBoxItem.ToString();
+                        label6.Text = comboBox6.SelectionBoxItem.ToString();
+                        label5.Text = comboBox7.SelectionBoxItem.ToString();
+                        label4.Text = comboBox8.SelectionBoxItem.ToString();
+                        label3.Text = comboBox9.SelectionBoxItem.ToString();
+                        label2.Text = comboBox10.SelectionBoxItem.ToString();
+                        label1.Text = comboBox11.SelectionBoxItem.ToString();
+                        label.Text = comboBox1.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox3.SelectionBoxItem) == sync)
+                    {
+                        label10.Text = comboBox3.SelectionBoxItem.ToString();
+                        label9.Text = comboBox4.SelectionBoxItem.ToString();
+                        label8.Text = comboBox5.SelectionBoxItem.ToString();
+                        label7.Text = comboBox6.SelectionBoxItem.ToString();
+                        label6.Text = comboBox7.SelectionBoxItem.ToString();
+                        label5.Text = comboBox8.SelectionBoxItem.ToString();
+                        label4.Text = comboBox9.SelectionBoxItem.ToString();
+                        label3.Text = comboBox10.SelectionBoxItem.ToString();
+                        label2.Text = comboBox11.SelectionBoxItem.ToString();
+                        label1.Text = comboBox1.SelectionBoxItem.ToString();
+                        label.Text = comboBox2.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox4.SelectionBoxItem) == sync)
+                    {
+                        label10.Text = comboBox4.SelectionBoxItem.ToString();
+                        label9.Text = comboBox5.SelectionBoxItem.ToString();
+                        label8.Text = comboBox6.SelectionBoxItem.ToString();
+                        label7.Text = comboBox7.SelectionBoxItem.ToString();
+                        label6.Text = comboBox8.SelectionBoxItem.ToString();
+                        label5.Text = comboBox9.SelectionBoxItem.ToString();
+                        label4.Text = comboBox10.SelectionBoxItem.ToString();
+                        label3.Text = comboBox11.SelectionBoxItem.ToString();
+                        label2.Text = comboBox1.SelectionBoxItem.ToString();
+                        label1.Text = comboBox2.SelectionBoxItem.ToString();
+                        label.Text = comboBox3.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox5.SelectionBoxItem) == sync)
+                    {
+                        label10.Text = comboBox5.SelectionBoxItem.ToString();
+                        label9.Text = comboBox6.SelectionBoxItem.ToString();
+                        label8.Text = comboBox7.SelectionBoxItem.ToString();
+                        label7.Text = comboBox8.SelectionBoxItem.ToString();
+                        label6.Text = comboBox9.SelectionBoxItem.ToString();
+                        label5.Text = comboBox10.SelectionBoxItem.ToString();
+                        label4.Text = comboBox11.SelectionBoxItem.ToString();
+                        label3.Text = comboBox1.SelectionBoxItem.ToString();
+                        label2.Text = comboBox2.SelectionBoxItem.ToString();
+                        label1.Text = comboBox3.SelectionBoxItem.ToString();
+                        label.Text = comboBox4.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox6.SelectionBoxItem) == sync)
+                    {
+                        label10.Text = comboBox6.SelectionBoxItem.ToString();
+                        label9.Text = comboBox7.SelectionBoxItem.ToString();
+                        label8.Text = comboBox8.SelectionBoxItem.ToString();
+                        label7.Text = comboBox9.SelectionBoxItem.ToString();
+                        label6.Text = comboBox10.SelectionBoxItem.ToString();
+                        label5.Text = comboBox11.SelectionBoxItem.ToString();
+                        label4.Text = comboBox1.SelectionBoxItem.ToString();
+                        label3.Text = comboBox2.SelectionBoxItem.ToString();
+                        label2.Text = comboBox3.SelectionBoxItem.ToString();
+                        label1.Text = comboBox4.SelectionBoxItem.ToString();
+                        label.Text = comboBox5.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox7.SelectionBoxItem) == sync)
+                    {
+                        label10.Text = comboBox7.SelectionBoxItem.ToString();
+                        label9.Text = comboBox8.SelectionBoxItem.ToString();
+                        label8.Text = comboBox9.SelectionBoxItem.ToString();
+                        label7.Text = comboBox10.SelectionBoxItem.ToString();
+                        label6.Text = comboBox11.SelectionBoxItem.ToString();
+                        label5.Text = comboBox1.SelectionBoxItem.ToString();
+                        label4.Text = comboBox2.SelectionBoxItem.ToString();
+                        label3.Text = comboBox3.SelectionBoxItem.ToString();
+                        label2.Text = comboBox4.SelectionBoxItem.ToString();
+                        label1.Text = comboBox5.SelectionBoxItem.ToString();
+                        label.Text = comboBox6.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox8.SelectionBoxItem) == sync)
+                    {
+                        label10.Text = comboBox8.SelectionBoxItem.ToString();
+                        label9.Text = comboBox9.SelectionBoxItem.ToString();
+                        label8.Text = comboBox10.SelectionBoxItem.ToString();
+                        label7.Text = comboBox11.SelectionBoxItem.ToString();
+                        label6.Text = comboBox1.SelectionBoxItem.ToString();
+                        label5.Text = comboBox2.SelectionBoxItem.ToString();
+                        label4.Text = comboBox3.SelectionBoxItem.ToString();
+                        label3.Text = comboBox4.SelectionBoxItem.ToString();
+                        label2.Text = comboBox5.SelectionBoxItem.ToString();
+                        label1.Text = comboBox6.SelectionBoxItem.ToString();
+                        label.Text = comboBox7.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox9.SelectionBoxItem) == sync)
+                    {
+                        label10.Text = comboBox9.SelectionBoxItem.ToString();
+                        label9.Text = comboBox10.SelectionBoxItem.ToString();
+                        label8.Text = comboBox11.SelectionBoxItem.ToString();
+                        label7.Text = comboBox1.SelectionBoxItem.ToString();
+                        label6.Text = comboBox2.SelectionBoxItem.ToString();
+                        label5.Text = comboBox3.SelectionBoxItem.ToString();
+                        label4.Text = comboBox4.SelectionBoxItem.ToString();
+                        label3.Text = comboBox5.SelectionBoxItem.ToString();
+                        label2.Text = comboBox6.SelectionBoxItem.ToString();
+                        label1.Text = comboBox7.SelectionBoxItem.ToString();
+                        label.Text = comboBox8.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox10.SelectionBoxItem) == sync)
+                    {
+                        label10.Text = comboBox10.SelectionBoxItem.ToString();
+                        label9.Text = comboBox11.SelectionBoxItem.ToString();
+                        label8.Text = comboBox1.SelectionBoxItem.ToString();
+                        label7.Text = comboBox2.SelectionBoxItem.ToString();
+                        label6.Text = comboBox3.SelectionBoxItem.ToString();
+                        label5.Text = comboBox4.SelectionBoxItem.ToString();
+                        label4.Text = comboBox5.SelectionBoxItem.ToString();
+                        label3.Text = comboBox6.SelectionBoxItem.ToString();
+                        label2.Text = comboBox7.SelectionBoxItem.ToString();
+                        label1.Text = comboBox8.SelectionBoxItem.ToString();
+                        label.Text = comboBox9.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox11.SelectionBoxItem) == sync)
+                    {
+                        label10.Text = comboBox11.SelectionBoxItem.ToString();
+                        label9.Text = comboBox1.SelectionBoxItem.ToString();
+                        label8.Text = comboBox2.SelectionBoxItem.ToString();
+                        label7.Text = comboBox3.SelectionBoxItem.ToString();
+                        label6.Text = comboBox4.SelectionBoxItem.ToString();
+                        label5.Text = comboBox5.SelectionBoxItem.ToString();
+                        label4.Text = comboBox6.SelectionBoxItem.ToString();
+                        label3.Text = comboBox7.SelectionBoxItem.ToString();
+                        label2.Text = comboBox8.SelectionBoxItem.ToString();
+                        label1.Text = comboBox9.SelectionBoxItem.ToString();
+                        label.Text = comboBox10.SelectionBoxItem.ToString();
+                    }
+                }
+
+                if (cylinders == 12)
+                {
+                    FrameworkElement labelA = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label" select someElement as FrameworkElement).FirstOrDefault();
+                    label = labelA as TextBlock;
+
+                    FrameworkElement labelB = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label1" select someElement as FrameworkElement).FirstOrDefault();
+                    label1 = labelB as TextBlock;
+
+                    FrameworkElement labelC = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label2" select someElement as FrameworkElement).FirstOrDefault();
+                    label2 = labelC as TextBlock;
+
+                    FrameworkElement labelD = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label3" select someElement as FrameworkElement).FirstOrDefault();
+                    label3 = labelD as TextBlock;
+
+                    FrameworkElement labelE = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label4" select someElement as FrameworkElement).FirstOrDefault();
+                    label4 = labelE as TextBlock;
+
+                    FrameworkElement labelF = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label5" select someElement as FrameworkElement).FirstOrDefault();
+                    label5 = labelF as TextBlock;
+
+                    FrameworkElement labelG = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label6" select someElement as FrameworkElement).FirstOrDefault();
+                    label6 = labelG as TextBlock;
+
+                    FrameworkElement labelH = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label7" select someElement as FrameworkElement).FirstOrDefault();
+                    label7 = labelH as TextBlock;
+
+                    FrameworkElement labelI = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label8" select someElement as FrameworkElement).FirstOrDefault();
+                    label8 = labelI as TextBlock;
+
+                    FrameworkElement labelJ = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label9" select someElement as FrameworkElement).FirstOrDefault();
+                    label9 = labelJ as TextBlock;
+
+                    FrameworkElement labelK = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label10" select someElement as FrameworkElement).FirstOrDefault();
+                    label10 = labelK as TextBlock;
+
+                    FrameworkElement labelL = (from someElement in gridCylinderIdOverlay.Children where (someElement is FrameworkElement) && ((FrameworkElement)someElement).Name == "label11" select someElement as FrameworkElement).FirstOrDefault();
+                    label11 = labelL as TextBlock;
+
+                    if (Convert.ToString(comboBox1.SelectionBoxItem) == sync)
+                    {
+                        label11.Text = comboBox1.SelectionBoxItem.ToString();
+                        label10.Text = comboBox2.SelectionBoxItem.ToString();
+                        label9.Text = comboBox3.SelectionBoxItem.ToString();
+                        label8.Text = comboBox4.SelectionBoxItem.ToString();
+                        label7.Text = comboBox5.SelectionBoxItem.ToString();
+                        label6.Text = comboBox6.SelectionBoxItem.ToString();
+                        label5.Text = comboBox7.SelectionBoxItem.ToString();
+                        label4.Text = comboBox8.SelectionBoxItem.ToString();
+                        label3.Text = comboBox9.SelectionBoxItem.ToString();
+                        label2.Text = comboBox10.SelectionBoxItem.ToString();
+                        label1.Text = comboBox11.SelectionBoxItem.ToString();
+                        label.Text = comboBox12.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox2.SelectionBoxItem) == sync)
+                    {
+                        label11.Text = comboBox2.SelectionBoxItem.ToString();
+                        label10.Text = comboBox3.SelectionBoxItem.ToString();
+                        label9.Text = comboBox4.SelectionBoxItem.ToString();
+                        label8.Text = comboBox5.SelectionBoxItem.ToString();
+                        label7.Text = comboBox6.SelectionBoxItem.ToString();
+                        label6.Text = comboBox7.SelectionBoxItem.ToString();
+                        label5.Text = comboBox8.SelectionBoxItem.ToString();
+                        label4.Text = comboBox9.SelectionBoxItem.ToString();
+                        label3.Text = comboBox10.SelectionBoxItem.ToString();
+                        label2.Text = comboBox11.SelectionBoxItem.ToString();
+                        label1.Text = comboBox12.SelectionBoxItem.ToString();
+                        label.Text = comboBox1.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox3.SelectionBoxItem) == sync)
+                    {
+                        label11.Text = comboBox3.SelectionBoxItem.ToString();
+                        label10.Text = comboBox4.SelectionBoxItem.ToString();
+                        label9.Text = comboBox5.SelectionBoxItem.ToString();
+                        label8.Text = comboBox6.SelectionBoxItem.ToString();
+                        label7.Text = comboBox7.SelectionBoxItem.ToString();
+                        label6.Text = comboBox8.SelectionBoxItem.ToString();
+                        label5.Text = comboBox9.SelectionBoxItem.ToString();
+                        label4.Text = comboBox10.SelectionBoxItem.ToString();
+                        label3.Text = comboBox11.SelectionBoxItem.ToString();
+                        label2.Text = comboBox12.SelectionBoxItem.ToString();
+                        label1.Text = comboBox1.SelectionBoxItem.ToString();
+                        label.Text = comboBox2.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox4.SelectionBoxItem) == sync)
+                    {
+                        label11.Text = comboBox4.SelectionBoxItem.ToString();
+                        label10.Text = comboBox5.SelectionBoxItem.ToString();
+                        label9.Text = comboBox6.SelectionBoxItem.ToString();
+                        label8.Text = comboBox7.SelectionBoxItem.ToString();
+                        label7.Text = comboBox8.SelectionBoxItem.ToString();
+                        label6.Text = comboBox9.SelectionBoxItem.ToString();
+                        label5.Text = comboBox10.SelectionBoxItem.ToString();
+                        label4.Text = comboBox11.SelectionBoxItem.ToString();
+                        label3.Text = comboBox12.SelectionBoxItem.ToString();
+                        label2.Text = comboBox1.SelectionBoxItem.ToString();
+                        label1.Text = comboBox2.SelectionBoxItem.ToString();
+                        label.Text = comboBox3.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox5.SelectionBoxItem) == sync)
+                    {
+                        label11.Text = comboBox5.SelectionBoxItem.ToString();
+                        label10.Text = comboBox6.SelectionBoxItem.ToString();
+                        label9.Text = comboBox7.SelectionBoxItem.ToString();
+                        label8.Text = comboBox8.SelectionBoxItem.ToString();
+                        label7.Text = comboBox9.SelectionBoxItem.ToString();
+                        label6.Text = comboBox10.SelectionBoxItem.ToString();
+                        label5.Text = comboBox11.SelectionBoxItem.ToString();
+                        label4.Text = comboBox12.SelectionBoxItem.ToString();
+                        label3.Text = comboBox1.SelectionBoxItem.ToString();
+                        label2.Text = comboBox2.SelectionBoxItem.ToString();
+                        label1.Text = comboBox3.SelectionBoxItem.ToString();
+                        label.Text = comboBox4.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox6.SelectionBoxItem) == sync)
+                    {
+                        label11.Text = comboBox6.SelectionBoxItem.ToString();
+                        label10.Text = comboBox7.SelectionBoxItem.ToString();
+                        label9.Text = comboBox8.SelectionBoxItem.ToString();
+                        label8.Text = comboBox9.SelectionBoxItem.ToString();
+                        label7.Text = comboBox10.SelectionBoxItem.ToString();
+                        label6.Text = comboBox11.SelectionBoxItem.ToString();
+                        label5.Text = comboBox12.SelectionBoxItem.ToString();
+                        label4.Text = comboBox1.SelectionBoxItem.ToString();
+                        label3.Text = comboBox2.SelectionBoxItem.ToString();
+                        label2.Text = comboBox3.SelectionBoxItem.ToString();
+                        label1.Text = comboBox4.SelectionBoxItem.ToString();
+                        label.Text = comboBox5.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox7.SelectionBoxItem) == sync)
+                    {
+                        label11.Text = comboBox7.SelectionBoxItem.ToString();
+                        label10.Text = comboBox8.SelectionBoxItem.ToString();
+                        label9.Text = comboBox9.SelectionBoxItem.ToString();
+                        label8.Text = comboBox10.SelectionBoxItem.ToString();
+                        label7.Text = comboBox11.SelectionBoxItem.ToString();
+                        label6.Text = comboBox12.SelectionBoxItem.ToString();
+                        label5.Text = comboBox1.SelectionBoxItem.ToString();
+                        label4.Text = comboBox2.SelectionBoxItem.ToString();
+                        label3.Text = comboBox3.SelectionBoxItem.ToString();
+                        label2.Text = comboBox4.SelectionBoxItem.ToString();
+                        label1.Text = comboBox5.SelectionBoxItem.ToString();
+                        label.Text = comboBox6.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox8.SelectionBoxItem) == sync)
+                    {
+                        label11.Text = comboBox8.SelectionBoxItem.ToString();
+                        label10.Text = comboBox9.SelectionBoxItem.ToString();
+                        label9.Text = comboBox10.SelectionBoxItem.ToString();
+                        label8.Text = comboBox11.SelectionBoxItem.ToString();
+                        label7.Text = comboBox12.SelectionBoxItem.ToString();
+                        label6.Text = comboBox1.SelectionBoxItem.ToString();
+                        label5.Text = comboBox2.SelectionBoxItem.ToString();
+                        label4.Text = comboBox3.SelectionBoxItem.ToString();
+                        label3.Text = comboBox4.SelectionBoxItem.ToString();
+                        label2.Text = comboBox5.SelectionBoxItem.ToString();
+                        label1.Text = comboBox6.SelectionBoxItem.ToString();
+                        label.Text = comboBox7.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox9.SelectionBoxItem) == sync)
+                    {
+                        label11.Text = comboBox9.SelectionBoxItem.ToString();
+                        label10.Text = comboBox10.SelectionBoxItem.ToString();
+                        label9.Text = comboBox11.SelectionBoxItem.ToString();
+                        label8.Text = comboBox12.SelectionBoxItem.ToString();
+                        label7.Text = comboBox1.SelectionBoxItem.ToString();
+                        label6.Text = comboBox2.SelectionBoxItem.ToString();
+                        label5.Text = comboBox3.SelectionBoxItem.ToString();
+                        label4.Text = comboBox4.SelectionBoxItem.ToString();
+                        label3.Text = comboBox5.SelectionBoxItem.ToString();
+                        label2.Text = comboBox6.SelectionBoxItem.ToString();
+                        label1.Text = comboBox7.SelectionBoxItem.ToString();
+                        label.Text = comboBox8.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox10.SelectionBoxItem) == sync)
+                    {
+                        label11.Text = comboBox10.SelectionBoxItem.ToString();
+                        label10.Text = comboBox11.SelectionBoxItem.ToString();
+                        label9.Text = comboBox12.SelectionBoxItem.ToString();
+                        label8.Text = comboBox1.SelectionBoxItem.ToString();
+                        label7.Text = comboBox2.SelectionBoxItem.ToString();
+                        label6.Text = comboBox3.SelectionBoxItem.ToString();
+                        label5.Text = comboBox4.SelectionBoxItem.ToString();
+                        label4.Text = comboBox5.SelectionBoxItem.ToString();
+                        label3.Text = comboBox6.SelectionBoxItem.ToString();
+                        label2.Text = comboBox7.SelectionBoxItem.ToString();
+                        label1.Text = comboBox8.SelectionBoxItem.ToString();
+                        label.Text = comboBox9.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox11.SelectionBoxItem) == sync)
+                    {
+                        label11.Text = comboBox11.SelectionBoxItem.ToString();
+                        label10.Text = comboBox12.SelectionBoxItem.ToString();
+                        label9.Text = comboBox1.SelectionBoxItem.ToString();
+                        label8.Text = comboBox2.SelectionBoxItem.ToString();
+                        label7.Text = comboBox3.SelectionBoxItem.ToString();
+                        label6.Text = comboBox4.SelectionBoxItem.ToString();
+                        label5.Text = comboBox5.SelectionBoxItem.ToString();
+                        label4.Text = comboBox6.SelectionBoxItem.ToString();
+                        label3.Text = comboBox7.SelectionBoxItem.ToString();
+                        label2.Text = comboBox8.SelectionBoxItem.ToString();
+                        label1.Text = comboBox9.SelectionBoxItem.ToString();
+                        label.Text = comboBox10.SelectionBoxItem.ToString();
+                    }
+                    else if (Convert.ToString(comboBox12.SelectionBoxItem) == sync)
+                    {
+                        label11.Text = comboBox12.SelectionBoxItem.ToString();
+                        label10.Text = comboBox1.SelectionBoxItem.ToString();
+                        label9.Text = comboBox2.SelectionBoxItem.ToString();
+                        label8.Text = comboBox3.SelectionBoxItem.ToString();
+                        label7.Text = comboBox4.SelectionBoxItem.ToString();
+                        label6.Text = comboBox5.SelectionBoxItem.ToString();
+                        label5.Text = comboBox6.SelectionBoxItem.ToString();
+                        label4.Text = comboBox7.SelectionBoxItem.ToString();
+                        label3.Text = comboBox8.SelectionBoxItem.ToString();
+                        label2.Text = comboBox9.SelectionBoxItem.ToString();
+                        label1.Text = comboBox10.SelectionBoxItem.ToString();
+                        label.Text = comboBox11.SelectionBoxItem.ToString();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                var dialog = new MessageDialog("A problem occured when trying to set the grid labels.    " + ex.Message);
+                await dialog.ShowAsync();
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+        private void comboBoxSync_DropDownClosed(object sender, object e)
+        {
+            if (textBox1.Visibility == Visibility.Visible)
+            {
+                textBox1.Focus(FocusState.Programmatic);
+            }
+        }
+
+        private void textBox1_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            if (textBox2.Visibility == Visibility.Visible)
+            {
+                textBox2.Focus(FocusState.Programmatic);
+            }
+            else
+            {
+                btnGoCylinderID.Focus(FocusState.Programmatic);
+            }
+        }
+
+        private void textBox2_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            if (textBox3.Visibility == Visibility.Visible)
+            {
+                textBox3.Focus(FocusState.Programmatic);
+            }
+            else
+            {
+                btnGoCylinderID.Focus(FocusState.Programmatic);
+            }
+        }
+
+        private void textBox3_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            if (textBox4.Visibility == Visibility.Visible)
+            {
+                textBox4.Focus(FocusState.Programmatic);
+            }
+            else
+            {
+                btnGoCylinderID.Focus(FocusState.Programmatic);
+            }
+        }
+
+        private void textBox4_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            if (textBox5.Visibility == Visibility.Visible)
+            {
+                textBox5.Focus(FocusState.Programmatic);
+            }
+            else
+            {
+                btnGoCylinderID.Focus(FocusState.Programmatic);
+            }
+        }
+
+        private void textBox5_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            if (textBox6.Visibility == Visibility.Visible)
+            {
+                textBox6.Focus(FocusState.Programmatic);
+            }
+            else
+            {
+                btnGoCylinderID.Focus(FocusState.Programmatic);
+            }
+        }
+
+        private void textBox6_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            if (textBox7.Visibility == Visibility.Visible)
+            {
+                textBox7.Focus(FocusState.Programmatic);
+            }
+            else
+            {
+                btnGoCylinderID.Focus(FocusState.Programmatic);
+            }
+        }
+
+        private void textBox7_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            if (textBox8.Visibility == Visibility.Visible)
+            {
+                textBox8.Focus(FocusState.Programmatic);
+            }
+            else
+            {
+                btnGoCylinderID.Focus(FocusState.Programmatic);
+            }
+        }
+
+        private void textBox8_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            btnGoCylinderID.Focus(FocusState.Programmatic);
+        }
+
+        private void textBox1_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (textBox1.Text.Length > 0)
+            {
+                textBox1.Text = "";
+            }
+        }
+
+        private void textBox2_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (textBox2.Text.Length > 0)
+            {
+                textBox2.Text = "";
+            }
+        }
+
+        private void textBox3_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (textBox3.Text.Length > 0)
+            {
+                textBox3.Text = "";
+            }
+        }
+
+        private void textBox4_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (textBox4.Text.Length > 0)
+            {
+                textBox4.Text = "";
+            }
+        }
+
+        private void textBox5_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (textBox5.Text.Length > 0)
+            {
+                textBox5.Text = "";
+            }
+        }
+
+        private void textBox6_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (textBox6.Text.Length > 0)
+            {
+                textBox6.Text = "";
+            }
+        }
+
+        private void textBox7_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (textBox7.Text.Length > 0)
+            {
+                textBox7.Text = "";
+            }
+        }
+
+        private void textBox8_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (textBox8.Text.Length > 0)
+            {
+                textBox8.Text = "";
+            }
+        }
+
+        private void box_DropDownOpened(object sender, object e)
+        {
+            var box = sender as ComboBox;
+            box.SelectedIndex = 0;
         }
 
         #endregion
