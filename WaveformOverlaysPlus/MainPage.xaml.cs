@@ -3713,16 +3713,6 @@ namespace WaveformOverlaysPlus
             }
         }
 
-
-
-
-
-
-
-
-
-
-
         private void comboBoxSync_DropDownClosed(object sender, object e)
         {
             if (textBox1.Visibility == Visibility.Visible)
@@ -3887,7 +3877,11 @@ namespace WaveformOverlaysPlus
         private void box_DropDownOpened(object sender, object e)
         {
             var box = sender as ComboBox;
-            box.SelectedIndex = 0;
+
+            if (box.Items.Count > 0)
+            {
+                box.SelectedIndex = 0;
+            }
         }
 
         #endregion

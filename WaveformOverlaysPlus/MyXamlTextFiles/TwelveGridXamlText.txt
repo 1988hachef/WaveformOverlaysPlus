@@ -1,4 +1,4 @@
-﻿<Grid xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Name="grids" Width="340" Height="340" HorizontalAlignment="Left" VerticalAlignment="Top">
+﻿<Grid xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Name="grids">
 
     <Grid.ColumnDefinitions>
         <ColumnDefinition Width="45"/>
@@ -55,148 +55,100 @@
         <RowDefinition/>
     </Grid.RowDefinitions>
 
-    <Border>
-        <Border.Background>
-            <SolidColorBrush Color="LightGray" Opacity="0.4"/>
-        </Border.Background>
-    </Border>
-    <Border Grid.Row="1" BorderBrush="Black" BorderThickness="0,1,0,0">
-        <Border.Background>
-            <SolidColorBrush Color="LightGray" Opacity="0.4"/>
-        </Border.Background>
-    </Border>
-    <Border Grid.Row="2" BorderBrush="Black" BorderThickness="0,1,0,0">
-        <Border.Background>
-            <SolidColorBrush Color="LightGray" Opacity="0.4"/>
-        </Border.Background>
-    </Border>
-    <Border Grid.Row="3" BorderBrush="Black" BorderThickness="0,1,0,0">
-        <Border.Background>
-            <SolidColorBrush Color="LightGray" Opacity="0.4"/>
-        </Border.Background>
-    </Border>
-    <Border Grid.Row="4" BorderBrush="Black" BorderThickness="0,1,0,0">
-        <Border.Background>
-            <SolidColorBrush Color="LightGray" Opacity="0.4"/>
-        </Border.Background>
-    </Border>
-    <Border Grid.Row="5" BorderBrush="Black" BorderThickness="0,1,0,0">
-        <Border.Background>
-            <SolidColorBrush Color="LightGray" Opacity="0.4"/>
-        </Border.Background>
-    </Border>
-    <Border Grid.Row="6" BorderBrush="Black" BorderThickness="0,1,0,0">
-        <Border.Background>
-            <SolidColorBrush Color="LightGray" Opacity="0.4"/>
-        </Border.Background>
-    </Border>
-    <Border Grid.Row="7" BorderBrush="Black" BorderThickness="0,1,0,0">
-        <Border.Background>
-            <SolidColorBrush Color="LightGray" Opacity="0.4"/>
-        </Border.Background>
-    </Border>
-    <Border Grid.Row="8" BorderBrush="Black" BorderThickness="0,1,0,0">
-        <Border.Background>
-            <SolidColorBrush Color="LightGray" Opacity="0.4"/>
-        </Border.Background>
-    </Border>
-    <Border Grid.Row="9" BorderBrush="Black" BorderThickness="0,1,0,0">
-        <Border.Background>
-            <SolidColorBrush Color="LightGray" Opacity="0.4"/>
-        </Border.Background>
-    </Border>
-    <Border Grid.Row="10" BorderBrush="Black" BorderThickness="0,1,0,0">
-        <Border.Background>
-            <SolidColorBrush Color="LightGray" Opacity="0.4"/>
-        </Border.Background>
-    </Border>
-    <Border Grid.Row="11" BorderBrush="Black" BorderThickness="0,1,0,0">
-        <Border.Background>
-            <SolidColorBrush Color="LightGray" Opacity="0.4"/>
-        </Border.Background>
-    </Border>
+    <Border Background="White"/>
+    <Border Grid.Row="1" BorderBrush="Black" BorderThickness="0,1,0,0" Background="White"/>
+    <Border Grid.Row="2" BorderBrush="Black" BorderThickness="0,1,0,0" Background="White"/>
+    <Border Grid.Row="3" BorderBrush="Black" BorderThickness="0,1,0,0" Background="White"/>
+    <Border Grid.Row="4" BorderBrush="Black" BorderThickness="0,1,0,0" Background="White"/>
+    <Border Grid.Row="5" BorderBrush="Black" BorderThickness="0,1,0,0" Background="White"/>
+    <Border Grid.Row="6" BorderBrush="Black" BorderThickness="0,1,0,0" Background="White"/>
+    <Border Grid.Row="7" BorderBrush="Black" BorderThickness="0,1,0,0" Background="White"/>
+    <Border Grid.Row="8" BorderBrush="Black" BorderThickness="0,1,0,0" Background="White"/>
+    <Border Grid.Row="9" BorderBrush="Black" BorderThickness="0,1,0,0" Background="White"/>
+    <Border Grid.Row="10" BorderBrush="Black" BorderThickness="0,1,0,0" Background="White"/>
+    <Border Grid.Row="11" BorderBrush="Black" BorderThickness="0,1,0,0" Background="White"/>
 
-    <TextBlock Name="label" Text="N" HorizontalAlignment="Center" Grid.Row="0" VerticalAlignment="Center" Padding="0"/>
-    <TextBlock Name="label1" Text="N" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Center" Padding="0"/>
-    <TextBlock Name="label2" Text="N" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Center" Padding="0"/>
-    <TextBlock Name="label3" Text="N" HorizontalAlignment="Center" Grid.Row="3" VerticalAlignment="Center" Padding="0"/>
-    <TextBlock Name="label4" Text="N" HorizontalAlignment="Center" Grid.Row="4" VerticalAlignment="Center" Padding="0"/>
-    <TextBlock Name="label5" Text="N" HorizontalAlignment="Center" Grid.Row="5" VerticalAlignment="Center" Padding="0"/>
-    <TextBlock Name="label6" Text="N" HorizontalAlignment="Center" Grid.Row="6" VerticalAlignment="Center" Padding="0"/>
-    <TextBlock Name="label7" Text="N" HorizontalAlignment="Center" Grid.Row="7" VerticalAlignment="Center" Padding="0"/>
-    <TextBlock Name="label8" Text="N" HorizontalAlignment="Center" Grid.Row="8" VerticalAlignment="Center" Padding="0"/>
-    <TextBlock Name="label9" Text="N" HorizontalAlignment="Center" Grid.Row="9" VerticalAlignment="Center" Padding="0"/>
-    <TextBlock Name="label10" Text="N" HorizontalAlignment="Center" Grid.Row="10" VerticalAlignment="Center" Padding="0"/>
-    <TextBlock Name="label11" Text="N" HorizontalAlignment="Center" Grid.Row="11" VerticalAlignment="Center" Padding="0" Foreground="Red" FontWeight="Bold"/>
-    <TextBlock Name="labelUpArrow" Text="↑" HorizontalAlignment="Right" Grid.Row="11" VerticalAlignment="Center" Padding="0" Foreground="Red" Margin="0,0,5,5" FontSize="21.333"/>
+    <TextBlock Name="label" Text="N" HorizontalAlignment="Center" Grid.Row="0" VerticalAlignment="Center" Padding="0" FontWeight="Bold" FontSize="24"/>
+    <TextBlock Name="label1" Text="N" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Center" Padding="0" FontWeight="Bold" FontSize="24"/>
+    <TextBlock Name="label2" Text="N" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Center" Padding="0" FontWeight="Bold" FontSize="24"/>
+    <TextBlock Name="label3" Text="N" HorizontalAlignment="Center" Grid.Row="3" VerticalAlignment="Center" Padding="0" FontWeight="Bold" FontSize="24"/>
+    <TextBlock Name="label4" Text="N" HorizontalAlignment="Center" Grid.Row="4" VerticalAlignment="Center" Padding="0" FontWeight="Bold" FontSize="24"/>
+    <TextBlock Name="label5" Text="N" HorizontalAlignment="Center" Grid.Row="5" VerticalAlignment="Center" Padding="0" FontWeight="Bold" FontSize="24"/>
+    <TextBlock Name="label6" Text="N" HorizontalAlignment="Center" Grid.Row="6" VerticalAlignment="Center" Padding="0" FontWeight="Bold" FontSize="24"/>
+    <TextBlock Name="label7" Text="N" HorizontalAlignment="Center" Grid.Row="7" VerticalAlignment="Center" Padding="0" FontWeight="Bold" FontSize="24"/>
+    <TextBlock Name="label8" Text="N" HorizontalAlignment="Center" Grid.Row="8" VerticalAlignment="Center" Padding="0" FontWeight="Bold" FontSize="24"/>
+    <TextBlock Name="label9" Text="N" HorizontalAlignment="Center" Grid.Row="9" VerticalAlignment="Center" Padding="0" FontWeight="Bold" FontSize="24"/>
+    <TextBlock Name="label10" Text="N" HorizontalAlignment="Center" Grid.Row="10" VerticalAlignment="Center" Padding="0" FontWeight="Bold" FontSize="24"/>
+	<TextBlock Name="label11" Text="N" Grid.Row="11" Foreground="Red" FontWeight="Bold" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <TextBlock Name="labelUpArrow" Text="↑" Grid.Row="11" Foreground="Red" FontSize="26" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,2" />
 
-    <Rectangle Opacity="0.5" Grid.Column="1"  Grid.Row="11" Grid.ColumnSpan="9" Stroke="White" Fill="OrangeRed"/>
-    <Rectangle Opacity="0.5" Grid.Column="9"  Grid.Row="11" Grid.ColumnSpan="10" Stroke="White" Fill="SaddleBrown"/>
-    <Rectangle Opacity="0.5" Grid.Column="18" Grid.Row="11" Grid.ColumnSpan="10" Stroke="White" Fill="Yellow"/>
-    <Rectangle Opacity="0.5" Grid.Column="27" Grid.Row="11" Grid.ColumnSpan="10" Stroke="White" Fill="Orange"/>
+    <Rectangle Grid.Column="1"  Grid.Row="11" Grid.ColumnSpan="9" Stroke="White" Fill="OrangeRed"/>
+    <Rectangle Grid.Column="9"  Grid.Row="11" Grid.ColumnSpan="10" Stroke="White" Fill="SaddleBrown"/>
+    <Rectangle Grid.Column="18" Grid.Row="11" Grid.ColumnSpan="10" Stroke="White" Fill="Yellow"/>
+    <Rectangle Grid.Column="27" Grid.Row="11" Grid.ColumnSpan="10" Stroke="White" Fill="Orange"/>
 
-    <Rectangle Opacity="0.5" Grid.Column="1"  Grid.Row="10" Grid.ColumnSpan="3" Stroke="White" Fill="Orange"/>
-    <Rectangle Opacity="0.5" Grid.Column="3"  Grid.Row="10" Grid.ColumnSpan="10" Stroke="White" Fill="OrangeRed"/>
-    <Rectangle Opacity="0.5" Grid.Column="12" Grid.Row="10" Grid.ColumnSpan="10" Stroke="White" Fill="SaddleBrown"/>
-    <Rectangle Opacity="0.5" Grid.Column="21" Grid.Row="10" Grid.ColumnSpan="10" Stroke="White" Fill="Yellow"/>
-    <Rectangle Opacity="0.5" Grid.Column="30" Grid.Row="10" Grid.ColumnSpan="17" Stroke="White" Fill="Orange"/>
+    <Rectangle Grid.Column="1"  Grid.Row="10" Grid.ColumnSpan="3" Stroke="White" Fill="Orange"/>
+    <Rectangle Grid.Column="3"  Grid.Row="10" Grid.ColumnSpan="10" Stroke="White" Fill="OrangeRed"/>
+    <Rectangle Grid.Column="12" Grid.Row="10" Grid.ColumnSpan="10" Stroke="White" Fill="SaddleBrown"/>
+    <Rectangle Grid.Column="21" Grid.Row="10" Grid.ColumnSpan="10" Stroke="White" Fill="Yellow"/>
+    <Rectangle Grid.Column="30" Grid.Row="10" Grid.ColumnSpan="17" Stroke="White" Fill="Orange"/>
 
-    <Rectangle Opacity="0.5" Grid.Column="1"  Grid.Row="9" Grid.ColumnSpan="6" Stroke="White" Fill="Orange"/>
-    <Rectangle Opacity="0.5" Grid.Column="6"  Grid.Row="9" Grid.ColumnSpan="10" Stroke="White" Fill="OrangeRed"/>
-    <Rectangle Opacity="0.5" Grid.Column="15" Grid.Row="9" Grid.ColumnSpan="10" Stroke="White" Fill="SaddleBrown"/>
-    <Rectangle Opacity="0.5" Grid.Column="24" Grid.Row="9" Grid.ColumnSpan="10" Stroke="White" Fill="Yellow"/>
-    <Rectangle Opacity="0.5" Grid.Column="33" Grid.Row="9" Grid.ColumnSpan="4" Stroke="White" Fill="Orange"/>
+    <Rectangle Grid.Column="1"  Grid.Row="9" Grid.ColumnSpan="6" Stroke="White" Fill="Orange"/>
+    <Rectangle Grid.Column="6"  Grid.Row="9" Grid.ColumnSpan="10" Stroke="White" Fill="OrangeRed"/>
+    <Rectangle Grid.Column="15" Grid.Row="9" Grid.ColumnSpan="10" Stroke="White" Fill="SaddleBrown"/>
+    <Rectangle Grid.Column="24" Grid.Row="9" Grid.ColumnSpan="10" Stroke="White" Fill="Yellow"/>
+    <Rectangle Grid.Column="33" Grid.Row="9" Grid.ColumnSpan="4" Stroke="White" Fill="Orange"/>
 
-    <Rectangle Opacity="0.5" Grid.Column="1"  Grid.Row="8" Grid.ColumnSpan="9" Stroke="White" Fill="Orange"/>
-    <Rectangle Opacity="0.5" Grid.Column="9"  Grid.Row="8" Grid.ColumnSpan="10" Stroke="White" Fill="OrangeRed"/>
-    <Rectangle Opacity="0.5" Grid.Column="18" Grid.Row="8" Grid.ColumnSpan="10" Stroke="White" Fill="SaddleBrown"/>
-    <Rectangle Opacity="0.5" Grid.Column="27" Grid.Row="8" Grid.ColumnSpan="10" Stroke="White" Fill="Yellow"/>
+    <Rectangle Grid.Column="1"  Grid.Row="8" Grid.ColumnSpan="9" Stroke="White" Fill="Orange"/>
+    <Rectangle Grid.Column="9"  Grid.Row="8" Grid.ColumnSpan="10" Stroke="White" Fill="OrangeRed"/>
+    <Rectangle Grid.Column="18" Grid.Row="8" Grid.ColumnSpan="10" Stroke="White" Fill="SaddleBrown"/>
+    <Rectangle Grid.Column="27" Grid.Row="8" Grid.ColumnSpan="10" Stroke="White" Fill="Yellow"/>
 
-    <Rectangle Opacity="0.5" Grid.Column="1"  Grid.Row="7" Grid.ColumnSpan="3" Stroke="White" Fill="Yellow"/>
-    <Rectangle Opacity="0.5" Grid.Column="3"  Grid.Row="7" Grid.ColumnSpan="10" Stroke="White" Fill="Orange"/>
-    <Rectangle Opacity="0.5" Grid.Column="12" Grid.Row="7" Grid.ColumnSpan="10" Stroke="White" Fill="OrangeRed"/>
-    <Rectangle Opacity="0.5" Grid.Column="21" Grid.Row="7" Grid.ColumnSpan="10" Stroke="White" Fill="SaddleBrown"/>
-    <Rectangle Opacity="0.5" Grid.Column="30" Grid.Row="7" Grid.ColumnSpan="17" Stroke="White" Fill="Yellow"/>
+    <Rectangle Grid.Column="1"  Grid.Row="7" Grid.ColumnSpan="3" Stroke="White" Fill="Yellow"/>
+    <Rectangle Grid.Column="3"  Grid.Row="7" Grid.ColumnSpan="10" Stroke="White" Fill="Orange"/>
+    <Rectangle Grid.Column="12" Grid.Row="7" Grid.ColumnSpan="10" Stroke="White" Fill="OrangeRed"/>
+    <Rectangle Grid.Column="21" Grid.Row="7" Grid.ColumnSpan="10" Stroke="White" Fill="SaddleBrown"/>
+    <Rectangle Grid.Column="30" Grid.Row="7" Grid.ColumnSpan="17" Stroke="White" Fill="Yellow"/>
 
-    <Rectangle Opacity="0.5" Grid.Column="1"  Grid.Row="6" Grid.ColumnSpan="6" Stroke="White" Fill="Yellow"/>
-    <Rectangle Opacity="0.5" Grid.Column="6"  Grid.Row="6" Grid.ColumnSpan="10" Stroke="White" Fill="Orange"/>
-    <Rectangle Opacity="0.5" Grid.Column="15" Grid.Row="6" Grid.ColumnSpan="10" Stroke="White" Fill="OrangeRed"/>
-    <Rectangle Opacity="0.5" Grid.Column="24" Grid.Row="6" Grid.ColumnSpan="10" Stroke="White" Fill="SaddleBrown"/>
-    <Rectangle Opacity="0.5" Grid.Column="33" Grid.Row="6" Grid.ColumnSpan="4" Stroke="White" Fill="Yellow"/>
+    <Rectangle Grid.Column="1"  Grid.Row="6" Grid.ColumnSpan="6" Stroke="White" Fill="Yellow"/>
+    <Rectangle Grid.Column="6"  Grid.Row="6" Grid.ColumnSpan="10" Stroke="White" Fill="Orange"/>
+    <Rectangle Grid.Column="15" Grid.Row="6" Grid.ColumnSpan="10" Stroke="White" Fill="OrangeRed"/>
+    <Rectangle Grid.Column="24" Grid.Row="6" Grid.ColumnSpan="10" Stroke="White" Fill="SaddleBrown"/>
+    <Rectangle Grid.Column="33" Grid.Row="6" Grid.ColumnSpan="4" Stroke="White" Fill="Yellow"/>
 
-    <Rectangle Opacity="0.5" Grid.Column="1"  Grid.Row="5" Grid.ColumnSpan="9" Stroke="White" Fill="Yellow"/>
-    <Rectangle Opacity="0.5" Grid.Column="9"  Grid.Row="5" Grid.ColumnSpan="10" Stroke="White" Fill="Orange"/>
-    <Rectangle Opacity="0.5" Grid.Column="18" Grid.Row="5" Grid.ColumnSpan="10" Stroke="White" Fill="OrangeRed"/>
-    <Rectangle Opacity="0.5" Grid.Column="27" Grid.Row="5" Grid.ColumnSpan="10" Stroke="White" Fill="SaddleBrown"/>
+    <Rectangle Grid.Column="1"  Grid.Row="5" Grid.ColumnSpan="9" Stroke="White" Fill="Yellow"/>
+    <Rectangle Grid.Column="9"  Grid.Row="5" Grid.ColumnSpan="10" Stroke="White" Fill="Orange"/>
+    <Rectangle Grid.Column="18" Grid.Row="5" Grid.ColumnSpan="10" Stroke="White" Fill="OrangeRed"/>
+    <Rectangle Grid.Column="27" Grid.Row="5" Grid.ColumnSpan="10" Stroke="White" Fill="SaddleBrown"/>
 
-    <Rectangle Opacity="0.5" Grid.Column="1"  Grid.Row="4" Grid.ColumnSpan="3" Stroke="White" Fill="SaddleBrown"/>
-    <Rectangle Opacity="0.5" Grid.Column="3"  Grid.Row="4" Grid.ColumnSpan="10" Stroke="White" Fill="Yellow"/>
-    <Rectangle Opacity="0.5" Grid.Column="12" Grid.Row="4" Grid.ColumnSpan="10" Stroke="White" Fill="Orange"/>
-    <Rectangle Opacity="0.5" Grid.Column="21" Grid.Row="4" Grid.ColumnSpan="10" Stroke="White" Fill="OrangeRed"/>
-    <Rectangle Opacity="0.5" Grid.Column="30" Grid.Row="4" Grid.ColumnSpan="17" Stroke="White" Fill="SaddleBrown"/>
+    <Rectangle Grid.Column="1"  Grid.Row="4" Grid.ColumnSpan="3" Stroke="White" Fill="SaddleBrown"/>
+    <Rectangle Grid.Column="3"  Grid.Row="4" Grid.ColumnSpan="10" Stroke="White" Fill="Yellow"/>
+    <Rectangle Grid.Column="12" Grid.Row="4" Grid.ColumnSpan="10" Stroke="White" Fill="Orange"/>
+    <Rectangle Grid.Column="21" Grid.Row="4" Grid.ColumnSpan="10" Stroke="White" Fill="OrangeRed"/>
+    <Rectangle Grid.Column="30" Grid.Row="4" Grid.ColumnSpan="17" Stroke="White" Fill="SaddleBrown"/>
 
-    <Rectangle Opacity="0.5" Grid.Column="1"  Grid.Row="3" Grid.ColumnSpan="6" Stroke="White" Fill="SaddleBrown"/>
-    <Rectangle Opacity="0.5" Grid.Column="6"  Grid.Row="3" Grid.ColumnSpan="10" Stroke="White" Fill="Yellow"/>
-    <Rectangle Opacity="0.5" Grid.Column="15" Grid.Row="3" Grid.ColumnSpan="10" Stroke="White" Fill="Orange"/>
-    <Rectangle Opacity="0.5" Grid.Column="24" Grid.Row="3" Grid.ColumnSpan="10" Stroke="White" Fill="OrangeRed"/>
-    <Rectangle Opacity="0.5" Grid.Column="33" Grid.Row="3" Grid.ColumnSpan="4" Stroke="White" Fill="SaddleBrown"/>
+    <Rectangle Grid.Column="1"  Grid.Row="3" Grid.ColumnSpan="6" Stroke="White" Fill="SaddleBrown"/>
+    <Rectangle Grid.Column="6"  Grid.Row="3" Grid.ColumnSpan="10" Stroke="White" Fill="Yellow"/>
+    <Rectangle Grid.Column="15" Grid.Row="3" Grid.ColumnSpan="10" Stroke="White" Fill="Orange"/>
+    <Rectangle Grid.Column="24" Grid.Row="3" Grid.ColumnSpan="10" Stroke="White" Fill="OrangeRed"/>
+    <Rectangle Grid.Column="33" Grid.Row="3" Grid.ColumnSpan="4" Stroke="White" Fill="SaddleBrown"/>
 
-    <Rectangle Opacity="0.5" Grid.Column="1"  Grid.Row="2" Grid.ColumnSpan="9" Stroke="White" Fill="SaddleBrown"/>
-    <Rectangle Opacity="0.5" Grid.Column="9"  Grid.Row="2" Grid.ColumnSpan="10" Stroke="White" Fill="Yellow"/>
-    <Rectangle Opacity="0.5" Grid.Column="18" Grid.Row="2" Grid.ColumnSpan="10" Stroke="White" Fill="Orange"/>
-    <Rectangle Opacity="0.5" Grid.Column="27" Grid.Row="2" Grid.ColumnSpan="10" Stroke="White" Fill="OrangeRed"/>
+    <Rectangle Grid.Column="1"  Grid.Row="2" Grid.ColumnSpan="9" Stroke="White" Fill="SaddleBrown"/>
+    <Rectangle Grid.Column="9"  Grid.Row="2" Grid.ColumnSpan="10" Stroke="White" Fill="Yellow"/>
+    <Rectangle Grid.Column="18" Grid.Row="2" Grid.ColumnSpan="10" Stroke="White" Fill="Orange"/>
+    <Rectangle Grid.Column="27" Grid.Row="2" Grid.ColumnSpan="10" Stroke="White" Fill="OrangeRed"/>
 
-    <Rectangle Opacity="0.5" Grid.Column="1"  Grid.Row="1" Grid.ColumnSpan="3" Stroke="White" Fill="OrangeRed"/>
-    <Rectangle Opacity="0.5" Grid.Column="3"  Grid.Row="1" Grid.ColumnSpan="10" Stroke="White" Fill="SaddleBrown"/>
-    <Rectangle Opacity="0.5" Grid.Column="12" Grid.Row="1" Grid.ColumnSpan="10" Stroke="White" Fill="Yellow"/>
-    <Rectangle Opacity="0.5" Grid.Column="21" Grid.Row="1" Grid.ColumnSpan="10" Stroke="White" Fill="Orange"/>
-    <Rectangle Opacity="0.5" Grid.Column="30" Grid.Row="1" Grid.ColumnSpan="17" Stroke="White" Fill="OrangeRed"/>
+    <Rectangle Grid.Column="1"  Grid.Row="1" Grid.ColumnSpan="3" Stroke="White" Fill="OrangeRed"/>
+    <Rectangle Grid.Column="3"  Grid.Row="1" Grid.ColumnSpan="10" Stroke="White" Fill="SaddleBrown"/>
+    <Rectangle Grid.Column="12" Grid.Row="1" Grid.ColumnSpan="10" Stroke="White" Fill="Yellow"/>
+    <Rectangle Grid.Column="21" Grid.Row="1" Grid.ColumnSpan="10" Stroke="White" Fill="Orange"/>
+    <Rectangle Grid.Column="30" Grid.Row="1" Grid.ColumnSpan="17" Stroke="White" Fill="OrangeRed"/>
 
-    <Rectangle Opacity="0.5" Grid.Column="1"  Grid.Row="0" Grid.ColumnSpan="6" Stroke="White" Fill="OrangeRed"/>
-    <Rectangle Opacity="0.5" Grid.Column="6"  Grid.Row="0" Grid.ColumnSpan="10" Stroke="White" Fill="SaddleBrown"/>
-    <Rectangle Opacity="0.5" Grid.Column="15" Grid.Row="0" Grid.ColumnSpan="10" Stroke="White" Fill="Yellow"/>
-    <Rectangle Opacity="0.5" Grid.Column="24" Grid.Row="0" Grid.ColumnSpan="10" Stroke="White" Fill="Orange"/>
-    <Rectangle Opacity="0.5" Grid.Column="33" Grid.Row="0" Grid.ColumnSpan="4" Stroke="White" Fill="OrangeRed"/>
+    <Rectangle Grid.Column="1"  Grid.Row="0" Grid.ColumnSpan="6" Stroke="White" Fill="OrangeRed"/>
+    <Rectangle Grid.Column="6"  Grid.Row="0" Grid.ColumnSpan="10" Stroke="White" Fill="SaddleBrown"/>
+    <Rectangle Grid.Column="15" Grid.Row="0" Grid.ColumnSpan="10" Stroke="White" Fill="Yellow"/>
+    <Rectangle Grid.Column="24" Grid.Row="0" Grid.ColumnSpan="10" Stroke="White" Fill="Orange"/>
+    <Rectangle Grid.Column="33" Grid.Row="0" Grid.ColumnSpan="4" Stroke="White" Fill="OrangeRed"/>
 
 
     <Rectangle Grid.Column="3"  Grid.Row="0" Grid.RowSpan="12" Fill="Black" Margin="0,1"/>

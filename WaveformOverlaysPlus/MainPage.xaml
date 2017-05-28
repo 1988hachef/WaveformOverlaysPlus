@@ -252,7 +252,7 @@
 
             <Grid Name="gridForOverall" Grid.Column="1" Background="#FFD7E0EE">
 
-                <Grid Name="gridDelta" Height="32" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,-25,250,0" Background="White" Visibility="Collapsed">
+                <Grid Name="gridDelta" Height="32" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,-25,230,0" Background="White" Visibility="Collapsed">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="20"/>
                         <ColumnDefinition Width="50"/>
@@ -643,7 +643,7 @@
         </Grid>
 
         <Grid Name="gridCylinderIDSelections" Grid.RowSpan="2" Background="#B2000000" Visibility="Collapsed">
-            <Border Background="White" VerticalAlignment="Center" HorizontalAlignment="Center" Width="355">
+            <Border Background="White" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <StackPanel>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,4,0">
@@ -669,7 +669,7 @@
                         <ComboBox Name="comboBoxSync" VerticalAlignment="Center" Foreground="Red" Margin="45,0,0,0" DropDownClosed="comboBoxSync_DropDownClosed" DropDownOpened="box_DropDownOpened"/>
                     </StackPanel>
 
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,2,0">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="15,0">
                         <TextBlock Text="Firing order:" Margin="0,15,10,15" />
                         <TextBox Name="textBox1" Height="32" MinWidth="23" Padding="5,3,5,5" Margin="5,0,0,0" Visibility="Collapsed" KeyUp="textBox1_KeyUp" MaxLength="1" KeyDown="textBox1_KeyDown"/>
                         <TextBox Name="textBox2" Height="32" MinWidth="23" Padding="5,3,5,5" Margin="5,0,0,0" Visibility="Collapsed" KeyUp="textBox2_KeyUp" MaxLength="1" KeyDown="textBox2_KeyDown"/>
@@ -679,7 +679,7 @@
                         <TextBox Name="textBox6" Height="32" MinWidth="23" Padding="5,3,5,5" Margin="5,0,0,0" Visibility="Collapsed" KeyUp="textBox6_KeyUp" MaxLength="1" KeyDown="textBox6_KeyDown"/>
                         <TextBox Name="textBox7" Height="32" MinWidth="23" Padding="5,3,5,5" Margin="5,0,0,0" Visibility="Collapsed" KeyUp="textBox7_KeyUp" MaxLength="1" KeyDown="textBox7_KeyDown"/>
                         <TextBox Name="textBox8" Height="32" MinWidth="23" Padding="5,3,5,5" Margin="5,0,0,0" Visibility="Collapsed" KeyUp="textBox8_KeyUp" MaxLength="1" KeyDown="textBox8_KeyDown"/>
-                        <StackPanel Margin="0,10,0,0">
+                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                             <ComboBox Name="comboBox1" MinWidth="53" Visibility="Collapsed" Margin="0,0,0,2" DropDownOpened="box_DropDownOpened">
                                 <ComboBoxItem Content="1"/>
                                 <ComboBoxItem Content="2"/>
@@ -851,7 +851,7 @@
                         </StackPanel>
                     </StackPanel>
 
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="51,0">
                         <Button Name="btnCancelCylinderID" Content="Cancel" Width="96" Height="45" Margin="15,15,15,15" Click="btnCancelCylinderID_Click"/>
                         <Button Name="btnGoCylinderID" Margin="15,15,15,15" Width="96" Height="45" Click="btnGoCylinderID_Click">
                             <Button.Content>

@@ -40,56 +40,24 @@
         <RowDefinition/>
     </Grid.RowDefinitions>
 
-    <Border>
-        <Border.Background>
-            <SolidColorBrush Color="LightGray"/>
-        </Border.Background>
-    </Border>
-    <Border Grid.Row="1" BorderBrush="Black" BorderThickness="0,1,0,0">
-        <Border.Background>
-            <SolidColorBrush Color="LightGray"/>
-        </Border.Background>
-    </Border>
-    <Border Grid.Row="2" BorderBrush="Black" BorderThickness="0,1,0,0">
-        <Border.Background>
-            <SolidColorBrush Color="LightGray"/>
-        </Border.Background>
-    </Border>
-    <Border Grid.Row="3" BorderBrush="Black" BorderThickness="0,1,0,0">
-        <Border.Background>
-            <SolidColorBrush Color="LightGray"/>
-        </Border.Background>
-    </Border>
-    <Border Grid.Row="4" BorderBrush="Black" BorderThickness="0,1,0,0">
-        <Border.Background>
-            <SolidColorBrush Color="LightGray"/>
-        </Border.Background>
-    </Border>
-    <Border Grid.Row="5" BorderBrush="Black" BorderThickness="0,1,0,0">
-        <Border.Background>
-            <SolidColorBrush Color="LightGray"/>
-        </Border.Background>
-    </Border>
-    <Border Grid.Row="6" BorderBrush="Black" BorderThickness="0,1,0,0">
-        <Border.Background>
-            <SolidColorBrush Color="LightGray"/>
-        </Border.Background>
-    </Border>
-    <Border Grid.Row="7" BorderBrush="Black" BorderThickness="0,1,0,0">
-        <Border.Background>
-            <SolidColorBrush Color="LightGray"/>
-        </Border.Background>
-    </Border>
+    <Border Background="White"/>
+    <Border Grid.Row="1" BorderBrush="Black" BorderThickness="0,1,0,0" Background="White"/>
+    <Border Grid.Row="2" BorderBrush="Black" BorderThickness="0,1,0,0" Background="White"/>
+    <Border Grid.Row="3" BorderBrush="Black" BorderThickness="0,1,0,0" Background="White"/>
+    <Border Grid.Row="4" BorderBrush="Black" BorderThickness="0,1,0,0" Background="White"/>
+    <Border Grid.Row="5" BorderBrush="Black" BorderThickness="0,1,0,0" Background="White"/>
+    <Border Grid.Row="6" BorderBrush="Black" BorderThickness="0,1,0,0" Background="White"/>
+    <Border Grid.Row="7" BorderBrush="Black" BorderThickness="0,1,0,0" Background="White"/>
 
-    <TextBlock Name="label" Text="N" HorizontalAlignment="Center" Grid.Row="0" VerticalAlignment="Center" Padding="0"/>
-    <TextBlock Name="label1" Text="N" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Center" Padding="0"/>
-    <TextBlock Name="label2" Text="N" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Center" Padding="0"/>
-    <TextBlock Name="label3" Text="N" HorizontalAlignment="Center" Grid.Row="3" VerticalAlignment="Center" Padding="0"/>
-    <TextBlock Name="label4" Text="N" HorizontalAlignment="Center" Grid.Row="4" VerticalAlignment="Center" Padding="0"/>
-    <TextBlock Name="label5" Text="N" HorizontalAlignment="Center" Grid.Row="5" VerticalAlignment="Center" Padding="0"/>
-    <TextBlock Name="label6" Text="N" HorizontalAlignment="Center" Grid.Row="6" VerticalAlignment="Center" Padding="0"/>
-    <TextBlock Name="label7" Text="N" HorizontalAlignment="Center" Grid.Row="7" VerticalAlignment="Center" Padding="0" Foreground="Red" FontWeight="Bold"/>
-    <TextBlock Name="labelUpArrow" Text="↑" HorizontalAlignment="Right" Grid.Row="7" VerticalAlignment="Center" Padding="0" Foreground="Red" Margin="0,0,5,5" FontSize="21.333"/>
+    <TextBlock Name="label" Text="N" HorizontalAlignment="Center" Grid.Row="0" VerticalAlignment="Center" Padding="0" FontWeight="Bold" FontSize="24"/>
+    <TextBlock Name="label1" Text="N" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Center" Padding="0" FontWeight="Bold" FontSize="24"/>
+    <TextBlock Name="label2" Text="N" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Center" Padding="0" FontWeight="Bold" FontSize="24"/>
+    <TextBlock Name="label3" Text="N" HorizontalAlignment="Center" Grid.Row="3" VerticalAlignment="Center" Padding="0" FontWeight="Bold" FontSize="24"/>
+    <TextBlock Name="label4" Text="N" HorizontalAlignment="Center" Grid.Row="4" VerticalAlignment="Center" Padding="0" FontWeight="Bold" FontSize="24"/>
+    <TextBlock Name="label5" Text="N" HorizontalAlignment="Center" Grid.Row="5" VerticalAlignment="Center" Padding="0" FontWeight="Bold" FontSize="24"/>
+    <TextBlock Name="label6" Text="N" HorizontalAlignment="Center" Grid.Row="6" VerticalAlignment="Center" Padding="0" FontWeight="Bold" FontSize="24"/>
+	<TextBlock Name="label7" Text="N" Grid.Row="11" Foreground="Red" FontWeight="Bold" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <TextBlock Name="labelUpArrow" Text="↑" Grid.Row="11" Foreground="Red" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,3,4" FontSize="26"/>
 
     <Rectangle Grid.Column="1"  Grid.Row="7" Grid.ColumnSpan="7" Stroke="White" Fill="OrangeRed"/>
     <Rectangle Grid.Column="7"  Grid.Row="7" Grid.ColumnSpan="7" Stroke="White" Fill="SaddleBrown"/>
