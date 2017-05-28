@@ -355,6 +355,9 @@ namespace WaveformOverlaysPlus
 
         private async void menuSave_Click(object sender, RoutedEventArgs e)
         {
+            gridCover.Visibility = Visibility.Visible;
+            gridBranding.Visibility = Visibility.Visible;
+
             try
             {
                 FileSavePicker savePicker = new FileSavePicker();
@@ -375,6 +378,11 @@ namespace WaveformOverlaysPlus
                 var dialog = new MessageDialog("The Save File method ran into a problem.    " + ex.Message);
                 await dialog.ShowAsync();
             }
+            finally
+            {
+                gridBranding.Visibility = Visibility.Collapsed;
+                gridCover.Visibility = Visibility.Collapsed;
+            }
         }
 
         #endregion
@@ -384,6 +392,7 @@ namespace WaveformOverlaysPlus
         private async void PrintButtonClick(object sender, RoutedEventArgs e)
         {
             gridCover.Visibility = Visibility.Visible;
+            gridBranding.Visibility = Visibility.Visible;
 
             RenderTargetBitmap rtb = new RenderTargetBitmap();
             await rtb.RenderAsync(gridForOverall);
@@ -416,12 +425,6 @@ namespace WaveformOverlaysPlus
                     };
                     await noPrintingDialog.ShowAsync();
                 }
-                finally
-                {
-                    imageForPrint.ClearValue(Image.SourceProperty);
-                    gridForPrint.Visibility = Visibility.Collapsed;
-                    gridCover.Visibility = Visibility.Collapsed;
-                }
             }
             else
             {
@@ -436,6 +439,7 @@ namespace WaveformOverlaysPlus
 
                 imageForPrint.ClearValue(Image.SourceProperty);
                 gridForPrint.Visibility = Visibility.Collapsed;
+                gridBranding.Visibility = Visibility.Collapsed;
                 gridCover.Visibility = Visibility.Collapsed;
             }
         }
@@ -493,6 +497,7 @@ namespace WaveformOverlaysPlus
 
                     imageForPrint.ClearValue(Image.SourceProperty);
                     gridForPrint.Visibility = Visibility.Collapsed;
+                    gridBranding.Visibility = Visibility.Collapsed;
                     gridCover.Visibility = Visibility.Collapsed;
                 });
             }
@@ -505,6 +510,7 @@ namespace WaveformOverlaysPlus
                 {
                     imageForPrint.ClearValue(Image.SourceProperty);
                     gridForPrint.Visibility = Visibility.Collapsed;
+                    gridBranding.Visibility = Visibility.Collapsed;
                     gridCover.Visibility = Visibility.Collapsed;
                 });
             }
@@ -536,12 +542,18 @@ namespace WaveformOverlaysPlus
             }
             finally
             {
+                gridBranding.Visibility = Visibility.Collapsed;
+                gridCover.Visibility = Visibility.Collapsed;
+
                 deferral.Complete();
             }
         }
 
         private async void menuShare_Click(object sender, RoutedEventArgs e)
         {
+            gridCover.Visibility = Visibility.Visible;
+            gridBranding.Visibility = Visibility.Visible;
+
             RenderTargetBitmap rtb = new RenderTargetBitmap();
             await rtb.RenderAsync(gridForOverall);
             IBuffer pixelBuffer = await rtb.GetPixelsAsync();
@@ -558,15 +570,15 @@ namespace WaveformOverlaysPlus
             DataTransferManager.ShowShareUI();
         }
 
-
-
-
         #endregion
 
         #region Copy and Paste
 
         private async void menuCopy_Click(object sender, RoutedEventArgs e)
         {
+            gridCover.Visibility = Visibility.Visible;
+            gridBranding.Visibility = Visibility.Visible;
+
             StorageFile file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync("TempImgFile", CreationCollisionOption.ReplaceExisting);
             await ImageUtils.CaptureElementToFile(gridForOverall, file);
 
@@ -575,6 +587,9 @@ namespace WaveformOverlaysPlus
             dataPackage.SetBitmap(RandomAccessStreamReference.CreateFromFile(file));
 
             Clipboard.SetContent(dataPackage);
+
+            gridBranding.Visibility = Visibility.Collapsed;
+            gridCover.Visibility = Visibility.Collapsed;
         }
 
         private async void menuPaste_Click(object sender, RoutedEventArgs e)
