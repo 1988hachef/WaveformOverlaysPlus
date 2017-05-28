@@ -182,22 +182,28 @@ namespace WaveformOverlaysPlus
                     UnBindLast();
                     break;
                 case "text":
+                    textColorRB.IsChecked = true;
                     currentToolChosen = "text";
                     break;
                 case "arrow":
+                    strokeColorRB.IsChecked = true;
                     currentToolChosen = "arrow";
                     gridForOtherInput.Visibility = Visibility.Visible;
                     break;
                 case "ellipse":
+                    strokeColorRB.IsChecked = true;
                     currentToolChosen = "ellipse";
                     break;
                 case "roundedRectangle":
+                    strokeColorRB.IsChecked = true;
                     currentToolChosen = "roundedRectangle";
                     break;
                 case "rectangle":
+                    strokeColorRB.IsChecked = true;
                     currentToolChosen = "rectangle";
                     break;
                 case "line":
+                    strokeColorRB.IsChecked = true;
                     currentToolChosen = "line";
                     gridForOtherInput.Visibility = Visibility.Visible;
                     break;
@@ -208,6 +214,7 @@ namespace WaveformOverlaysPlus
                     currentToolChosen = "crop";
                     break;
                 case "pen":
+                    strokeColorRB.IsChecked = true;
                     currentToolChosen = "pen";
                     break;
             }
@@ -1307,6 +1314,9 @@ namespace WaveformOverlaysPlus
                         case "pageColorRB":
                             borderForPageColor.Background = new SolidColorBrush(Colors.White);
                             break;
+                        case "compLinesColorRB":
+                            borderForCompLinesColor.Background = new SolidColorBrush(Colors.Gray);
+                            break;
                     }
                 }
                 else
@@ -1328,6 +1338,9 @@ namespace WaveformOverlaysPlus
                             break;
                         case "pageColorRB":
                             borderForPageColor.Background = chosenColor;
+                            break;
+                        case "compLinesColorRB":
+                            borderForCompLinesColor.Background = chosenColor;
                             break;
                     }
                 }
@@ -1966,10 +1979,14 @@ namespace WaveformOverlaysPlus
             if (gridCompressionOverlay.Opacity < .5)
             {
                 gridCompressionOverlay.Opacity = 1.0;
+                compLinesColorRB.Visibility = Visibility.Visible;
+                compLinesColorRB.IsChecked = true;
             }
             else
             {
                 gridCompressionOverlay.Opacity = .001;
+                compLinesColorRB.Visibility = Visibility.Collapsed;
+                strokeColorRB.IsChecked = true;
             }
         }
 

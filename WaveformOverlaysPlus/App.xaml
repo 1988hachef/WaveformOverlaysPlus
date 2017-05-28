@@ -490,7 +490,7 @@
                                           ZoomMode="Disabled"/>
                             <ContentControl x:Name="PlaceholderTextContentPresenter"
                                             Content="{TemplateBinding PlaceholderText}" 
-                                            Foreground="{ThemeResource TextControlPlaceholderForeground}" 
+                                            Foreground="Gray"
                                             IsHitTestVisible="False" 
                                             IsTabStop="False" 
                                             Margin="{TemplateBinding BorderThickness}" 
