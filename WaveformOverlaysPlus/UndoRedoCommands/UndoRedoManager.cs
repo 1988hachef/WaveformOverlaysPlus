@@ -1,13 +1,18 @@
 ﻿using Microsoft.Graphics.Canvas.UI.Xaml;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WaveformOverlaysPlus.Controls;
+using Windows.Storage;
+using Windows.Storage.Streams;
 using Windows.UI.Input.Inking;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Shapes;
 
 namespace WaveformOverlaysPlus.UndoRedoCommands
@@ -224,6 +229,79 @@ namespace WaveformOverlaysPlus.UndoRedoCommands
             }
         }
 
+        class CropCommand : ICommand
+        {
+            private BitmapImage _Bitmap;
+            private StorageFile _BeforeCropFile;
+            private StorageFile _AfterCropFile;
+            private PaintObjectTemplatedControl _PaintControl;
+            private ObservableCollection<StoredImage> _ImageCollection;
+
+            public CropCommand(BitmapImage bitmap, StorageFile beforeCropFile, StorageFile afterCropFile, PaintObjectTemplatedControl paintControl, ObservableCollection<StoredImage> imageCollection)
+            {
+                _Bitmap = bitmap;
+                _BeforeCropFile = beforeCropFile;
+                _AfterCropFile = afterCropFile;
+                _PaintControl = paintControl;
+                _ImageCollection = imageCollection;
+            }
+
+            public void Execute()
+            {
+                RemoveImageFromCollection();
+
+                Image image = _PaintControl.Content as Image;
+                image.Source = _Bitmap;
+                _PaintControl.Height = _Bitmap.PixelHeight * _PaintControl.ImageScale;
+                _PaintControl.Width = _Bitmap.PixelWidth * _PaintControl.ImageScale;
+                _PaintControl.ImageFileName = _AfterCropFile.Name;
+                _PaintControl.ImageFilePath = "ms-appdata:///local/" + _AfterCropFile.Name;
+
+                _ImageCollection.Add(new StoredImage { FileName = _PaintControl.ImageFileName, FilePath = _PaintControl.ImageFilePath });
+            }
+
+            public async void UnExecute()
+            {
+                RemoveImageFromCollection();
+
+                Image image = _PaintControl.Content as Image;
+                
+                using (IRandomAccessStream IRASstream = await _BeforeCropFile.OpenAsync(FileAccessMode.Read))
+                {
+                    BitmapImage bitmapImage = new BitmapImage();
+                    await bitmapImage.SetSourceAsync(IRASstream);
+                    _PaintControl.Height = bitmapImage.PixelHeight * _PaintControl.ImageScale;
+                    _PaintControl.Width = bitmapImage.PixelWidth * _PaintControl.ImageScale;
+                    image.Source = bitmapImage;
+                }
+
+                _PaintControl.ImageFileName = _BeforeCropFile.Name;
+                _PaintControl.ImageFilePath = "ms-appdata:///local/" + _BeforeCropFile.Name;
+
+                _ImageCollection.Add(new StoredImage { FileName = _PaintControl.ImageFileName, FilePath = _PaintControl.ImageFilePath });
+            }
+
+            void RemoveImageFromCollection()
+            {
+                int index = 0;
+                int pos = 0;
+
+                foreach (StoredImage storedImage in _ImageCollection)
+                {
+                    if (storedImage.FileName == _PaintControl.ImageFileName)
+                    {
+                        pos = index;
+                    }
+                    else
+                    {
+                        index++;
+                    }
+                }
+
+                _ImageCollection.RemoveAt(pos);
+            }
+        }
+
         public class UnDoRedo
         {
             private Stack<ICommand> _Undocommands = new Stack<ICommand>();
@@ -300,6 +378,13 @@ namespace WaveformOverlaysPlus.UndoRedoCommands
             public void InsertInUnDoRedoForLineOrArrow(Line line, Polyline polyline, Panel container)
             {
                 ICommand cmd = new InsertLineOrArrowCommand(line, polyline, container);
+                _Undocommands.Push(cmd);
+                _Redocommands.Clear();
+            }
+
+            public void InsertInUnDoRedoForCrop(BitmapImage bitmap, StorageFile beforeCropFile, StorageFile afterCropFile, PaintObjectTemplatedControl paintControl, ObservableCollection<StoredImage> imageCollection)
+            {
+                ICommand cmd = new CropCommand(bitmap, beforeCropFile, afterCropFile, paintControl, imageCollection);
                 _Undocommands.Push(cmd);
                 _Redocommands.Clear();
             }

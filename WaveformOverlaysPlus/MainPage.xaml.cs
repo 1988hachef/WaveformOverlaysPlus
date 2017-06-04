@@ -1133,6 +1133,9 @@ namespace WaveformOverlaysPlus
             paintObject.Content = textBox;
             gridMain.Children.Add(paintObject);
 
+            _UndoRedo.InsertInUnDoRedoForInsert(paintObject, gridMain);
+            ManageUndoRedoButtons();
+
             textBox.SizeChanged += TextBox_SizeChanged;
         }
 
@@ -1180,6 +1183,9 @@ namespace WaveformOverlaysPlus
             paintObject.Content = rectangle;
             paintObject.OpacitySliderIsVisible = true;
             gridMain.Children.Add(paintObject);
+
+            _UndoRedo.InsertInUnDoRedoForInsert(paintObject, gridMain);
+            ManageUndoRedoButtons();
         }
 
         #endregion
@@ -1505,6 +1511,9 @@ namespace WaveformOverlaysPlus
                                         control.ImageFileName = newName;
                                         control.ImageFilePath = newPath;
                                         imageCollection.Add(new StoredImage { FileName = newName, FilePath = newPath });
+
+                                        _UndoRedo.InsertInUnDoRedoForCrop(bitmapImage, cropFile, file1, control, imageCollection);
+                                        ManageUndoRedoButtons();
                                     }
                                 }
                             }

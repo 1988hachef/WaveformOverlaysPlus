@@ -122,6 +122,7 @@ namespace WaveformOverlaysPlus.Controls
             _rectForFlyoutPosition.ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY;
 
             this.Loaded += TemplatedWindowControl_Loaded;
+            this.SizeChanged += PaintObjectTemplatedControl_SizeChanged;
 
             _contentPresenter.ManipulationDelta += _contentPresenter_ManipulationDelta;
             _contentPresenter.PointerEntered += _contentPresenter_PointerEntered;
@@ -181,6 +182,42 @@ namespace WaveformOverlaysPlus.Controls
 
             transform_rectForFlyout = new CompositeTransform();
             _rectForFlyoutPosition.RenderTransform = transform_rectForFlyout;
+        }
+
+        private void PaintObjectTemplatedControl_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var jail = (Panel)this.Parent;
+
+            //Get top left point
+            GeneralTransform gt = this.TransformToVisual(jail);
+            Point TopLeftPoint = gt.TransformPoint(new Point(0, 0));
+
+            // Set these variables to represent the edges of "this"
+            double left = TopLeftPoint.X;
+            double top = TopLeftPoint.Y;
+            double right = left + this.ActualWidth;
+            double bottom = top + this.ActualHeight;
+
+            // Reposition "this" to keep inside panel
+            if (left < 0)
+            {
+                transform_myControl.TranslateX = 0;
+            }
+            else if ((right > jail.ActualWidth) && (left > 0))
+            {
+                double updatedLeft = jail.ActualWidth - this.ActualWidth;
+                transform_myControl.TranslateX = updatedLeft - this.BorderThickness.Right;
+            }
+
+            if (top < 0)
+            {
+                transform_myControl.TranslateY = 0;
+            }
+            else if ((bottom > jail.ActualHeight) && (top > 0))
+            {
+                double updatedTop = jail.ActualHeight - this.ActualHeight;
+                transform_myControl.TranslateY = updatedTop - this.BorderThickness.Bottom;
+            }
         }
 
         private void TemplatedWindowControl_Loaded(object sender, RoutedEventArgs e)
