@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Microsoft.Graphics.Canvas.UI.Xaml;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Input.Inking;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -132,6 +134,58 @@ namespace WaveformOverlaysPlus.UndoRedoCommands
             }
         }
 
+        class DrawStrokeCommand : ICommand
+        {
+            private List<InkStrokeContainer> _Strokes;
+            private InkStrokeContainer _Container;
+            private CanvasControl _DrawingCanvas;
+
+            public DrawStrokeCommand(List<InkStrokeContainer> strokes, InkStrokeContainer container, CanvasControl drawingCanvas)
+            {
+                _Strokes = strokes;
+                _Container = container;
+                _DrawingCanvas = drawingCanvas;
+            }
+
+            public void Execute()
+            {
+                _Strokes.Add(_Container);
+                _DrawingCanvas.Invalidate();
+            }
+
+            public void UnExecute()
+            {
+                _Strokes.Remove(_Container);
+                _DrawingCanvas.Invalidate();
+            }
+        }
+
+        class EraseStrokeCommand : ICommand
+        {
+            private List<InkStrokeContainer> _Strokes;
+            private InkStrokeContainer _Container;
+            private CanvasControl _DrawingCanvas;
+
+            public EraseStrokeCommand(List<InkStrokeContainer> strokes, InkStrokeContainer container, CanvasControl drawingCanvas)
+            {
+                _Strokes = strokes;
+                _Container = container;
+                _DrawingCanvas = drawingCanvas;
+            }
+
+            public void Execute()
+            {
+                _Strokes.Remove(_Container);
+                _DrawingCanvas.Invalidate();
+            }
+
+            public void UnExecute()
+            {
+                _Strokes.Add(_Container);
+                _DrawingCanvas.Invalidate();
+            }
+        }
+
         public class UnDoRedo
         {
             private Stack<ICommand> _Undocommands = new Stack<ICommand>();
@@ -187,6 +241,20 @@ namespace WaveformOverlaysPlus.UndoRedoCommands
             public void InsertInUnDoRedoForResize(double x, double y, double width, double height, FrameworkElement UIelement)
             {
                 ICommand cmd = new ResizeCommand(x, y, width, height, UIelement);
+                _Undocommands.Push(cmd);
+                _Redocommands.Clear();
+            }
+
+            public void InsertInUnDoRedoForDrawStroke(List<InkStrokeContainer> strokes, InkStrokeContainer container, CanvasControl drawingCanvas)
+            {
+                ICommand cmd = new DrawStrokeCommand(strokes, container, drawingCanvas);
+                _Undocommands.Push(cmd);
+                _Redocommands.Clear();
+            }
+
+            public void InsertInUnDoRedoForEraseStroke(List<InkStrokeContainer> strokes, InkStrokeContainer container, CanvasControl drawingCanvas)
+            {
+                ICommand cmd = new EraseStrokeCommand(strokes, container, drawingCanvas);
                 _Undocommands.Push(cmd);
                 _Redocommands.Clear();
             }

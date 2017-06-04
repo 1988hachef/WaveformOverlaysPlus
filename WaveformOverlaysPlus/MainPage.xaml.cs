@@ -353,10 +353,7 @@ namespace WaveformOverlaysPlus
                     gridMain.Children.Add(paintObject);
 
                     _UndoRedo.InsertInUnDoRedoForInsert(paintObject, gridMain);
-                    if (!btnUndo.IsEnabled)
-                    {
-                        btnUndo.IsEnabled = true;
-                    }
+                    ManageUndoRedoButtons();
 
                     await imgFile.CopyAsync(ApplicationData.Current.LocalFolder, name, NameCollisionOption.ReplaceExisting);
 
@@ -662,10 +659,7 @@ namespace WaveformOverlaysPlus
                     gridMain.Children.Add(paintObject);
 
                     _UndoRedo.InsertInUnDoRedoForInsert(paintObject, gridMain);
-                    if (!btnUndo.IsEnabled)
-                    {
-                        btnUndo.IsEnabled = true;
-                    }
+                    ManageUndoRedoButtons();
                 }
             }
             else
@@ -858,6 +852,11 @@ namespace WaveformOverlaysPlus
                     _strokes.Remove(item);
 
                     invalidate = true;
+
+                    // for undo redo
+                    _UndoRedo.InsertInUnDoRedoForEraseStroke(_strokes, item, DrawingCanvas);
+                    ManageUndoRedoButtons();
+                    //
                 }
             }
 
@@ -894,6 +893,11 @@ namespace WaveformOverlaysPlus
             _strokes.Add(container);
 
             DrawingCanvas.Invalidate();
+
+            // for undo redo
+            _UndoRedo.InsertInUnDoRedoForDrawStroke(_strokes, container, DrawingCanvas);
+            ManageUndoRedoButtons();
+            //
         }
 
         private void DrawCanvas(CanvasControl sender, CanvasDrawEventArgs args)
@@ -1148,10 +1152,7 @@ namespace WaveformOverlaysPlus
             gridMain.Children.Add(paintObject);
 
             _UndoRedo.InsertInUnDoRedoForInsert(paintObject, gridMain);
-            if (!btnUndo.IsEnabled)
-            {
-                btnUndo.IsEnabled = true;
-            }
+            ManageUndoRedoButtons();
         }
 
         private void RectOrRoundRect_Clicked(object sender, RoutedEventArgs e)
@@ -3947,33 +3948,34 @@ namespace WaveformOverlaysPlus
 
         private void btnUndo_Click(object sender, RoutedEventArgs e)
         {
-            if (_UndoRedo.IsUndoPossible())
-            {
-                _UndoRedo.Undo(1);
-                if (!_UndoRedo.IsUndoPossible())
-                {
-                    btnUndo.IsEnabled = false;
-                }
-            }
-            if (_UndoRedo.IsRedoPossible() && !btnRedo.IsEnabled)
-            {
-                btnRedo.IsEnabled = true;
-            }
+            _UndoRedo.Undo(1);
+            ManageUndoRedoButtons();
         }
 
         private void btnRedo_Click(object sender, RoutedEventArgs e)
         {
+            _UndoRedo.Redo(1);
+            ManageUndoRedoButtons();
+        }
+
+        void ManageUndoRedoButtons()
+        {
+            if (_UndoRedo.IsUndoPossible())
+            {
+                if (!btnUndo.IsEnabled) { btnUndo.IsEnabled = true; }
+            }
+            else
+            {
+                if (btnUndo.IsEnabled) { btnUndo.IsEnabled = false; }
+            }
+
             if (_UndoRedo.IsRedoPossible())
             {
-                _UndoRedo.Redo(1);
-                if (!_UndoRedo.IsRedoPossible())
-                {
-                    btnRedo.IsEnabled = false;
-                }
+                if (!btnRedo.IsEnabled) { btnRedo.IsEnabled = true; }
             }
-            if (_UndoRedo.IsUndoPossible() && !btnUndo.IsEnabled)
+            else
             {
-                btnUndo.IsEnabled = true;
+                if (btnRedo.IsEnabled) { btnRedo.IsEnabled = false; }
             }
         }
     }
