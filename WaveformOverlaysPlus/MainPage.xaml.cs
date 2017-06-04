@@ -281,12 +281,7 @@ namespace WaveformOverlaysPlus
         #region New and Exit
         private void menuNew_Click(object sender, RoutedEventArgs e)
         {
-            gridMain.Children.Clear();
-
-            if (!(gridMain.Background.Equals(Colors.White)))
-            {
-                gridMain.Background = new SolidColorBrush(Colors.White);
-            }
+            Frame.Navigate(typeof(ResetPage));
         }
 
         private void menuExit_Click(object sender, RoutedEventArgs e)
@@ -356,6 +351,12 @@ namespace WaveformOverlaysPlus
                     paintObject.Unloaded += PaintObject_Unloaded;
 
                     gridMain.Children.Add(paintObject);
+
+                    _UndoRedo.InsertInUnDoRedoForInsert(paintObject, gridMain);
+                    if (!btnUndo.IsEnabled)
+                    {
+                        btnUndo.IsEnabled = true;
+                    }
 
                     await imgFile.CopyAsync(ApplicationData.Current.LocalFolder, name, NameCollisionOption.ReplaceExisting);
 
@@ -659,11 +660,17 @@ namespace WaveformOverlaysPlus
                     paintObject.OpacitySliderIsVisible = true;
 
                     gridMain.Children.Add(paintObject);
+
+                    _UndoRedo.InsertInUnDoRedoForInsert(paintObject, gridMain);
+                    if (!btnUndo.IsEnabled)
+                    {
+                        btnUndo.IsEnabled = true;
+                    }
                 }
             }
             else
             {
-                var dialog = new MessageDialog("Bitmap format is not available in clipboard").ShowAsync();
+                var dialog = new MessageDialog("Only bitmap (.bmp) images can be pasted. Use File>Open for other image file types.").ShowAsync();
             }
         }
 
