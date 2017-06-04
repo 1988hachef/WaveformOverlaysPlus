@@ -1107,6 +1107,14 @@ namespace WaveformOverlaysPlus
                 BringToFront(arrowHead);
 
                 (sender as Grid).ReleasePointerCapture(e.Pointer);
+
+                _UndoRedo.InsertInUnDoRedoForLineOrArrow(lineForArrow, arrowHead, gridMain);
+                ManageUndoRedoButtons();
+            }
+            else
+            {
+                _UndoRedo.InsertInUnDoRedoForLineOrArrow(lineForArrow, null, gridMain);
+                ManageUndoRedoButtons();
             }
         }
 
@@ -3946,6 +3954,8 @@ namespace WaveformOverlaysPlus
             a.RenderTransform.SetValue(CompositeTransform.TranslateXProperty, 150.8);
         }
 
+        #region Undo Redo buttons
+
         private void btnUndo_Click(object sender, RoutedEventArgs e)
         {
             _UndoRedo.Undo(1);
@@ -3978,5 +3988,7 @@ namespace WaveformOverlaysPlus
                 if (btnRedo.IsEnabled) { btnRedo.IsEnabled = false; }
             }
         }
+
+        #endregion
     }
 }

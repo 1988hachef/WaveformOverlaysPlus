@@ -8,6 +8,7 @@ using Windows.UI.Input.Inking;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Shapes;
 
 namespace WaveformOverlaysPlus.UndoRedoCommands
 {
@@ -186,6 +187,43 @@ namespace WaveformOverlaysPlus.UndoRedoCommands
             }
         }
 
+        class InsertLineOrArrowCommand : ICommand
+        {
+            private Line _Line;
+            private Polyline _Polyline = null;
+            private Panel _Container;
+
+            public InsertLineOrArrowCommand(Line line, Polyline polyline, Panel container)
+            {
+                _Line = line;
+                if (polyline != null) { _Polyline = polyline; }
+                _Container = container;
+            }
+
+            public void Execute()
+            {
+                if (!_Container.Children.Contains(_Line))
+                {
+                    _Container.Children.Add(_Line);
+
+                    if (_Polyline != null)
+                    {
+                        _Container.Children.Add(_Polyline);
+                    }
+                }
+            }
+
+            public void UnExecute()
+            {
+                _Container.Children.Remove(_Line);
+
+                if (_Polyline != null)
+                {
+                    _Container.Children.Remove(_Polyline);
+                }
+            }
+        }
+
         public class UnDoRedo
         {
             private Stack<ICommand> _Undocommands = new Stack<ICommand>();
@@ -255,6 +293,13 @@ namespace WaveformOverlaysPlus.UndoRedoCommands
             public void InsertInUnDoRedoForEraseStroke(List<InkStrokeContainer> strokes, InkStrokeContainer container, CanvasControl drawingCanvas)
             {
                 ICommand cmd = new EraseStrokeCommand(strokes, container, drawingCanvas);
+                _Undocommands.Push(cmd);
+                _Redocommands.Clear();
+            }
+
+            public void InsertInUnDoRedoForLineOrArrow(Line line, Polyline polyline, Panel container)
+            {
+                ICommand cmd = new InsertLineOrArrowCommand(line, polyline, container);
                 _Undocommands.Push(cmd);
                 _Redocommands.Clear();
             }
