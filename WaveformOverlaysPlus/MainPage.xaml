@@ -67,8 +67,8 @@
 
             <Rectangle Margin="10,0" Width="1" Height="20" Fill="#FF909090"/>
 
-            <Button Name="btnUndo" Style="{StaticResource styleMenuButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE7A7;" FontSize="14" Height="25" />
-            <Button Name="btnRedo" Style="{StaticResource styleMenuButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE7A6;" FontSize="14" Height="25"/>
+            <Button Name="btnUndo" Style="{StaticResource styleMenuButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE7A7;" FontSize="14" Height="25" IsEnabled="False" Click="btnUndo_Click"/>
+            <Button Name="btnRedo" Style="{StaticResource styleMenuButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE7A6;" FontSize="14" Height="25" IsEnabled="False" Click="btnRedo_Click"/>
 
         </StackPanel>
 
@@ -351,7 +351,7 @@
                 <Grid Name="gridToContainOthers" Margin="50,15,20,40">
 
                     <Grid Name="gridMain" Background="{Binding Background, ElementName=borderForPageColor}">
-                        
+                        <Button Content="button" Click="Button_Click"/>
                     </Grid>
 
                     <Grid Name="gridCompressionOverlay" ManipulationMode="TranslateX" HorizontalAlignment="Left" VerticalAlignment="Top" Opacity="0.001" IsHitTestVisible="False" Width="721">
@@ -460,7 +460,12 @@
                         </Grid.RenderTransform>
                         <Rectangle Name="rectEVO" Fill="Red" HorizontalAlignment="Left" Width="1" />
                         <Rectangle Name="rectEVC" Fill="Red" HorizontalAlignment="Right" Width="1" />
+                        
                         <StackPanel Name="spEVO" Orientation="Horizontal" Background="Red" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-23,0,0,0" ManipulationMode="TranslateX, TranslateY" ManipulationDelta="spEVO_ManipulationDelta">
+                            <StackPanel.RenderTransform>
+                                <CompositeTransform x:Name="transformTest"/>
+                            </StackPanel.RenderTransform>
+                            
                             <TextBlock Name="tblockExhOpen" Text="40" FontSize="12" Foreground="White" Padding="1,0,0,0"/>
                             <TextBlock Name="tblockEVO" Text="&#186; BBC" FontSize="12" Foreground="White" Padding="0,0,1,0"/>
                         </StackPanel>

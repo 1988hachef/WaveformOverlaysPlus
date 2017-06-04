@@ -43,6 +43,7 @@ using System.Numerics;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Markup;
+using WaveformOverlaysPlus.UndoRedoCommands;
 
 namespace WaveformOverlaysPlus
 {
@@ -72,6 +73,10 @@ namespace WaveformOverlaysPlus
         TextBlock label9;
         TextBlock label10;
         TextBlock label11;
+
+        #region For UndoRedo
+        UndoRedoManager.UnDoRedo _UndoRedo;
+        #endregion
 
         #region For Custom Ink Rendering and Erase
         private readonly List<InkStrokeContainer> _strokes = new List<InkStrokeContainer>();
@@ -170,6 +175,9 @@ namespace WaveformOverlaysPlus
 
             // Initialize imageCollection
             imageCollection = new ObservableCollection<StoredImage>();
+
+            //Initialize UndoRedo
+            _UndoRedo = new UndoRedoManager.UnDoRedo();
         }
 
         private void tool_Checked(object sender, RoutedEventArgs e)
@@ -1131,6 +1139,12 @@ namespace WaveformOverlaysPlus
             paintObject.Content = ell;
             paintObject.OpacitySliderIsVisible = true;
             gridMain.Children.Add(paintObject);
+
+            _UndoRedo.InsertInUnDoRedoForInsert(paintObject, gridMain);
+            if (!btnUndo.IsEnabled)
+            {
+                btnUndo.IsEnabled = true;
+            }
         }
 
         private void RectOrRoundRect_Clicked(object sender, RoutedEventArgs e)
@@ -3917,5 +3931,43 @@ namespace WaveformOverlaysPlus
         }
 
         #endregion
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var a = gridExhOverlap as FrameworkElement;
+            a.RenderTransform.SetValue(CompositeTransform.TranslateXProperty, 150.8);
+        }
+
+        private void btnUndo_Click(object sender, RoutedEventArgs e)
+        {
+            if (_UndoRedo.IsUndoPossible())
+            {
+                _UndoRedo.Undo(1);
+                if (!_UndoRedo.IsUndoPossible())
+                {
+                    btnUndo.IsEnabled = false;
+                }
+            }
+            if (_UndoRedo.IsRedoPossible() && !btnRedo.IsEnabled)
+            {
+                btnRedo.IsEnabled = true;
+            }
+        }
+
+        private void btnRedo_Click(object sender, RoutedEventArgs e)
+        {
+            if (_UndoRedo.IsRedoPossible())
+            {
+                _UndoRedo.Redo(1);
+                if (!_UndoRedo.IsRedoPossible())
+                {
+                    btnRedo.IsEnabled = false;
+                }
+            }
+            if (_UndoRedo.IsUndoPossible() && !btnUndo.IsEnabled)
+            {
+                btnUndo.IsEnabled = true;
+            }
+        }
     }
 }
