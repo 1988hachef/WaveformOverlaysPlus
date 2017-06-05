@@ -19,39 +19,51 @@ namespace WaveformOverlaysPlus.UndoRedoCommands
 {
     class UndoRedoManager
     {
-        interface ICommand
+        public interface ICommand
         {
             void Execute();
             void UnExecute();
         }
 
-        class MoveCommand : ICommand
+        public class MoveCommand : ICommand
         {
             private double _ChangeOfTranslateX;
             private double _ChangeOfTranslateY;
-            private FrameworkElement _UiElement;
+            public FrameworkElement _UiElement;
 
-            public MoveCommand(double transX, double transY, FrameworkElement uiElement)
+            public MoveCommand(double changeOf_X, double changeOf_Y, FrameworkElement uiElement)
             {
-                _ChangeOfTranslateX = transX;
-                _ChangeOfTranslateY = transY;
+                _ChangeOfTranslateX = changeOf_X;
+                _ChangeOfTranslateY = changeOf_Y;
                 _UiElement = uiElement;
             }
 
             public void Execute()
             {
-                double currentX = (double)(_UiElement.RenderTransform.GetValue(CompositeTransform.TranslateXProperty));
-                double currentY = (double)(_UiElement.RenderTransform.GetValue(CompositeTransform.TranslateYProperty));
-                _UiElement.RenderTransform.SetValue(CompositeTransform.TranslateXProperty, (currentX + _ChangeOfTranslateX));
-                _UiElement.RenderTransform.SetValue(CompositeTransform.TranslateYProperty, (currentY + _ChangeOfTranslateY));
+                if (_ChangeOfTranslateX > 1 || _ChangeOfTranslateX < -1)
+                {
+                    double currentX = (double)(_UiElement.RenderTransform.GetValue(CompositeTransform.TranslateXProperty));
+                    _UiElement.RenderTransform.SetValue(CompositeTransform.TranslateXProperty, (currentX + _ChangeOfTranslateX));
+                }
+                if (_ChangeOfTranslateY > 1 || _ChangeOfTranslateY < -1)
+                {
+                    double currentY = (double)(_UiElement.RenderTransform.GetValue(CompositeTransform.TranslateYProperty));
+                    _UiElement.RenderTransform.SetValue(CompositeTransform.TranslateYProperty, (currentY + _ChangeOfTranslateY));
+                }
             }
 
             public void UnExecute()
             {
-                double currentX = (double)(_UiElement.RenderTransform.GetValue(CompositeTransform.TranslateXProperty));
-                double currentY = (double)(_UiElement.RenderTransform.GetValue(CompositeTransform.TranslateYProperty));
-                _UiElement.RenderTransform.SetValue(CompositeTransform.TranslateXProperty, (currentX - _ChangeOfTranslateX));
-                _UiElement.RenderTransform.SetValue(CompositeTransform.TranslateYProperty, (currentY - _ChangeOfTranslateY));
+                if (_ChangeOfTranslateX > 1 || _ChangeOfTranslateX < -1)
+                {
+                    double currentX = (double)(_UiElement.RenderTransform.GetValue(CompositeTransform.TranslateXProperty));
+                    _UiElement.RenderTransform.SetValue(CompositeTransform.TranslateXProperty, (currentX - _ChangeOfTranslateX));
+                }
+                if (_ChangeOfTranslateY > 1 || _ChangeOfTranslateY < -1)
+                {
+                    double currentY = (double)(_UiElement.RenderTransform.GetValue(CompositeTransform.TranslateYProperty));
+                    _UiElement.RenderTransform.SetValue(CompositeTransform.TranslateYProperty, (currentY - _ChangeOfTranslateY));
+                }
             }
         }
 
@@ -347,9 +359,9 @@ namespace WaveformOverlaysPlus.UndoRedoCommands
                 _Redocommands.Clear();
             }
 
-            public void InsertInUnDoRedoForMove(double x, double y, FrameworkElement UIelement)
+            public void InsertInUnDoRedoForMove(double changeOf_X, double changeOf_Y, FrameworkElement UIelement)
             {
-                ICommand cmd = new MoveCommand(x, y, UIelement);
+                ICommand cmd = new MoveCommand(changeOf_X, changeOf_Y, UIelement);
                 _Undocommands.Push(cmd);
                 _Redocommands.Clear();
             }
@@ -411,6 +423,18 @@ namespace WaveformOverlaysPlus.UndoRedoCommands
                 {
                     return false;
                 }
+            }
+
+            public ICommand GetTopUndoCommand()
+            {
+                var topUndo = _Undocommands.Peek();
+                return topUndo;
+            }
+
+            public ICommand GetTopRedoCommand()
+            {
+                var topRedo = _Redocommands.Peek();
+                return topRedo;
             }
         }
     }

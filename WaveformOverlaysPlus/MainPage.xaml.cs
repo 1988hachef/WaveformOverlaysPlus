@@ -44,6 +44,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Markup;
 using WaveformOverlaysPlus.UndoRedoCommands;
+using System.Windows.Input;
 
 namespace WaveformOverlaysPlus
 {
@@ -76,6 +77,8 @@ namespace WaveformOverlaysPlus
 
         #region For UndoRedo
         UndoRedoManager.UnDoRedo _UndoRedo;
+        Point pointStartOfManipulation;
+        Point pointEndOfManipuluation;
         #endregion
 
         #region For Custom Ink Rendering and Erase
@@ -112,7 +115,7 @@ namespace WaveformOverlaysPlus
         #endregion
 
         #region For Rulers
-
+        Grid rulerContainer;
         string gripName;
         Line rulerLine;
         Shape gripShape;
@@ -123,7 +126,6 @@ namespace WaveformOverlaysPlus
         double amountBetweenHs;
         double VstartValue;
         double HstartValue;
-
         #endregion
 
         #region Dependency Properties
@@ -1937,7 +1939,6 @@ namespace WaveformOverlaysPlus
         {
             gripShape = sender as Shape;
             gripName = gripShape.Name;
-            Grid rulerContainer;
 
             if (gripName.StartsWith("r"))
             {
@@ -1954,9 +1955,27 @@ namespace WaveformOverlaysPlus
                 rulerLine.Stroke = new SolidColorBrush(Colors.Gray);
             }
             rulerTransform = rulerContainer.RenderTransform as CompositeTransform;
+
+            GeneralTransform gt = rulerContainer.TransformToVisual(gridMain);
+            Point p = gt.TransformPoint(new Point(0, 0));
+            pointStartOfManipulation = p;
         }
 
         private void rulers_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
+        {
+            SetSomeStuffOnRulerManipulationCompleted();
+
+            GeneralTransform gt = rulerContainer.TransformToVisual(gridMain);
+            Point p = gt.TransformPoint(new Point(0, 0));
+            pointEndOfManipuluation = p;
+
+            var Xchange = pointEndOfManipuluation.X - pointStartOfManipulation.X;
+            var Ychange = pointEndOfManipuluation.Y - pointStartOfManipulation.Y;
+            _UndoRedo.InsertInUnDoRedoForMove(Xchange, Ychange, rulerContainer);
+            ManageUndoRedoButtons();
+        }
+
+        void SetSomeStuffOnRulerManipulationCompleted()
         {
             GeneralTransform gt;
             Point p;
@@ -1986,6 +2005,10 @@ namespace WaveformOverlaysPlus
                         if (rulerLine.Name == "lineH2") { tblockPurple2.Text = "--"; }
                     }
                 }
+                else
+                {
+                    if (rulerLine.Visibility == Visibility.Collapsed) { rulerLine.Visibility = Visibility.Visible; } 
+                }
 
                 if (lineV1.Visibility == Visibility.Collapsed &&
                     lineV2.Visibility == Visibility.Collapsed &&
@@ -1993,6 +2016,10 @@ namespace WaveformOverlaysPlus
                     lineH2.Visibility == Visibility.Collapsed)
                 {
                     gridDelta.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    if (gridDelta.Visibility == Visibility.Collapsed) { gridDelta.Visibility = Visibility.Visible; }
                 }
             }
             else
@@ -2005,6 +2032,10 @@ namespace WaveformOverlaysPlus
                     (p.X < 2 && p.Y < 2))
                 {
                     rulerLine.Stroke = new SolidColorBrush(Colors.Transparent);
+                }
+                else
+                {
+                    if (rulerLine.Stroke == new SolidColorBrush(Colors.Transparent)) { rulerLine.Stroke = new SolidColorBrush(Colors.Gray); }
                 }
             }
         }
@@ -3959,22 +3990,49 @@ namespace WaveformOverlaysPlus
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var a = gridExhOverlap as FrameworkElement;
-            a.RenderTransform.SetValue(CompositeTransform.TranslateXProperty, 150.8);
+
         }
 
         #region Undo Redo buttons
 
         private void btnUndo_Click(object sender, RoutedEventArgs e)
         {
+            bool IsMoveCommand = false;
+            var topUndo = _UndoRedo.GetTopUndoCommand();
+            if (topUndo.ToString().EndsWith("MoveCommand"))
+            {
+                IsMoveCommand = true;
+            }
+
             _UndoRedo.Undo(1);
             ManageUndoRedoButtons();
+
+            if (IsMoveCommand)
+            {
+                var moveCommand = topUndo as UndoRedoManager.MoveCommand;
+                var element = moveCommand._UiElement;
+                SetStuffOnMoveCommand(element);
+            }
         }
 
         private void btnRedo_Click(object sender, RoutedEventArgs e)
         {
+            bool IsMoveCommand = false;
+            var topRedo = _UndoRedo.GetTopRedoCommand();
+            if (topRedo.ToString().EndsWith("MoveCommand"))
+            {
+                IsMoveCommand = true;
+            }
+
             _UndoRedo.Redo(1);
             ManageUndoRedoButtons();
+
+            if (IsMoveCommand)
+            {
+                var moveCommand = topRedo as UndoRedoManager.MoveCommand;
+                var element = moveCommand._UiElement;
+                SetStuffOnMoveCommand(element);
+            }
         }
 
         void ManageUndoRedoButtons()
@@ -3995,6 +4053,133 @@ namespace WaveformOverlaysPlus
             else
             {
                 if (btnRedo.IsEnabled) { btnRedo.IsEnabled = false; }
+            }
+        }
+
+        void SetStuffOnMoveCommand(FrameworkElement element)
+        {
+            string name;
+
+            if (String.IsNullOrEmpty(element.Name))
+            {
+                return;
+            }
+            else
+            {
+                name = element.Name;
+            }
+
+            if (String.IsNullOrEmpty(name))
+            {
+                return;
+            }
+            else
+            {
+                if (name == "gridHrulerPres")
+                {
+                    gripShape = polygonHpres;
+                    gripName = gripShape.Name;
+                    rulerLine = lineHrulerPres;
+
+                    SetUnitsPerY();
+                    SetTextofPurple(false);
+                }
+                else if (name == "gridHrulerZero")
+                {
+                    gripShape = polygonHzero;
+                    gripName = gripShape.Name;
+                    rulerLine = lineHrulerZero;
+
+                    SetUnitsPerY();
+                    SetTextofPurple(false);
+                }
+                else if (name == "gridVrulerZero")
+                {
+                    gripShape = polygonVzero;
+                    gripName = gripShape.Name;
+                    rulerLine = lineVrulerZero;
+
+                    GeneralTransform gt = lineVrulerZero.TransformToVisual(gridToContainOthers);
+                    Point TopLeftPoint = gt.TransformPoint(new Point(0, 0));
+
+                    GeneralTransform gt1 = lineVruler720.TransformToVisual(gridToContainOthers);
+                    Point TopLeftPoint1 = gt1.TransformPoint(new Point(0, 0));
+
+                    transformComp.TranslateX = TopLeftPoint.X;
+                    gridCompressionOverlay.Width = TopLeftPoint1.X - TopLeftPoint.X;
+
+                    SetUnitsPerX();
+                    SetTextofPink(false);
+                    SetEVOText();
+                    SetEVCText();
+                    SetIVOText();
+                    SetIVCText();
+                }
+                else if (name == "gridVruler720")
+                {
+                    gripShape = polygonV720;
+                    gripName = gripShape.Name;
+                    rulerLine = lineVruler720;
+
+                    GeneralTransform gt = lineVrulerZero.TransformToVisual(gridToContainOthers);
+                    Point TopLeftPoint = gt.TransformPoint(new Point(0, 0));
+
+                    GeneralTransform gt1 = lineVruler720.TransformToVisual(gridToContainOthers);
+                    Point TopLeftPoint1 = gt1.TransformPoint(new Point(0, 0));
+
+                    gridCompressionOverlay.Width = TopLeftPoint1.X - TopLeftPoint.X;
+
+                    SetUnitsPerX();
+                    SetTextofPink(false);
+                    SetEVOText();
+                    SetEVCText();
+                    SetIVOText();
+                    SetIVCText();
+                }
+                else if (name == "gridVline2")
+                {
+                    gripShape = rectV2;
+                    gripName = gripShape.Name;
+                    rulerLine = lineV2;
+
+                    SetTextofPink(true);
+                }
+                else if (name == "gridVline1")
+                {
+                    gripShape = rectV1;
+                    gripName = gripShape.Name;
+                    rulerLine = lineV1;
+
+                    SetTextofPink(true);
+                }
+                else if (name == "gridHline1")
+                {
+                    gripShape = rectH1;
+                    gripName = gripShape.Name;
+                    rulerLine = lineH1;
+
+                    SetTextofPurple(true);
+                }
+                else if (name == "gridHline2")
+                {
+                    gripShape = rectH2;
+                    gripName = gripShape.Name;
+                    rulerLine = lineH2;
+
+                    SetTextofPurple(true);
+                }
+                else if (name.StartsWith("gridExh"))
+                {
+                    SetEVOText();
+                    SetEVCText();
+                }
+                else if (name.StartsWith("gridInt"))
+                {
+                    SetIVOText();
+                    SetIVCText();
+                }
+
+                SetSomeStuffOnRulerManipulationCompleted();
             }
         }
 
