@@ -6,8 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WaveformOverlaysPlus.Controls;
+using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Windows.UI;
 using Windows.UI.Input.Inking;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -105,9 +107,9 @@ namespace WaveformOverlaysPlus.UndoRedoCommands
             }
         }
 
-        class InsertCommand : ICommand
+        public class InsertCommand : ICommand
         {
-            private FrameworkElement _UiElement;
+            public FrameworkElement _UiElement;
             private Panel _Container;
 
             public InsertCommand(FrameworkElement uiElement, Panel container)
@@ -314,6 +316,116 @@ namespace WaveformOverlaysPlus.UndoRedoCommands
             }
         }
 
+        class ShowHideCompCommand : ICommand
+        {
+            private bool _ShowOverlay;
+            private Grid _CompOverlay;
+            private RadioButton _LinesColorRB;
+            private RadioButton _StrokeColorRB;
+
+            public ShowHideCompCommand(bool showOverlay, Grid compOverlay, RadioButton linesColorRB, RadioButton strokeColorRB)
+            {
+                _ShowOverlay = showOverlay;
+                _CompOverlay = compOverlay;
+                _LinesColorRB = linesColorRB;
+                _StrokeColorRB = strokeColorRB;
+            }
+
+            public void Execute()
+            {
+                if (_ShowOverlay is true)
+                {
+                    Show();
+                }
+                else
+                {
+                    Hide();
+                }
+            }
+
+            public void UnExecute()
+            {
+                if (_ShowOverlay is true)
+                {
+                    Hide();
+                }
+                else
+                {
+                    Show();
+                }
+            }
+
+            private void Show()
+            {
+                _CompOverlay.Opacity = 1.0;
+                _LinesColorRB.Visibility = Visibility.Visible;
+                _LinesColorRB.IsChecked = true;
+            }
+
+            private void Hide()
+            {
+                _CompOverlay.Opacity = .001;
+                _LinesColorRB.Visibility = Visibility.Collapsed;
+                _StrokeColorRB.IsChecked = true;
+            }
+        }
+
+        class ShowHideOverlapCommand : ICommand
+        {
+            private bool _ShowOverlay;
+            private Grid _ExhOverlay;
+            private Grid _IntOverlay;
+            private TextBlock _ExhLabel;
+            private TextBlock _IntLabel;
+
+            public ShowHideOverlapCommand(bool showOverlay, Grid exhOverlay, Grid intOverlay, TextBlock exhLabel, TextBlock intLabel)
+            {
+                _ShowOverlay = showOverlay;
+                _ExhOverlay = exhOverlay;
+                _IntOverlay = intOverlay;
+                _ExhLabel = exhLabel;
+                _IntLabel = intLabel;
+            }
+
+            public void Execute()
+            {
+                if (_ShowOverlay is true)
+                {
+                    Show();
+                }
+                else
+                {
+                    Hide();
+                }
+            }
+
+            public void UnExecute()
+            {
+                if (_ShowOverlay is true)
+                {
+                    Hide();
+                }
+                else
+                {
+                    Show();
+                }
+            }
+            private void Show()
+            {
+                _IntOverlay.Visibility = Visibility.Visible;
+                _ExhOverlay.Visibility = Visibility.Visible;
+                _IntLabel.Foreground = new SolidColorBrush(Colors.Red);
+                _ExhLabel.Foreground = new SolidColorBrush(Colors.Blue);
+            }
+            private void Hide()
+            {
+                _IntOverlay.Visibility = Visibility.Collapsed;
+                _ExhOverlay.Visibility = Visibility.Collapsed;
+                _IntLabel.Foreground = new SolidColorBrush(Colors.Black);
+                _ExhLabel.Foreground = new SolidColorBrush(Colors.Black);
+            }
+        }
+
         public class UnDoRedo
         {
             private Stack<ICommand> _Undocommands = new Stack<ICommand>();
@@ -397,6 +509,20 @@ namespace WaveformOverlaysPlus.UndoRedoCommands
             public void InsertInUnDoRedoForCrop(BitmapImage bitmap, StorageFile beforeCropFile, StorageFile afterCropFile, PaintObjectTemplatedControl paintControl, ObservableCollection<StoredImage> imageCollection)
             {
                 ICommand cmd = new CropCommand(bitmap, beforeCropFile, afterCropFile, paintControl, imageCollection);
+                _Undocommands.Push(cmd);
+                _Redocommands.Clear();
+            }
+            
+            public void InsertInUnDoRedoForShowHideComp(bool showOverlay, Grid compOverlay, RadioButton linesColorRB, RadioButton strokeColorRB)
+            {
+                ICommand cmd = new ShowHideCompCommand(showOverlay, compOverlay, linesColorRB, strokeColorRB);
+                _Undocommands.Push(cmd);
+                _Redocommands.Clear();
+            }
+
+            public void InsertInUnDoRedoForShowHideOverlap(bool showOverlay, Grid exhOverlay, Grid intOverlay, TextBlock exhLabel, TextBlock intLabel)
+            {
+                ICommand cmd = new ShowHideOverlapCommand(showOverlay, exhOverlay, intOverlay, exhLabel, intLabel);
                 _Undocommands.Push(cmd);
                 _Redocommands.Clear();
             }

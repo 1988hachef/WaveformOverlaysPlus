@@ -74,11 +74,14 @@ namespace WaveformOverlaysPlus
         TextBlock label9;
         TextBlock label10;
         TextBlock label11;
+        
 
         #region For UndoRedo
         UndoRedoManager.UnDoRedo _UndoRedo;
         Point pointStartOfManipulation;
         Point pointEndOfManipuluation;
+        RadioButton previousSizeRadioButtonChecked;
+        FrameworkElement previouslyBoundElement;
         #endregion
 
         #region For Custom Ink Rendering and Erase
@@ -138,18 +141,18 @@ namespace WaveformOverlaysPlus
 
         // Using a DependencyProperty as the backing store for currentSizeSelected.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty currentSizeSelectedProperty =
-            DependencyProperty.Register("currentSizeSelected", typeof(double), typeof(MainPage), new PropertyMetadata(3));
+            DependencyProperty.Register("currentSizeSelected", typeof(double), typeof(MainPage), new PropertyMetadata(6.0));
 
         public double currentFontSize
         {
             get { return (double)GetValue(currentFontSizeProperty); }
             set
             {
-                value = value == 1 ? 14 :
-                        value == 2 ? 18 :
-                        value == 6 ? 24 :
-                        value == 10 ? 36 :
-                        18;
+                value = value == 1 ? 14.0 :
+                        value == 2 ? 18.0 :
+                        value == 6 ? 24.0 :
+                        value == 10 ? 36.0 :
+                        24.0;
 
                 SetValue(currentFontSizeProperty, value);
             }
@@ -157,7 +160,7 @@ namespace WaveformOverlaysPlus
 
         // Using a DependencyProperty as the backing store for currentFontSize.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty currentFontSizeProperty =
-            DependencyProperty.Register("currentFontSize", typeof(double), typeof(MainPage), new PropertyMetadata(18));
+            DependencyProperty.Register("currentFontSize", typeof(double), typeof(MainPage), new PropertyMetadata(24.0));
 
         #endregion
 
@@ -180,6 +183,7 @@ namespace WaveformOverlaysPlus
 
             //Initialize UndoRedo
             _UndoRedo = new UndoRedoManager.UnDoRedo();
+            previousSizeRadioButtonChecked = rbSize6;
         }
 
         private void tool_Checked(object sender, RoutedEventArgs e)
@@ -1272,34 +1276,6 @@ namespace WaveformOverlaysPlus
                         t.FontSize = t.FontSize;
                     }
                 }
-                //if (lastChild is Polyline)
-                //{
-                //    var p = lastChild as Polyline;
-                //    p.Stroke = p.Stroke;
-                //    p.Fill = p.Fill;
-                //    p.StrokeThickness = p.StrokeThickness;
-
-                //    if (gridMain.Children.Count >= 2)
-                //    {
-                //        var secondToLastChild = gridMain.Children[gridMain.Children.Count - 2];
-
-                //        if (secondToLastChild is Line)
-                //        {
-                //            var l = secondToLastChild as Line;
-                //            l.Stroke = l.Stroke;
-                //            l.Fill = l.Fill;
-                //            l.StrokeThickness = l.StrokeThickness;
-                //        }
-                //    }
-
-                //}
-                //if (lastChild is Line)
-                //{
-                //    var l = lastChild as Line;
-                //    l.Stroke = l.Stroke;
-                //    l.Fill = l.Fill;
-                //    l.StrokeThickness = l.StrokeThickness;
-                //}
             }
         }
 
@@ -1321,6 +1297,12 @@ namespace WaveformOverlaysPlus
                 drawingAttributes.Size = new Size(size, size);
                 inkCanvas.InkPresenter.UpdateDefaultDrawingAttributes(drawingAttributes);
             }
+        }
+
+        private void sizes_Clicked(object sender, RoutedEventArgs e)
+        {
+            // Only insert an undo command if called from a click from the user, not from an IsChecked change event. This distinction has to be made in order for undo/redo to behave properly.
+            
         }
 
         private void color_Click(object sender, RoutedEventArgs e)
@@ -2051,12 +2033,18 @@ namespace WaveformOverlaysPlus
                 gridCompressionOverlay.Opacity = 1.0;
                 compLinesColorRB.Visibility = Visibility.Visible;
                 compLinesColorRB.IsChecked = true;
+
+                _UndoRedo.InsertInUnDoRedoForShowHideComp(true, gridCompressionOverlay, compLinesColorRB, strokeColorRB);
+                ManageUndoRedoButtons();
             }
             else
             {
                 gridCompressionOverlay.Opacity = .001;
                 compLinesColorRB.Visibility = Visibility.Collapsed;
                 strokeColorRB.IsChecked = true;
+
+                _UndoRedo.InsertInUnDoRedoForShowHideComp(false, gridCompressionOverlay, compLinesColorRB, strokeColorRB);
+                ManageUndoRedoButtons();
             }
         }
 
@@ -2068,6 +2056,9 @@ namespace WaveformOverlaysPlus
                 gridExhOverlap.Visibility = Visibility.Visible;
                 tblockExh.Foreground = new SolidColorBrush(Colors.Red);
                 tblockInt.Foreground = new SolidColorBrush(Colors.Blue);
+
+                _UndoRedo.InsertInUnDoRedoForShowHideOverlap(true, gridExhOverlap, gridIntOverlap, tblockExh, tblockInt);
+                ManageUndoRedoButtons();
             }
             else
             {
@@ -2075,6 +2066,9 @@ namespace WaveformOverlaysPlus
                 gridExhOverlap.Visibility = Visibility.Collapsed;
                 tblockExh.Foreground = new SolidColorBrush(Colors.Black);
                 tblockInt.Foreground = new SolidColorBrush(Colors.Black);
+
+                _UndoRedo.InsertInUnDoRedoForShowHideOverlap(false, gridExhOverlap, gridIntOverlap, tblockExh, tblockInt);
+                ManageUndoRedoButtons();
             }
         }
 
@@ -2588,10 +2582,14 @@ namespace WaveformOverlaysPlus
 
                     gridMain.Children.Add(paintObjectCylID);
 
+                    _UndoRedo.InsertInUnDoRedoForInsert(paintObjectCylID, gridMain);
+                    ManageUndoRedoButtons();
+
                     // Create event handler
                     paintObjectCylID.Unloaded += PaintObjectCylID_Unloaded;
+                    paintObjectCylID.Loaded += PaintObjectCylID_Loaded;
 
-                    // Show and move thumb to lower right of grid, and show color key
+                    // Show color key
                     colorKey.Visibility = Visibility.Visible;
 
                     // Set some variables to use for the SetGridLabels method
@@ -2616,6 +2614,17 @@ namespace WaveformOverlaysPlus
                     logger.Log("Show CylinderID Overlay exception: " + ex.Message);
                 }
             }
+        }
+
+        private void PaintObjectCylID_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (colorKey.Visibility == Visibility.Collapsed)
+            {
+                colorKey.Visibility = Visibility.Visible;
+            }
+
+            var cylIDgrid = sender as PaintObjectTemplatedControl;
+            cylIDgrid.Opacity = 0.6;
         }
 
         private void PaintObjectCylID_Unloaded(object sender, RoutedEventArgs e)
@@ -3999,7 +4008,9 @@ namespace WaveformOverlaysPlus
         {
             bool IsMoveCommand = false;
             var topUndo = _UndoRedo.GetTopUndoCommand();
-            if (topUndo.ToString().EndsWith("MoveCommand"))
+            var _topUndo = topUndo.ToString();
+
+            if (_topUndo.EndsWith("MoveCommand"))
             {
                 IsMoveCommand = true;
             }
@@ -4019,10 +4030,13 @@ namespace WaveformOverlaysPlus
         {
             bool IsMoveCommand = false;
             var topRedo = _UndoRedo.GetTopRedoCommand();
-            if (topRedo.ToString().EndsWith("MoveCommand"))
+            var _topRedo = topRedo.ToString();
+
+            if (_topRedo.EndsWith("MoveCommand"))
             {
                 IsMoveCommand = true;
             }
+            
 
             _UndoRedo.Redo(1);
             ManageUndoRedoButtons();
@@ -4032,6 +4046,17 @@ namespace WaveformOverlaysPlus
                 var moveCommand = topRedo as UndoRedoManager.MoveCommand;
                 var element = moveCommand._UiElement;
                 SetStuffOnMoveCommand(element);
+            }
+            else if (_topRedo.EndsWith("InsertCommand"))
+            {
+                var insertCommand = topRedo as UndoRedoManager.InsertCommand;
+                var paintObject = insertCommand._UiElement as PaintObjectTemplatedControl;
+                var content = paintObject.Content;
+
+                if (content is Image)
+                {
+                    imageCollection.Add(new StoredImage { FileName = paintObject.ImageFileName, FilePath = paintObject.ImageFilePath });
+                }
             }
         }
 
@@ -4182,6 +4207,7 @@ namespace WaveformOverlaysPlus
                 SetSomeStuffOnRulerManipulationCompleted();
             }
         }
+
 
         #endregion
     }

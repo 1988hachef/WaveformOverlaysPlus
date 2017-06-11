@@ -139,25 +139,25 @@
 
                 <StackPanel Margin="0">
 
-                    <RadioButton Tag="1" GroupName="sizes" Style="{StaticResource styleToolRadioButton}" Margin="5,0" Width="88"  Height="17" HorizontalAlignment="Center" Checked="sizes_Checked">
+                    <RadioButton Tag="1" Name="rbSize1" GroupName="sizes" Style="{StaticResource styleToolRadioButton}" Margin="5,0" Width="88"  Height="17" HorizontalAlignment="Center" Checked="sizes_Checked" Click="sizes_Clicked">
                         <RadioButton.Content>
                             <Rectangle Width="56" Height="1" Fill="Black"/>
                         </RadioButton.Content>
                     </RadioButton>
 
-                    <RadioButton Tag="2" GroupName="sizes" Style="{StaticResource styleToolRadioButton}" Margin="5,0" Width="88"  Height="18" HorizontalAlignment="Center" Checked="sizes_Checked">
+                    <RadioButton Tag="2" Name="rbSize2" GroupName="sizes" Style="{StaticResource styleToolRadioButton}" Margin="5,0" Width="88"  Height="18" HorizontalAlignment="Center" Checked="sizes_Checked" Click="sizes_Clicked">
                         <RadioButton.Content>
                             <Rectangle Width="56" Height="2" Fill="Black"/>
                         </RadioButton.Content>
                     </RadioButton>
 
-                    <RadioButton Tag="6" GroupName="sizes" Style="{StaticResource styleToolRadioButton}" Margin="5,0" Width="88"  Height="22" HorizontalAlignment="Center" Checked="sizes_Checked" IsChecked="True">
+                    <RadioButton Tag="6" Name="rbSize6" GroupName="sizes" Style="{StaticResource styleToolRadioButton}" Margin="5,0" Width="88"  Height="22" HorizontalAlignment="Center" Checked="sizes_Checked" Click="sizes_Clicked" IsChecked="True">
                         <RadioButton.Content>
                             <Rectangle Width="56" Height="6" Fill="Black"/>
                         </RadioButton.Content>
                     </RadioButton>
 
-                    <RadioButton Tag="10" Name="rbSize10" GroupName="sizes" Style="{StaticResource styleToolRadioButton}" Margin="5,0" Width="88"  Height="26" HorizontalAlignment="Center" Checked="sizes_Checked">
+                    <RadioButton Tag="10" Name="rbSize10" GroupName="sizes" Style="{StaticResource styleToolRadioButton}" Margin="5,0" Width="88"  Height="26" HorizontalAlignment="Center" Checked="sizes_Checked" Click="sizes_Clicked">
                         <RadioButton.Content>
                             <Rectangle Width="56" Height="10" Fill="Black"/>
                         </RadioButton.Content>
