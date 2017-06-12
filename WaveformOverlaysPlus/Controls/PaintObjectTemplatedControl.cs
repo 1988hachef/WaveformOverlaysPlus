@@ -184,6 +184,8 @@ namespace WaveformOverlaysPlus.Controls
             _rectForFlyoutPosition.RenderTransform = transform_rectForFlyout;
         }
 
+        public event EventHandler Closing;
+
         private void PaintObjectTemplatedControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             var jail = (Panel)this.Parent;
@@ -272,6 +274,7 @@ namespace WaveformOverlaysPlus.Controls
 
         private void _closeButton_Click(object sender, RoutedEventArgs e)
         {
+            Closing.Invoke(this, null);
             ((Panel)this.Parent).Children.Remove(this);
         }
 

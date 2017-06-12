@@ -80,8 +80,13 @@ namespace WaveformOverlaysPlus
         UndoRedoManager.UnDoRedo _UndoRedo;
         Point pointStartOfManipulation;
         Point pointEndOfManipuluation;
+        Point paintObjStart;
+        Point paintObjEnd;
+        double widthStart;
+        double heightStart;
+        double widthEnd;
+        double heightEnd;
         RadioButton previousSizeRadioButtonChecked;
-        FrameworkElement previouslyBoundElement;
         #endregion
 
         #region For Custom Ink Rendering and Erase
@@ -127,8 +132,8 @@ namespace WaveformOverlaysPlus
         double UnitsPerY;
         double amountBetweenVs;
         double amountBetweenHs;
-        double VstartValue;
-        double HstartValue;
+        double VstartValue = 0;
+        double HstartValue = 0;
         #endregion
 
         #region Dependency Properties
@@ -183,7 +188,6 @@ namespace WaveformOverlaysPlus
 
             //Initialize UndoRedo
             _UndoRedo = new UndoRedoManager.UnDoRedo();
-            previousSizeRadioButtonChecked = rbSize6;
         }
 
         private void tool_Checked(object sender, RoutedEventArgs e)
@@ -355,10 +359,13 @@ namespace WaveformOverlaysPlus
                     paintObject.ImageScale = scale;
                     paintObject.OpacitySliderIsVisible = true;
                     paintObject.Unloaded += PaintObject_Unloaded;
+                    paintObject.ManipulationStarting += GeneralPaintObj_ManipStarting;
+                    paintObject.ManipulationCompleted += GeneralPaintObj_ManipCompleted;
+                    paintObject.Closing += GeneralPaintObject_Closing;
 
                     gridMain.Children.Add(paintObject);
 
-                    _UndoRedo.InsertInUnDoRedoForInsert(paintObject, gridMain);
+                    _UndoRedo.InsertInUnDoRedoForAddRemoveElement(true, paintObject, gridMain);
                     ManageUndoRedoButtons();
 
                     await imgFile.CopyAsync(ApplicationData.Current.LocalFolder, name, NameCollisionOption.ReplaceExisting);
@@ -367,6 +374,8 @@ namespace WaveformOverlaysPlus
                 }
             }
         }
+
+        
 
         #endregion
 
@@ -661,10 +670,14 @@ namespace WaveformOverlaysPlus
                     paintObject.Height = _height;
                     paintObject.Content = image;
                     paintObject.OpacitySliderIsVisible = true;
+                    paintObject.Unloaded += PaintObject_Unloaded;
+                    paintObject.ManipulationStarting += GeneralPaintObj_ManipStarting;
+                    paintObject.ManipulationCompleted += GeneralPaintObj_ManipCompleted;
+                    paintObject.Closing += GeneralPaintObject_Closing;
 
                     gridMain.Children.Add(paintObject);
 
-                    _UndoRedo.InsertInUnDoRedoForInsert(paintObject, gridMain);
+                    _UndoRedo.InsertInUnDoRedoForAddRemoveElement(true, paintObject, gridMain);
                     ManageUndoRedoButtons();
                 }
             }
@@ -1128,21 +1141,70 @@ namespace WaveformOverlaysPlus
 
         #region Adding TextBox, Rectangles, or Ellipse
 
+        private void GeneralPaintObject_Closing(object sender, EventArgs e)
+        {
+            _UndoRedo.InsertInUnDoRedoForAddRemoveElement(false, sender as FrameworkElement, gridMain);
+            ManageUndoRedoButtons();
+        }
+
+        private void GeneralPaintObj_ManipStarting(object sender, ManipulationStartingRoutedEventArgs e)
+        {
+            var paintObj = sender as FrameworkElement;
+            var name = paintObj.Name;
+
+            GeneralTransform gt = paintObj.TransformToVisual(gridMain);
+            Point p = gt.TransformPoint(new Point(0, 0));
+            paintObjStart = p;
+
+            widthStart = paintObj.ActualWidth;
+            heightStart = paintObj.ActualHeight;
+        }
+
+        private void GeneralPaintObj_ManipCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
+        {
+            var paintObj = sender as FrameworkElement;
+            var name = paintObj.Name;
+
+            GeneralTransform gt = paintObj.TransformToVisual(gridMain);
+            Point p = gt.TransformPoint(new Point(0, 0));
+            paintObjEnd = p;
+
+            widthEnd = paintObj.ActualWidth;
+            heightEnd = paintObj.ActualHeight;
+
+            var Xchange = paintObjEnd.X - paintObjStart.X;
+            var Ychange = paintObjEnd.Y - paintObjStart.Y;
+            var widthChange = widthEnd - widthStart;
+            var heightChange = heightEnd - heightStart;
+
+            if (Xchange >= 1 || Xchange <= -1 ||
+                Ychange >= 1 || Ychange <= -1 ||
+                widthChange >= 1 || widthChange <= -1 ||
+                heightChange >= 1 || heightChange <= -1)
+            {
+                _UndoRedo.InsertInUnDoRedoForMoveOrResize(Xchange, Ychange, widthChange, heightChange, paintObj);
+                ManageUndoRedoButtons();
+            }
+        }
+
         private void text_Click(object sender, RoutedEventArgs e)
         {
             UnBindLast();
             TextBox textBox = new TextBox();
             textBox.Style = App.Current.Resources["styleTextBox"] as Style;
+            textBox.SizeChanged += TextBox_SizeChanged;
             Bind(textBox);
 
             PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
             paintObject.Content = textBox;
+            paintObject.Closing += GeneralPaintObject_Closing;
+            paintObject.ManipulationStarting += GeneralPaintObj_ManipStarting;
+            paintObject.ManipulationCompleted += GeneralPaintObj_ManipCompleted;
+
             gridMain.Children.Add(paintObject);
 
-            _UndoRedo.InsertInUnDoRedoForInsert(paintObject, gridMain);
+            _UndoRedo.InsertInUnDoRedoForAddRemoveElement(true, paintObject, gridMain);
             ManageUndoRedoButtons();
-
-            textBox.SizeChanged += TextBox_SizeChanged;
         }
 
         private void TextBox_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -1166,9 +1228,13 @@ namespace WaveformOverlaysPlus
             paintObject.Height = 200;
             paintObject.Content = ell;
             paintObject.OpacitySliderIsVisible = true;
+            paintObject.Closing += GeneralPaintObject_Closing;
+            paintObject.ManipulationStarting += GeneralPaintObj_ManipStarting;
+            paintObject.ManipulationCompleted += GeneralPaintObj_ManipCompleted;
+
             gridMain.Children.Add(paintObject);
 
-            _UndoRedo.InsertInUnDoRedoForInsert(paintObject, gridMain);
+            _UndoRedo.InsertInUnDoRedoForAddRemoveElement(true, paintObject, gridMain);
             ManageUndoRedoButtons();
         }
 
@@ -1188,9 +1254,13 @@ namespace WaveformOverlaysPlus
             paintObject.Height = 200;
             paintObject.Content = rectangle;
             paintObject.OpacitySliderIsVisible = true;
+            paintObject.Closing += GeneralPaintObject_Closing;
+            paintObject.ManipulationStarting += GeneralPaintObj_ManipStarting;
+            paintObject.ManipulationCompleted += GeneralPaintObj_ManipCompleted;
+
             gridMain.Children.Add(paintObject);
 
-            _UndoRedo.InsertInUnDoRedoForInsert(paintObject, gridMain);
+            _UndoRedo.InsertInUnDoRedoForAddRemoveElement(true, paintObject, gridMain);
             ManageUndoRedoButtons();
         }
 
@@ -1953,8 +2023,12 @@ namespace WaveformOverlaysPlus
 
             var Xchange = pointEndOfManipuluation.X - pointStartOfManipulation.X;
             var Ychange = pointEndOfManipuluation.Y - pointStartOfManipulation.Y;
-            _UndoRedo.InsertInUnDoRedoForMove(Xchange, Ychange, rulerContainer);
-            ManageUndoRedoButtons();
+
+            if (Xchange >= 1 || Xchange <= -1 || Ychange >= 1 || Ychange <= -1)
+            {
+                _UndoRedo.InsertInUnDoRedoForMoveOrResize(Xchange, Ychange, 0, 0, rulerContainer);
+                ManageUndoRedoButtons();
+            }  
         }
 
         void SetSomeStuffOnRulerManipulationCompleted()
@@ -2089,13 +2163,160 @@ namespace WaveformOverlaysPlus
             {
                 transformExh.TranslateX += e.Delta.Translation.X;
                 gridExhOverlap.Width -= e.Delta.Translation.X;
-
-                SetEVOText();
             }
             if (yAdjust > 1 && yAdjust < bottomLimit)
             {
                 gridExhOverlap.Height -= e.Delta.Translation.Y;
             }
+        }
+
+        private void spEVC_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+            GeneralTransform gt = rectEVC.TransformToVisual(gridToContainOthers);
+            Point p = gt.TransformPoint(new Point(0, 0));
+
+            var currentXposition = p.X;
+            var xAdjust = currentXposition + e.Delta.Translation.X;
+            var leftLimit = currentXposition - rectRed.ActualWidth + 60;
+
+            var currentYposition = p.Y;
+            var yAdjust = currentYposition + e.Delta.Translation.Y;
+            var bottomLimit = gridToContainOthers.ActualHeight - gridIntOverlap.ActualHeight - 45;
+
+            if (xAdjust > leftLimit && xAdjust < gridToContainOthers.ActualWidth - 35)
+            {
+                gridExhOverlap.Width += e.Delta.Translation.X;
+            }
+            if (yAdjust > 1 && yAdjust < bottomLimit)
+            {
+                gridExhOverlap.Height -= e.Delta.Translation.Y;
+            }
+        }
+
+        private void spIVO_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+            GeneralTransform gt = rectIVO.TransformToVisual(gridToContainOthers);
+            Point p = gt.TransformPoint(new Point(0, 0));
+
+            var currentXposition = p.X;
+            var xAdjust = currentXposition + e.Delta.Translation.X;
+            var rightLimit = currentXposition + rectBlue.ActualWidth - 60;
+
+            var currentYposition = p.Y;
+            var yAdjust = currentYposition + e.Delta.Translation.Y;
+            var topLimit = gridToContainOthers.ActualHeight - gridExhOverlap.ActualHeight + 45;
+
+            if (xAdjust > 25 && xAdjust < rightLimit)
+            {
+                transformInt.TranslateX += e.Delta.Translation.X;
+                gridIntOverlap.Width -= e.Delta.Translation.X;
+            }
+            if (yAdjust > topLimit && yAdjust < gridToContainOthers.ActualHeight - 75)
+            {
+                gridIntOverlap.Height -= e.Delta.Translation.Y;
+            }
+        }
+
+        private void spIVC_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+            GeneralTransform gt = rectIVC.TransformToVisual(gridToContainOthers);
+            Point p = gt.TransformPoint(new Point(0, 0));
+
+            var currentXposition = p.X;
+            var xAdjust = currentXposition + e.Delta.Translation.X;
+            var leftLimit = currentXposition - rectBlue.ActualWidth + 60;
+
+            var currentYposition = p.Y;
+            var yAdjust = currentYposition + e.Delta.Translation.Y;
+            var topLimit = gridToContainOthers.ActualHeight - gridExhOverlap.ActualHeight + 45;
+
+            if (xAdjust > leftLimit && xAdjust < gridToContainOthers.ActualWidth - 35)
+            {
+                gridIntOverlap.Width += e.Delta.Translation.X;
+            }
+            if (yAdjust > topLimit && yAdjust < gridToContainOthers.ActualHeight - 75)
+            {
+                gridIntOverlap.Height -= e.Delta.Translation.Y;
+            }
+        }
+
+        private void OverlapManip_Starting(object sender, ManipulationStartingRoutedEventArgs e)
+        {
+            var element = sender as FrameworkElement;
+            var name = element.Name;
+
+            if (name == "spEVO" || name == "spEVC")
+            {
+                GeneralTransform gt = gridExhOverlap.TransformToVisual(gridMain);
+                Point p = gt.TransformPoint(new Point(0, 0));
+                paintObjStart = p;
+
+                widthStart = gridExhOverlap.ActualWidth;
+                heightStart = gridExhOverlap.ActualHeight;
+            }
+            else if (name == "spIVO" || name == "spIVC")
+            {
+                GeneralTransform gt = gridIntOverlap.TransformToVisual(gridMain);
+                Point p = gt.TransformPoint(new Point(0, 0));
+                paintObjStart = p;
+
+                widthStart = gridIntOverlap.ActualWidth;
+                heightStart = gridIntOverlap.ActualHeight;
+            }
+        }
+
+        private void OverlapManip_Completed(object sender, ManipulationCompletedRoutedEventArgs e)
+        {
+            var manipulator = sender as FrameworkElement;
+            var manipulatorName = manipulator.Name;
+            FrameworkElement uiElement = null;
+
+            if (manipulatorName == "spEVO" || manipulatorName == "spEVC")
+            {
+                GeneralTransform gt = gridExhOverlap.TransformToVisual(gridMain);
+                Point p = gt.TransformPoint(new Point(0, 0));
+                paintObjEnd = p;
+
+                widthEnd = gridExhOverlap.ActualWidth;
+                heightEnd = gridExhOverlap.ActualHeight;
+
+                uiElement = gridExhOverlap;
+            }
+            else if (manipulatorName == "spIVO" || manipulatorName == "spIVC")
+            {
+                GeneralTransform gt = gridIntOverlap.TransformToVisual(gridMain);
+                Point p = gt.TransformPoint(new Point(0, 0));
+                paintObjEnd = p;
+
+                widthEnd = gridIntOverlap.ActualWidth;
+                heightEnd = gridIntOverlap.ActualHeight;
+
+                uiElement = gridIntOverlap;
+            }
+
+            var Xchange = paintObjEnd.X - paintObjStart.X;
+            var widthChange = widthEnd - widthStart;
+            var heightChange = heightEnd - heightStart;
+
+            if (Xchange >= 1 || Xchange <= -1 ||
+                widthChange >= 1 || widthChange <= -1 ||
+                heightChange >= 1 || heightChange <= -1)
+            {
+                _UndoRedo.InsertInUnDoRedoForManipOverlap(Xchange, widthChange, heightChange, uiElement, manipulatorName);
+                ManageUndoRedoButtons();
+            }
+        }
+
+        private void gridExhOverlap_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            SetEVOText();
+            SetEVCText();
+        }
+
+        private void gridIntOverlap_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            SetIVOText();
+            SetIVCText();
         }
 
         void SetEVOText()
@@ -2120,31 +2341,6 @@ namespace WaveformOverlaysPlus
                 {
                     tblockEVO.Text = "\u00BA ABC";
                 }
-            }
-        }
-
-        private void spEVC_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
-        {
-            GeneralTransform gt = rectEVC.TransformToVisual(gridToContainOthers);
-            Point p = gt.TransformPoint(new Point(0, 0));
-
-            var currentXposition = p.X;
-            var xAdjust = currentXposition + e.Delta.Translation.X;
-            var leftLimit = currentXposition - rectRed.ActualWidth + 60;
-
-            var currentYposition = p.Y;
-            var yAdjust = currentYposition + e.Delta.Translation.Y;
-            var bottomLimit = gridToContainOthers.ActualHeight - gridIntOverlap.ActualHeight - 45;
-
-            if (xAdjust > leftLimit && xAdjust < gridToContainOthers.ActualWidth - 35)
-            {
-                gridExhOverlap.Width += e.Delta.Translation.X;
-
-                SetEVCText();
-            }
-            if (yAdjust > 1 && yAdjust < bottomLimit)
-            {
-                gridExhOverlap.Height -= e.Delta.Translation.Y;
             }
         }
 
@@ -2173,32 +2369,6 @@ namespace WaveformOverlaysPlus
             }
         }
 
-        private void spIVO_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
-        {
-            GeneralTransform gt = rectIVO.TransformToVisual(gridToContainOthers);
-            Point p = gt.TransformPoint(new Point(0, 0));
-
-            var currentXposition = p.X;
-            var xAdjust = currentXposition + e.Delta.Translation.X;
-            var rightLimit = currentXposition + rectBlue.ActualWidth - 60;
-
-            var currentYposition = p.Y;
-            var yAdjust = currentYposition + e.Delta.Translation.Y;
-            var topLimit = gridToContainOthers.ActualHeight - gridExhOverlap.ActualHeight + 45;
-
-            if (xAdjust > 25 && xAdjust < rightLimit)
-            {
-                transformInt.TranslateX += e.Delta.Translation.X;
-                gridIntOverlap.Width -= e.Delta.Translation.X;
-
-                SetIVOText();
-            }
-            if (yAdjust > topLimit && yAdjust < gridToContainOthers.ActualHeight - 75)
-            {
-                gridIntOverlap.Height -= e.Delta.Translation.Y;
-            }
-        }
-
         void SetIVOText()
         {
             GeneralTransform gt = rectIVO.TransformToVisual(rectZeroDegrees);
@@ -2221,31 +2391,6 @@ namespace WaveformOverlaysPlus
                 {
                     tblockIVO.Text = "\u00BA ATC";
                 }
-            }
-        }
-
-        private void spIVC_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
-        {
-            GeneralTransform gt = rectIVC.TransformToVisual(gridToContainOthers);
-            Point p = gt.TransformPoint(new Point(0, 0));
-
-            var currentXposition = p.X;
-            var xAdjust = currentXposition + e.Delta.Translation.X;
-            var leftLimit = currentXposition - rectBlue.ActualWidth + 60;
-
-            var currentYposition = p.Y;
-            var yAdjust = currentYposition + e.Delta.Translation.Y;
-            var topLimit = gridToContainOthers.ActualHeight - gridExhOverlap.ActualHeight + 45;
-
-            if (xAdjust > leftLimit && xAdjust < gridToContainOthers.ActualWidth - 35)
-            {
-                gridIntOverlap.Width += e.Delta.Translation.X;
-
-                SetIVCText();
-            }
-            if (yAdjust > topLimit && yAdjust < gridToContainOthers.ActualHeight - 75)
-            {
-                gridIntOverlap.Height -= e.Delta.Translation.Y;
             }
         }
 
@@ -2582,12 +2727,15 @@ namespace WaveformOverlaysPlus
 
                     gridMain.Children.Add(paintObjectCylID);
 
-                    _UndoRedo.InsertInUnDoRedoForInsert(paintObjectCylID, gridMain);
+                    _UndoRedo.InsertInUnDoRedoForAddRemoveElement(true, paintObjectCylID, gridMain);
                     ManageUndoRedoButtons();
 
                     // Create event handler
                     paintObjectCylID.Unloaded += PaintObjectCylID_Unloaded;
                     paintObjectCylID.Loaded += PaintObjectCylID_Loaded;
+                    paintObjectCylID.ManipulationStarting += GeneralPaintObj_ManipStarting;
+                    paintObjectCylID.ManipulationCompleted += GeneralPaintObj_ManipCompleted;
+                    paintObjectCylID.Closing += GeneralPaintObject_Closing;
 
                     // Show color key
                     colorKey.Visibility = Visibility.Visible;
@@ -3999,61 +4147,62 @@ namespace WaveformOverlaysPlus
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            //GeneralTransform gt = rectEVC.TransformToVisual(rectZeroDegrees);
+            //Point p = gt.TransformPoint(new Point(0, 0));
 
+            //tblock.Text = p.X.ToString();
         }
 
         #region Undo Redo buttons
 
         private void btnUndo_Click(object sender, RoutedEventArgs e)
         {
-            bool IsMoveCommand = false;
             var topUndo = _UndoRedo.GetTopUndoCommand();
             var _topUndo = topUndo.ToString();
-
-            if (_topUndo.EndsWith("MoveCommand"))
-            {
-                IsMoveCommand = true;
-            }
 
             _UndoRedo.Undo(1);
             ManageUndoRedoButtons();
 
-            if (IsMoveCommand)
+            if (_topUndo.EndsWith("MoveOrResizeCommand"))
             {
-                var moveCommand = topUndo as UndoRedoManager.MoveCommand;
+                var moveCommand = topUndo as UndoRedoManager.MoveOrResizeCommand;
                 var element = moveCommand._UiElement;
                 SetStuffOnMoveCommand(element);
+            }
+            else if (_topUndo.EndsWith("AddRemoveElementCommand"))
+            {
+                var addRemoveCommand = topUndo as UndoRedoManager.AddRemoveElementCommand;
+                var paintObject = addRemoveCommand._UiElement as PaintObjectTemplatedControl;
+                var content = paintObject.Content;
+
+                if (content is Image && addRemoveCommand._AddingElement == false)
+                {
+                    imageCollection.Add(new StoredImage { FileName = paintObject.ImageFileName, FilePath = paintObject.ImageFilePath });
+                }
             }
         }
 
         private void btnRedo_Click(object sender, RoutedEventArgs e)
         {
-            bool IsMoveCommand = false;
             var topRedo = _UndoRedo.GetTopRedoCommand();
             var _topRedo = topRedo.ToString();
-
-            if (_topRedo.EndsWith("MoveCommand"))
-            {
-                IsMoveCommand = true;
-            }
-            
 
             _UndoRedo.Redo(1);
             ManageUndoRedoButtons();
 
-            if (IsMoveCommand)
+            if (_topRedo.EndsWith("MoveOrResizeCommand"))
             {
-                var moveCommand = topRedo as UndoRedoManager.MoveCommand;
+                var moveCommand = topRedo as UndoRedoManager.MoveOrResizeCommand;
                 var element = moveCommand._UiElement;
                 SetStuffOnMoveCommand(element);
             }
-            else if (_topRedo.EndsWith("InsertCommand"))
+            else if (_topRedo.EndsWith("AddRemoveElementCommand"))
             {
-                var insertCommand = topRedo as UndoRedoManager.InsertCommand;
-                var paintObject = insertCommand._UiElement as PaintObjectTemplatedControl;
+                var addRemoveCommand = topRedo as UndoRedoManager.AddRemoveElementCommand;
+                var paintObject = addRemoveCommand._UiElement as PaintObjectTemplatedControl;
                 var content = paintObject.Content;
 
-                if (content is Image)
+                if (content is Image && addRemoveCommand._AddingElement == true)
                 {
                     imageCollection.Add(new StoredImage { FileName = paintObject.ImageFileName, FilePath = paintObject.ImageFilePath });
                 }
@@ -4193,21 +4342,10 @@ namespace WaveformOverlaysPlus
 
                     SetTextofPurple(true);
                 }
-                else if (name.StartsWith("gridExh"))
-                {
-                    SetEVOText();
-                    SetEVCText();
-                }
-                else if (name.StartsWith("gridInt"))
-                {
-                    SetIVOText();
-                    SetIVCText();
-                }
 
                 SetSomeStuffOnRulerManipulationCompleted();
             }
         }
-
 
         #endregion
     }

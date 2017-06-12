@@ -69,56 +69,202 @@ namespace WaveformOverlaysPlus.UndoRedoCommands
             }
         }
 
-        class ResizeCommand : ICommand
+        public class MoveOrResizeCommand : ICommand
         {
             private double _ChangeOfTranslateX;
             private double _ChangeOfTranslateY;
             private double _ChangeofWidth;
-            private double _Changeofheight;
-            private FrameworkElement _UiElement;
+            private double _ChangeofHeight;
+            public FrameworkElement _UiElement;
 
-            public ResizeCommand(double transX, double transY, double width, double height, FrameworkElement uiElement)
+            public MoveOrResizeCommand(double changeOf_X, double changeOf_Y, double changeOf_width, double changeOf_height, FrameworkElement uiElement)
             {
-                _ChangeOfTranslateX = transX;
-                _ChangeOfTranslateY = transY;
-                _ChangeofWidth = width;
-                _Changeofheight = height;
+                _ChangeOfTranslateX = changeOf_X;
+                _ChangeOfTranslateY = changeOf_Y;
+                _ChangeofWidth = changeOf_width;
+                _ChangeofHeight = changeOf_height;
                 _UiElement = uiElement;
             }
             
             public void Execute()
             {
-                double currentX = (double)(_UiElement.RenderTransform.GetValue(CompositeTransform.TranslateXProperty));
-                double currentY = (double)(_UiElement.RenderTransform.GetValue(CompositeTransform.TranslateYProperty));
-                _UiElement.RenderTransform.SetValue(CompositeTransform.TranslateXProperty, (currentX + _ChangeOfTranslateX));
-                _UiElement.RenderTransform.SetValue(CompositeTransform.TranslateYProperty, (currentY + _ChangeOfTranslateY));
-                _UiElement.Height = _UiElement.Height + _Changeofheight;
-                _UiElement.Width = _UiElement.Width + _ChangeofWidth;
+                if (_ChangeOfTranslateX >= 1 || _ChangeOfTranslateX <= -1)
+                {
+                    double currentX = (double)(_UiElement.RenderTransform.GetValue(CompositeTransform.TranslateXProperty));
+                    _UiElement.RenderTransform.SetValue(CompositeTransform.TranslateXProperty, (currentX + _ChangeOfTranslateX));
+                }
+                if (_ChangeOfTranslateY >= 1 || _ChangeOfTranslateY <= -1)
+                {
+                    double currentY = (double)(_UiElement.RenderTransform.GetValue(CompositeTransform.TranslateYProperty));
+                    _UiElement.RenderTransform.SetValue(CompositeTransform.TranslateYProperty, (currentY + _ChangeOfTranslateY));
+                }
+
+                if (_ChangeofHeight >= 1 || _ChangeofHeight <= -1)
+                {
+                    _UiElement.Height = _UiElement.Height + _ChangeofHeight;
+                }
+                
+                if (_ChangeofWidth >= 1 || _ChangeofWidth <= -1)
+                {
+                    _UiElement.Width = _UiElement.Width + _ChangeofWidth;
+                }
             }
 
             public void UnExecute()
             {
-                double currentX = (double)(_UiElement.RenderTransform.GetValue(CompositeTransform.TranslateXProperty));
-                double currentY = (double)(_UiElement.RenderTransform.GetValue(CompositeTransform.TranslateYProperty));
-                _UiElement.RenderTransform.SetValue(CompositeTransform.TranslateXProperty, (currentX - _ChangeOfTranslateX));
-                _UiElement.RenderTransform.SetValue(CompositeTransform.TranslateYProperty, (currentY - _ChangeOfTranslateY));
-                _UiElement.Height = _UiElement.Height - _Changeofheight;
-                _UiElement.Width = _UiElement.Width - _ChangeofWidth;
+                if (_ChangeOfTranslateX > 1 || _ChangeOfTranslateX < -1)
+                {
+                    double currentX = (double)(_UiElement.RenderTransform.GetValue(CompositeTransform.TranslateXProperty));
+                    _UiElement.RenderTransform.SetValue(CompositeTransform.TranslateXProperty, (currentX - _ChangeOfTranslateX));
+                }
+                if (_ChangeOfTranslateY > 1 || _ChangeOfTranslateY < -1)
+                {
+                    double currentY = (double)(_UiElement.RenderTransform.GetValue(CompositeTransform.TranslateYProperty));
+                    _UiElement.RenderTransform.SetValue(CompositeTransform.TranslateYProperty, (currentY - _ChangeOfTranslateY));
+                }
+
+                if (_ChangeofHeight >= 1 || _ChangeofHeight <= -1)
+                {
+                    _UiElement.Height = _UiElement.Height - _ChangeofHeight;
+                }
+
+                if (_ChangeofWidth >= 1 || _ChangeofWidth <= -1)
+                {
+                    _UiElement.Width = _UiElement.Width - _ChangeofWidth;
+                }
             }
         }
 
-        public class InsertCommand : ICommand
+        public class ManipOverlapCommand : ICommand
         {
+            private double _ChangeOfTranslateX;
+            private double _ChangeofWidth;
+            private double _ChangeofHeight;
+            public FrameworkElement _UiElement;
+            public string _Manipulator;
+
+            public ManipOverlapCommand(double changeOf_X, double changeOf_width, double changeOf_height, FrameworkElement uiElement, string manipulator)
+            {
+                _ChangeOfTranslateX = changeOf_X;
+                _ChangeofWidth = changeOf_width;
+                _ChangeofHeight = changeOf_height;
+                _UiElement = uiElement;
+                _Manipulator = manipulator;
+            }
+
+            public void Execute()
+            {
+                if (_Manipulator == "spEVO" || _Manipulator == "spIVO")
+                {
+                    if (_ChangeOfTranslateX >= 1 || _ChangeOfTranslateX <= -1)
+                    {
+                        double currentX = (double)(_UiElement.RenderTransform.GetValue(CompositeTransform.TranslateXProperty));
+                        _UiElement.RenderTransform.SetValue(CompositeTransform.TranslateXProperty, (currentX + _ChangeOfTranslateX));
+                    }
+
+                    if (_ChangeofHeight >= 1 || _ChangeofHeight <= -1)
+                    {
+                        _UiElement.Height = _UiElement.Height + _ChangeofHeight;
+                    }
+
+                    if (_ChangeofWidth >= 1 || _ChangeofWidth <= -1)
+                    {
+                        _UiElement.Width = _UiElement.Width + _ChangeofWidth;
+                    }
+                }
+                else if (_Manipulator == "spEVC" || _Manipulator == "spIVC")
+                {
+                    double currentX = (double)(_UiElement.RenderTransform.GetValue(CompositeTransform.TranslateXProperty));
+                    _UiElement.RenderTransform.SetValue(CompositeTransform.TranslateXProperty, (currentX + _ChangeOfTranslateX));
+
+                    if (_ChangeofHeight >= 1 || _ChangeofHeight <= -1)
+                    {
+                        _UiElement.Height = _UiElement.ActualHeight + _ChangeofHeight;
+                    }
+
+                    if (_ChangeofWidth >= 1 || _ChangeofWidth <= -1)
+                    {
+                        _UiElement.Width = _UiElement.ActualWidth + _ChangeofWidth;
+                    }
+                }
+            }
+
+            public void UnExecute()
+            {
+                if (_Manipulator == "spEVO" || _Manipulator == "spIVO")
+                {
+                    double currentX = (double)(_UiElement.RenderTransform.GetValue(CompositeTransform.TranslateXProperty));
+                    _UiElement.RenderTransform.SetValue(CompositeTransform.TranslateXProperty, (currentX - _ChangeOfTranslateX));
+
+                    if (_ChangeofHeight >= 1 || _ChangeofHeight <= -1)
+                    {
+                        _UiElement.Height = _UiElement.Height - _ChangeofHeight;
+                    }
+
+                    if (_ChangeofWidth >= 1 || _ChangeofWidth <= -1)
+                    {
+                        _UiElement.Width = _UiElement.Width - _ChangeofWidth;
+                    }
+                }
+                else if (_Manipulator == "spEVC" || _Manipulator == "spIVC")
+                {
+                    if (_ChangeOfTranslateX >= 1 || _ChangeOfTranslateX <= -1)
+                    {
+                        double currentX = (double)(_UiElement.RenderTransform.GetValue(CompositeTransform.TranslateXProperty));
+                        _UiElement.RenderTransform.SetValue(CompositeTransform.TranslateXProperty, (currentX - _ChangeOfTranslateX));
+                    }
+
+                    if (_ChangeofHeight >= 1 || _ChangeofHeight <= -1)
+                    {
+                        _UiElement.Height = _UiElement.ActualHeight - _ChangeofHeight;
+                    }
+
+                    if (_ChangeofWidth >= 1 || _ChangeofWidth <= -1)
+                    {
+                        _UiElement.Width = _UiElement.ActualWidth - _ChangeofWidth;
+                    }
+                }
+            }
+        }
+
+        public class AddRemoveElementCommand : ICommand
+        {
+            public bool _AddingElement;
             public FrameworkElement _UiElement;
             private Panel _Container;
 
-            public InsertCommand(FrameworkElement uiElement, Panel container)
+            public AddRemoveElementCommand(bool addingElement, FrameworkElement uiElement, Panel container)
             {
+                _AddingElement = addingElement;
                 _UiElement = uiElement;
                 _Container = container;
             }
             
             public void Execute()
+            {
+                if (_AddingElement == true)
+                {
+                    Add();
+                }
+                else
+                {
+                    Remove();
+                }
+            }
+
+            public void UnExecute()
+            {
+                if (_AddingElement == true)
+                {
+                    Remove();
+                }
+                else
+                {
+                    Add();
+                }
+            }
+
+            private void Add()
             {
                 if (!_Container.Children.Contains(_UiElement))
                 {
@@ -126,7 +272,7 @@ namespace WaveformOverlaysPlus.UndoRedoCommands
                 }
             }
 
-            public void UnExecute()
+            private void Remove()
             {
                 _Container.Children.Remove(_UiElement);
             }
@@ -333,7 +479,7 @@ namespace WaveformOverlaysPlus.UndoRedoCommands
 
             public void Execute()
             {
-                if (_ShowOverlay is true)
+                if (_ShowOverlay == true)
                 {
                     Show();
                 }
@@ -345,7 +491,7 @@ namespace WaveformOverlaysPlus.UndoRedoCommands
 
             public void UnExecute()
             {
-                if (_ShowOverlay is true)
+                if (_ShowOverlay == true)
                 {
                     Hide();
                 }
@@ -389,7 +535,7 @@ namespace WaveformOverlaysPlus.UndoRedoCommands
 
             public void Execute()
             {
-                if (_ShowOverlay is true)
+                if (_ShowOverlay == true)
                 {
                     Show();
                 }
@@ -401,7 +547,7 @@ namespace WaveformOverlaysPlus.UndoRedoCommands
 
             public void UnExecute()
             {
-                if (_ShowOverlay is true)
+                if (_ShowOverlay == true)
                 {
                     Hide();
                 }
@@ -431,35 +577,48 @@ namespace WaveformOverlaysPlus.UndoRedoCommands
             private Stack<ICommand> _Undocommands = new Stack<ICommand>();
             private Stack<ICommand> _Redocommands = new Stack<ICommand>();
 
+            //public event EventHandler<UndoEventArgs> UndoCompleted;
+            //public event EventHandler<RedoEventArgs> RedoCompleted;
+
             public void Redo(int levels)
             {
+                //ICommand commandThatIsRedone = null;
+
                 for (int i = 1; i <= levels; i++)
                 {
                     if (_Redocommands.Count != 0)
                     {
+                        //commandThatIsRedone = _Redocommands.Peek();
                         ICommand command = _Redocommands.Pop();
                         command.Execute();
                         _Undocommands.Push(command);
                     }
                 }
+
+                //RedoCompleted.Invoke(this, new RedoEventArgs { CommandThatWasRedone = commandThatIsRedone });
             }
 
             public void Undo(int levels)
             {
+                //ICommand commandThatIsUndone = null;
+
                 for (int i = 1; i <= levels; i++)
                 {
                     if (_Undocommands.Count != 0)
                     {
+                        //commandThatIsUndone = _Undocommands.Peek();
                         ICommand command = _Undocommands.Pop();
                         command.UnExecute();
                         _Redocommands.Push(command);
                     }
                 }
+
+                //UndoCompleted.Invoke(this, new UndoEventArgs { CommandThatWasUndone = commandThatIsUndone });
             }
 
-            public void InsertInUnDoRedoForInsert(FrameworkElement element, Panel container)
+            public void InsertInUnDoRedoForAddRemoveElement(bool addingElement, FrameworkElement uiElement, Panel container)
             {
-                ICommand cmd = new InsertCommand(element, container);
+                ICommand cmd = new AddRemoveElementCommand(addingElement, uiElement, container);
                 _Undocommands.Push(cmd);
                 _Redocommands.Clear();
             }
@@ -471,16 +630,16 @@ namespace WaveformOverlaysPlus.UndoRedoCommands
                 _Redocommands.Clear();
             }
 
-            public void InsertInUnDoRedoForMove(double changeOf_X, double changeOf_Y, FrameworkElement UIelement)
+            public void InsertInUnDoRedoForMoveOrResize(double changeOf_X, double changeOf_Y, double changeOf_width, double changeOf_height, FrameworkElement uiElement)
             {
-                ICommand cmd = new MoveCommand(changeOf_X, changeOf_Y, UIelement);
+                ICommand cmd = new MoveOrResizeCommand(changeOf_X, changeOf_Y, changeOf_width, changeOf_height, uiElement);
                 _Undocommands.Push(cmd);
                 _Redocommands.Clear();
             }
 
-            public void InsertInUnDoRedoForResize(double x, double y, double width, double height, FrameworkElement UIelement)
+            public void InsertInUnDoRedoForManipOverlap(double changeOf_X, double changeOf_width, double changeOf_height, FrameworkElement uiElement, string manipulator)
             {
-                ICommand cmd = new ResizeCommand(x, y, width, height, UIelement);
+                ICommand cmd = new ManipOverlapCommand(changeOf_X, changeOf_width, changeOf_height, uiElement, manipulator);
                 _Undocommands.Push(cmd);
                 _Redocommands.Clear();
             }
@@ -561,6 +720,16 @@ namespace WaveformOverlaysPlus.UndoRedoCommands
             {
                 var topRedo = _Redocommands.Peek();
                 return topRedo;
+            }
+
+            public class UndoEventArgs : EventArgs
+            {
+                public ICommand CommandThatWasUndone { get; set; }
+            }
+
+            public class RedoEventArgs : EventArgs
+            {
+                public ICommand CommandThatWasRedone { get; set; }
             }
         }
     }

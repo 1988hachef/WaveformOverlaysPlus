@@ -351,6 +351,7 @@
                 <Grid Name="gridToContainOthers" Margin="50,15,20,40">
 
                     <Grid Name="gridMain" Background="{Binding Background, ElementName=borderForPageColor}">
+                        <TextBlock Name="tblock" Text="test" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                         <Button Content="button" Click="Button_Click"/>
                     </Grid>
 
@@ -454,42 +455,41 @@
                         <TextBlock Name="tblockComp" Grid.Column="36" Grid.ColumnSpan="13" HorizontalAlignment="Center" Grid.Row="4" TextWrapping="Wrap" Text="Compression" VerticalAlignment="Center" FontWeight="Bold" FontSize="12"/>
                     </Grid>
 
-                    <Grid Name="gridExhOverlap" Visibility="Collapsed" Height="550" VerticalAlignment="Bottom" ManipulationMode="TranslateX, TranslateY" HorizontalAlignment="Left">
+                    <Grid Name="gridExhOverlap" Visibility="Collapsed" Height="550" VerticalAlignment="Bottom" ManipulationMode="TranslateX, TranslateY" HorizontalAlignment="Left" SizeChanged="gridExhOverlap_SizeChanged">
                         <Grid.RenderTransform>
                             <CompositeTransform x:Name="transformExh"/>
                         </Grid.RenderTransform>
                         <Rectangle Name="rectEVO" Fill="Red" HorizontalAlignment="Left" Width="1" />
                         <Rectangle Name="rectEVC" Fill="Red" HorizontalAlignment="Right" Width="1" />
-                        
-                        <StackPanel Name="spEVO" Orientation="Horizontal" Background="Red" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-23,0,0,0" ManipulationMode="TranslateX, TranslateY" ManipulationDelta="spEVO_ManipulationDelta">
-                            <StackPanel.RenderTransform>
-                                <CompositeTransform x:Name="transformTest"/>
-                            </StackPanel.RenderTransform>
-                            
+
+                        <StackPanel Name="spEVO" Orientation="Horizontal" Background="Red" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-23,0,0,0" ManipulationMode="TranslateX, TranslateY" ManipulationDelta="spEVO_ManipulationDelta" ManipulationStarting="OverlapManip_Starting" ManipulationCompleted="OverlapManip_Completed" >
                             <TextBlock Name="tblockExhOpen" Text="40" FontSize="12" Foreground="White" Padding="1,0,0,0"/>
                             <TextBlock Name="tblockEVO" Text="&#186; BBC" FontSize="12" Foreground="White" Padding="0,0,1,0"/>
                         </StackPanel>
-                        <StackPanel Name="spEVC" Orientation="Horizontal" Background="Red" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,-23,0" ManipulationMode="TranslateX, TranslateY" ManipulationDelta="spEVC_ManipulationDelta">
+                        <StackPanel Name="spEVC" Orientation="Horizontal" Background="Red" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,-23,0" ManipulationMode="TranslateX, TranslateY" ManipulationDelta="spEVC_ManipulationDelta" ManipulationStarting="OverlapManip_Starting" ManipulationCompleted="OverlapManip_Completed" >
                             <TextBlock Name="tblockExhClose" Text="10" FontSize="12" Foreground="White" Padding="1,0,0,0"/>
                             <TextBlock Name="tblockEVC" Text="&#186; ATC" FontSize="12" Foreground="White" Padding="0,0,1,0"/>
                         </StackPanel>
+                        
                         <Rectangle Name="rectRed" Fill="Red" Opacity="0.2" Margin="0,30,0,0"/>
                     </Grid>
 
-                    <Grid Name="gridIntOverlap" Visibility="Collapsed" Height="450" VerticalAlignment="Bottom" HorizontalAlignment="Left" ManipulationMode="TranslateX, TranslateY">
+                    <Grid Name="gridIntOverlap" Visibility="Collapsed" Height="450" VerticalAlignment="Bottom" HorizontalAlignment="Left" ManipulationMode="TranslateX, TranslateY" SizeChanged="gridIntOverlap_SizeChanged">
                         <Grid.RenderTransform>
                             <CompositeTransform x:Name="transformInt"/>
                         </Grid.RenderTransform>
                         <Rectangle Name="rectIVO" Fill="Blue" HorizontalAlignment="Left" Width="1" />
                         <Rectangle Name="rectIVC" Fill="Blue" HorizontalAlignment="Right" Width="1" />
-                        <StackPanel Name="spIVO" Orientation="Horizontal" Background="Blue" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-23,0,0,0" ManipulationMode="TranslateX, TranslateY" ManipulationDelta="spIVO_ManipulationDelta">
+                        
+                        <StackPanel Name="spIVO" Orientation="Horizontal" Background="Blue" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-23,0,0,0" ManipulationMode="TranslateX, TranslateY" ManipulationDelta="spIVO_ManipulationDelta" ManipulationStarting="OverlapManip_Starting" ManipulationCompleted="OverlapManip_Completed" >
                             <TextBlock Name="tblockIntOpen" Text="10" FontSize="12" Foreground="White" Padding="1,0,0,0"/>
                             <TextBlock Name="tblockIVO" Text="&#186; BTC" FontSize="12" Foreground="White" Padding="0,0,1,0"/>
                         </StackPanel>
-                        <StackPanel Name="spIVC" Orientation="Horizontal" Background="Blue" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,-23,0" ManipulationMode="TranslateX, TranslateY" ManipulationDelta="spIVC_ManipulationDelta">
+                        <StackPanel Name="spIVC" Orientation="Horizontal" Background="Blue" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,-23,0" ManipulationMode="TranslateX, TranslateY" ManipulationDelta="spIVC_ManipulationDelta" ManipulationStarting="OverlapManip_Starting" ManipulationCompleted="OverlapManip_Completed" >
                             <TextBlock Name="tblockIntClose" Text="45" FontSize="12" Foreground="White" Padding="1,0,0,0"/>
                             <TextBlock Name="tblockIVC" Text="&#186; ABC" FontSize="12" Foreground="White" Padding="0,0,1,0"/>
                         </StackPanel>
+                        
                         <Rectangle Name="rectBlue" Fill="Blue" Opacity="0.2" Margin="0,30,0,0" />
                     </Grid>
 
