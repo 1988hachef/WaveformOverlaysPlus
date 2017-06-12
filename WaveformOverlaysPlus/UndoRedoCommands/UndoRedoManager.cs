@@ -27,48 +27,6 @@ namespace WaveformOverlaysPlus.UndoRedoCommands
             void UnExecute();
         }
 
-        public class MoveCommand : ICommand
-        {
-            private double _ChangeOfTranslateX;
-            private double _ChangeOfTranslateY;
-            public FrameworkElement _UiElement;
-
-            public MoveCommand(double changeOf_X, double changeOf_Y, FrameworkElement uiElement)
-            {
-                _ChangeOfTranslateX = changeOf_X;
-                _ChangeOfTranslateY = changeOf_Y;
-                _UiElement = uiElement;
-            }
-
-            public void Execute()
-            {
-                if (_ChangeOfTranslateX > 1 || _ChangeOfTranslateX < -1)
-                {
-                    double currentX = (double)(_UiElement.RenderTransform.GetValue(CompositeTransform.TranslateXProperty));
-                    _UiElement.RenderTransform.SetValue(CompositeTransform.TranslateXProperty, (currentX + _ChangeOfTranslateX));
-                }
-                if (_ChangeOfTranslateY > 1 || _ChangeOfTranslateY < -1)
-                {
-                    double currentY = (double)(_UiElement.RenderTransform.GetValue(CompositeTransform.TranslateYProperty));
-                    _UiElement.RenderTransform.SetValue(CompositeTransform.TranslateYProperty, (currentY + _ChangeOfTranslateY));
-                }
-            }
-
-            public void UnExecute()
-            {
-                if (_ChangeOfTranslateX > 1 || _ChangeOfTranslateX < -1)
-                {
-                    double currentX = (double)(_UiElement.RenderTransform.GetValue(CompositeTransform.TranslateXProperty));
-                    _UiElement.RenderTransform.SetValue(CompositeTransform.TranslateXProperty, (currentX - _ChangeOfTranslateX));
-                }
-                if (_ChangeOfTranslateY > 1 || _ChangeOfTranslateY < -1)
-                {
-                    double currentY = (double)(_UiElement.RenderTransform.GetValue(CompositeTransform.TranslateYProperty));
-                    _UiElement.RenderTransform.SetValue(CompositeTransform.TranslateYProperty, (currentY - _ChangeOfTranslateY));
-                }
-            }
-        }
-
         public class MoveOrResizeCommand : ICommand
         {
             private double _ChangeOfTranslateX;
@@ -275,28 +233,6 @@ namespace WaveformOverlaysPlus.UndoRedoCommands
             private void Remove()
             {
                 _Container.Children.Remove(_UiElement);
-            }
-        }
-
-        class DeleteCommand : ICommand
-        {
-            private FrameworkElement _UiElement;
-            private Panel _Container;
-
-            public DeleteCommand(FrameworkElement uiElement, Panel container)
-            {
-                _UiElement = uiElement;
-                _Container = container;
-            }
-            
-            public void Execute()
-            {
-                _Container.Children.Remove(_UiElement);
-            }
-
-            public void UnExecute()
-            {
-                _Container.Children.Add(_UiElement);
             }
         }
 
@@ -623,13 +559,6 @@ namespace WaveformOverlaysPlus.UndoRedoCommands
                 _Redocommands.Clear();
             }
 
-            public void InsertInUnDoRedoForDelete(FrameworkElement element, Panel container)
-            {
-                ICommand cmd = new DeleteCommand(element, container);
-                _Undocommands.Push(cmd);
-                _Redocommands.Clear();
-            }
-
             public void InsertInUnDoRedoForMoveOrResize(double changeOf_X, double changeOf_Y, double changeOf_width, double changeOf_height, FrameworkElement uiElement)
             {
                 ICommand cmd = new MoveOrResizeCommand(changeOf_X, changeOf_Y, changeOf_width, changeOf_height, uiElement);
@@ -722,15 +651,15 @@ namespace WaveformOverlaysPlus.UndoRedoCommands
                 return topRedo;
             }
 
-            public class UndoEventArgs : EventArgs
-            {
-                public ICommand CommandThatWasUndone { get; set; }
-            }
+            //public class UndoEventArgs : EventArgs
+            //{
+            //    public ICommand CommandThatWasUndone { get; set; }
+            //}
 
-            public class RedoEventArgs : EventArgs
-            {
-                public ICommand CommandThatWasRedone { get; set; }
-            }
+            //public class RedoEventArgs : EventArgs
+            //{
+            //    public ICommand CommandThatWasRedone { get; set; }
+            //}
         }
     }
 }
