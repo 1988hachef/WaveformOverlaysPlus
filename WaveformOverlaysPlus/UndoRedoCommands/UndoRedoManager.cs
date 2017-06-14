@@ -508,6 +508,32 @@ namespace WaveformOverlaysPlus.UndoRedoCommands
             }
         }
 
+        class Z_Order_Change_Command : ICommand
+        {
+            private FrameworkElement _UiElement;
+            private int _ZChange;
+
+            public Z_Order_Change_Command(FrameworkElement uiElement, int zChange)
+            {
+                _ZChange = zChange;
+                _UiElement = uiElement;
+            }
+
+            public void Execute()
+            {
+                var currentZ = Canvas.GetZIndex(_UiElement);
+                var newZ = currentZ + _ZChange;
+                Canvas.SetZIndex(_UiElement, newZ);
+            }
+
+            public void UnExecute()
+            {
+                var currentZ = Canvas.GetZIndex(_UiElement);
+                var newZ = currentZ - _ZChange;
+                Canvas.SetZIndex(_UiElement, newZ);
+            }
+        }
+
         public class UnDoRedo
         {
             private Stack<ICommand> _Undocommands = new Stack<ICommand>();
@@ -611,6 +637,13 @@ namespace WaveformOverlaysPlus.UndoRedoCommands
             public void InsertInUnDoRedoForShowHideOverlap(bool showOverlay, Grid exhOverlay, Grid intOverlay, TextBlock exhLabel, TextBlock intLabel)
             {
                 ICommand cmd = new ShowHideOverlapCommand(showOverlay, exhOverlay, intOverlay, exhLabel, intLabel);
+                _Undocommands.Push(cmd);
+                _Redocommands.Clear();
+            }
+
+            public void InsertInUnDoRedoForZ_Order_Change(FrameworkElement uiElement, int zChange)
+            {
+                ICommand cmd = new Z_Order_Change_Command(uiElement, zChange);
                 _Undocommands.Push(cmd);
                 _Redocommands.Clear();
             }

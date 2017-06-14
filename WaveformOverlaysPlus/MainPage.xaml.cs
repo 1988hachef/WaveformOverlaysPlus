@@ -362,6 +362,7 @@ namespace WaveformOverlaysPlus
                     paintObject.ManipulationStarting += GeneralPaintObj_ManipStarting;
                     paintObject.ManipulationCompleted += GeneralPaintObj_ManipCompleted;
                     paintObject.Closing += GeneralPaintObject_Closing;
+                    paintObject.Z_Order_Changed += GeneralPaintObject_Z_Order_Changed;
 
                     gridMain.Children.Add(paintObject);
 
@@ -374,8 +375,6 @@ namespace WaveformOverlaysPlus
                 }
             }
         }
-
-        
 
         #endregion
 
@@ -674,6 +673,7 @@ namespace WaveformOverlaysPlus
                     paintObject.ManipulationStarting += GeneralPaintObj_ManipStarting;
                     paintObject.ManipulationCompleted += GeneralPaintObj_ManipCompleted;
                     paintObject.Closing += GeneralPaintObject_Closing;
+                    paintObject.Z_Order_Changed += GeneralPaintObject_Z_Order_Changed;
 
                     gridMain.Children.Add(paintObject);
 
@@ -1141,6 +1141,12 @@ namespace WaveformOverlaysPlus
 
         #region Adding TextBox, Rectangles, or Ellipse
 
+        private void GeneralPaintObject_Z_Order_Changed(object sender, PaintObjectTemplatedControl.Z_Change_EventArgs e)
+        {
+            _UndoRedo.InsertInUnDoRedoForZ_Order_Change(sender as FrameworkElement, e.ChangeOfZ);
+            ManageUndoRedoButtons();
+        }
+
         private void GeneralPaintObject_Closing(object sender, EventArgs e)
         {
             _UndoRedo.InsertInUnDoRedoForAddRemoveElement(false, sender as FrameworkElement, gridMain);
@@ -1200,6 +1206,7 @@ namespace WaveformOverlaysPlus
             paintObject.Closing += GeneralPaintObject_Closing;
             paintObject.ManipulationStarting += GeneralPaintObj_ManipStarting;
             paintObject.ManipulationCompleted += GeneralPaintObj_ManipCompleted;
+            paintObject.Z_Order_Changed += GeneralPaintObject_Z_Order_Changed;
 
             gridMain.Children.Add(paintObject);
 
@@ -1231,6 +1238,7 @@ namespace WaveformOverlaysPlus
             paintObject.Closing += GeneralPaintObject_Closing;
             paintObject.ManipulationStarting += GeneralPaintObj_ManipStarting;
             paintObject.ManipulationCompleted += GeneralPaintObj_ManipCompleted;
+            paintObject.Z_Order_Changed += GeneralPaintObject_Z_Order_Changed;
 
             gridMain.Children.Add(paintObject);
 
@@ -1257,6 +1265,7 @@ namespace WaveformOverlaysPlus
             paintObject.Closing += GeneralPaintObject_Closing;
             paintObject.ManipulationStarting += GeneralPaintObj_ManipStarting;
             paintObject.ManipulationCompleted += GeneralPaintObj_ManipCompleted;
+            paintObject.Z_Order_Changed += GeneralPaintObject_Z_Order_Changed;
 
             gridMain.Children.Add(paintObject);
 
@@ -2724,18 +2733,17 @@ namespace WaveformOverlaysPlus
                     paintObjectCylID.Opacity = 0.6;
                     paintObjectCylID.OpacitySliderIsVisible = true;
                     paintObjectCylID.Content = gridCylinderIdOverlay;
-
-                    gridMain.Children.Add(paintObjectCylID);
-
-                    _UndoRedo.InsertInUnDoRedoForAddRemoveElement(true, paintObjectCylID, gridMain);
-                    ManageUndoRedoButtons();
-
-                    // Create event handler
                     paintObjectCylID.Unloaded += PaintObjectCylID_Unloaded;
                     paintObjectCylID.Loaded += PaintObjectCylID_Loaded;
                     paintObjectCylID.ManipulationStarting += GeneralPaintObj_ManipStarting;
                     paintObjectCylID.ManipulationCompleted += GeneralPaintObj_ManipCompleted;
                     paintObjectCylID.Closing += GeneralPaintObject_Closing;
+                    paintObjectCylID.Z_Order_Changed += GeneralPaintObject_Z_Order_Changed;
+
+                    gridMain.Children.Add(paintObjectCylID);
+
+                    _UndoRedo.InsertInUnDoRedoForAddRemoveElement(true, paintObjectCylID, gridMain);
+                    ManageUndoRedoButtons();
 
                     // Show color key
                     colorKey.Visibility = Visibility.Visible;

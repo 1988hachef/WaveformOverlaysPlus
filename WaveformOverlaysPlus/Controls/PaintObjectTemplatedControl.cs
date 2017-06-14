@@ -186,6 +186,13 @@ namespace WaveformOverlaysPlus.Controls
 
         public event EventHandler Closing;
 
+        public event EventHandler<Z_Change_EventArgs> Z_Order_Changed;
+
+        public class Z_Change_EventArgs : EventArgs
+        {
+            public int ChangeOfZ { get; set; }
+        }
+
         private void PaintObjectTemplatedControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             var jail = (Panel)this.Parent;
@@ -274,7 +281,11 @@ namespace WaveformOverlaysPlus.Controls
 
         private void _closeButton_Click(object sender, RoutedEventArgs e)
         {
-            Closing.Invoke(this, null);
+            if (Closing != null)
+            {
+                Closing.Invoke(this, null);
+            }
+
             ((Panel)this.Parent).Children.Remove(this);
         }
 
@@ -322,7 +333,14 @@ namespace WaveformOverlaysPlus.Controls
 
             if (myZ < maxZ)
             {
-                Canvas.SetZIndex(myElement, maxZ + 1);
+                var newZ = maxZ + 1;
+                Canvas.SetZIndex(myElement, newZ);
+
+                if (Z_Order_Changed != null)
+                {
+                    var changeOfZ = newZ - myZ;
+                    Z_Order_Changed.Invoke(this, new Z_Change_EventArgs { ChangeOfZ = changeOfZ });
+                }
             }
         }
 
@@ -346,7 +364,14 @@ namespace WaveformOverlaysPlus.Controls
 
             if (myZ > minZ)
             {
-                Canvas.SetZIndex(myElement, minZ - 1);
+                var newZ = minZ - 1;
+                Canvas.SetZIndex(myElement, newZ);
+                
+                if (Z_Order_Changed != null)
+                {
+                    var changeOfZ = newZ - myZ;
+                    Z_Order_Changed.Invoke(this, new Z_Change_EventArgs { ChangeOfZ = changeOfZ });
+                }
             }
         }
 
