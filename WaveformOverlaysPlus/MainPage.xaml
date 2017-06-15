@@ -631,18 +631,18 @@
                 <Grid Name="gridCropping" Grid.Row="1" Margin="10,0,10,10" Background="Beige">
                     <Grid Name="gridImageContainer">
                         <!--<Image Source="Assets/Square150x150Logo.scale-200.png" Stretch="None"/>-->
-                        <local1:PaintObjectTemplatedControl x:Name="controlCropOutline" Width="200" Height="200" IsForCropper="True" PointerPressed="PaintObjectTemplatedControl_PointerPressed" PointerReleased="PaintObjectTemplatedControl_PointerReleased">
+                        <local1:PaintObjectTemplatedControl x:Name="controlCropOutline" Width="200" Height="200" IsForCropper="True" PointerPressed="CropOutline_PointerPressed" PointerReleased="CropOutline_PointerReleased" PointerEntered="CropOutline_PointerEntered" >
                             <Grid Name="gridCrop" Background="#19000000">
-                                <Rectangle Width="12" Height="12" Fill="White" Stroke="Black" StrokeThickness="1" HorizontalAlignment="Left" VerticalAlignment="Top" />
-                                <Rectangle Width="12" Height="12" Fill="White" Stroke="Black" StrokeThickness="1" HorizontalAlignment="Right" VerticalAlignment="Top"/>
-                                <Rectangle Width="12" Height="12" Fill="White" Stroke="Black" StrokeThickness="1" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
-                                <Rectangle Width="12" Height="12" Fill="White" Stroke="Black" StrokeThickness="1" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
-                                <Rectangle Width="12" Height="12" Fill="White" Stroke="Black" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-                                <Rectangle Width="12" Height="12" Fill="White" Stroke="Black" StrokeThickness="1" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                                <Rectangle Width="12" Height="12" Fill="White" Stroke="Black" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-                                <Rectangle Width="12" Height="12" Fill="White" Stroke="Black" StrokeThickness="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                                <Rectangle Stroke="DodgerBlue" StrokeThickness="1"/>
-                                <Rectangle Name="rectCropArea" Stroke="White" StrokeDashArray="6,6" StrokeThickness="1"/>
+                                <Rectangle Stroke="HotPink" StrokeThickness="2"/>
+                                <Rectangle Name="rectCropArea" Stroke="White" StrokeDashArray="6,6" StrokeThickness="2"/>
+                                <Rectangle Width="12" Height="12" Fill="#7F808080" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                                <Rectangle Width="12" Height="12" Fill="#7F808080" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                                <Rectangle Width="12" Height="12" Fill="#7F808080" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+                                <Rectangle Width="12" Height="12" Fill="#7F808080" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+                                <Rectangle Width="12" Height="12" Fill="#7F808080" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                                <Rectangle Width="12" Height="12" Fill="#7F808080" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                <Rectangle Width="12" Height="12" Fill="#7F808080" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                                <Rectangle Width="12" Height="12" Fill="#7F808080" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             </Grid>
                         </local1:PaintObjectTemplatedControl>
                     </Grid>

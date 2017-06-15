@@ -785,7 +785,14 @@ namespace WaveformOverlaysPlus
 
             foreach (var file in files)
             {
-                await file.DeleteAsync(StorageDeleteOption.Default);
+                try
+                {
+                    await file.DeleteAsync(StorageDeleteOption.Default);
+                }
+                catch
+                {
+                    
+                }
             }
 
             // Set these to initial values
@@ -1679,7 +1686,7 @@ namespace WaveformOverlaysPlus
             RemoveImageFromCollection(paintObj);
         }
 
-        private void PaintObjectTemplatedControl_PointerPressed(object sender, PointerRoutedEventArgs e)
+        private void CropOutline_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             foreach (Rectangle r in gridCrop.Children)
             {
@@ -1690,7 +1697,18 @@ namespace WaveformOverlaysPlus
             }
         }
 
-        private void PaintObjectTemplatedControl_PointerReleased(object sender, PointerRoutedEventArgs e)
+        private void CropOutline_PointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            foreach (Rectangle r in gridCrop.Children)
+            {
+                if (r.Visibility == Visibility.Collapsed)
+                {
+                    r.Visibility = Visibility.Visible;
+                }
+            }
+        }
+
+        private void CropOutline_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
             foreach (Rectangle r in gridCrop.Children)
             {
