@@ -67,8 +67,8 @@
 
             <Rectangle Margin="10,0" Width="1" Height="20" Fill="#FF909090"/>
 
-            <Button Name="btnUndo" Style="{StaticResource styleMenuButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE7A7;" FontSize="14" Height="25" IsEnabled="False" Click="btnUndo_Click"/>
-            <Button Name="btnRedo" Style="{StaticResource styleMenuButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE7A6;" FontSize="14" Height="25" IsEnabled="False" Click="btnRedo_Click"/>
+            <Button Name="btnUndo" Style="{StaticResource styleMenuButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE7A7;" FontSize="14" Height="25" IsEnabled="False" Click="btnUndo_Click" ToolTipService.ToolTip="Undo"/>
+            <Button Name="btnRedo" Style="{StaticResource styleMenuButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE7A6;" FontSize="14" Height="25" IsEnabled="False" Click="btnRedo_Click" ToolTipService.ToolTip="Redo"/>
 
         </StackPanel>
 
@@ -88,12 +88,12 @@
                 </StackPanel.Background>
 
                 <StackPanel Orientation="Horizontal">
-                    <Button Name="btnComp" Style="{StaticResource styleMenuButton}" Width="38" Padding="0" Margin="8,0,0,0" Height="38" Click="btnComp_Click">
+                    <Button Name="btnComp" Style="{StaticResource styleMenuButton}" Width="38" Padding="0" Margin="8,0,0,0" Height="38" Click="btnComp_Click" ToolTipService.ToolTip="Compression">
                         <Button.Content>
                             <Image Source="/Assets/IconCompDivs.bmp" Height="30" Width="30"/>
                         </Button.Content>
                     </Button>
-                    <Button Name="btnCyl" Style="{StaticResource styleMenuButton}" Width="38" Padding="0" Margin="8,0,0,0" Height="38" Click="btnCyl_Click">
+                    <Button Name="btnCyl" Style="{StaticResource styleMenuButton}" Width="38" Padding="0" Margin="8,0,0,0" Height="38" Click="btnCyl_Click" ToolTipService.ToolTip="Cylinder Id">
                         <Button.Content>
                             <Image Source="/Assets/IconCylinderIDOverlay.bmp" Width="30" Height="30"/>
                         </Button.Content>
@@ -101,7 +101,7 @@
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
-                    <Button Name="btnOverlap" Style="{StaticResource styleMenuButton}" Width="38" Padding="0" Margin="8,0,0,0" Height="38" Click="btnOverlap_Click">
+                    <Button Name="btnOverlap" Style="{StaticResource styleMenuButton}" Width="38" Padding="0" Margin="8,0,0,0" Height="38" Click="btnOverlap_Click" ToolTipService.ToolTip="Valve overlap">
                         <Button.Content>
                             <Image Source="/Assets/IconValveOverlap.bmp" Width="30" Height="30"/>
                         </Button.Content>
@@ -111,24 +111,24 @@
                 <Rectangle Fill="Gray" Height="1" Margin="8,5,10,5"/>
 
                 <StackPanel Orientation="Horizontal">
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE7C9;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="cursor" IsChecked="True"/>
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE123;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="crop" Click="crop_Click"/>
+                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE7C9;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="cursor" IsChecked="True" ToolTipService.ToolTip="Pointer"/>
+                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE123;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="crop" Click="crop_Click" ToolTipService.ToolTip="Crop Image"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xEE56;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="pen" Click="PenOrEraser_Clicked"/>
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xED60;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="eraser" Click="PenOrEraser_Clicked"/>
+                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xEE56;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="pen" Click="PenOrEraser_Clicked" ToolTipService.ToolTip="Pen"/>
+                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xED60;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="eraser" Click="PenOrEraser_Clicked" ToolTipService.ToolTip="Erase pen strokes"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE8D2;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="text" Click="text_Click"/>
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE8DB;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="line" Click="ArrowOrLine_Clicked"/>
+                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE8D2;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="text" Click="text_Click" ToolTipService.ToolTip="TextBox"/>
+                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE8DB;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="line" Click="ArrowOrLine_Clicked" ToolTipService.ToolTip="Line"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE741;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="arrow" Click="ArrowOrLine_Clicked"/>
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xEA3A;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="ellipse" Click="ellipse_Click"/>
+                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE741;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="arrow" Click="ArrowOrLine_Clicked" ToolTipService.ToolTip="Arrow"/>
+                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xEA3A;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="ellipse" Click="ellipse_Click" ToolTipService.ToolTip="Ellipse"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE739;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,0" Checked="tool_Checked" Name="rectangle" Click="RectOrRoundRect_Clicked"/>
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,0" Checked="tool_Checked" Name="roundedRectangle" Click="RectOrRoundRect_Clicked">
+                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE739;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,0" Checked="tool_Checked" Name="rectangle" Click="RectOrRoundRect_Clicked" ToolTipService.ToolTip="Rectangle"/>
+                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,0" Checked="tool_Checked" Name="roundedRectangle" Click="RectOrRoundRect_Clicked" ToolTipService.ToolTip="Rounded rectangle">
                         <RadioButton.Content>
                             <Rectangle Stroke="Black" Width="20" Height="20" RadiusX="4" RadiusY="4"/>
                         </RadioButton.Content>
