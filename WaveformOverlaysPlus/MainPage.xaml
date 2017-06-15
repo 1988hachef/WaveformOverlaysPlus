@@ -31,7 +31,7 @@
 
             <Button Name="btnFile" Content="File" Style="{StaticResource styleMenuButton}" Height="25" Padding="8,-2,8,0" >
                 <Button.Flyout>
-                    <MenuFlyout>
+                    <MenuFlyout MenuFlyoutPresenterStyle="{StaticResource styleMenuFlyout}">
                         <MenuFlyoutItem Name="menuNew" Text="New" FontSize="{StaticResource myFontSize}" Click="menuNew_Click"/>
                         <MenuFlyoutItem Name="menuOpen" Text="Open" FontSize="{StaticResource myFontSize}" Click="menuOpen_Click"/>
                         <MenuFlyoutItem Name="menuSave" Text="Save" FontSize="{StaticResource myFontSize}" Click="menuSave_Click"/>
@@ -46,7 +46,7 @@
 
             <Button Content="Edit" Style="{StaticResource styleMenuButton}" Height="25" Padding="8,-2,8,0" >
                 <Button.Flyout>
-                    <MenuFlyout>
+                    <MenuFlyout MenuFlyoutPresenterStyle="{StaticResource styleMenuFlyout}">
                         <MenuFlyoutItem Name="menuCopy" Text="Copy" FontSize="{StaticResource myFontSize}" Click="menuCopy_Click"/>
                         <MenuFlyoutItem Name="menuPaste" Text="Paste" FontSize="{StaticResource myFontSize}" Click="menuPaste_Click"/>
                     </MenuFlyout>
@@ -55,7 +55,7 @@
 
             <Button Content="Help" Style="{StaticResource styleMenuButton}" Height="25" Padding="8,-2,8,0">
                 <Button.Flyout>
-                    <MenuFlyout>
+                    <MenuFlyout MenuFlyoutPresenterStyle="{StaticResource styleMenuFlyout}">
                         <MenuFlyoutItem Name="menuHelp" Text="Help" FontSize="{StaticResource myFontSize}"/>
                         <MenuFlyoutItem Name="menuFeedback" Text="Feedback" FontSize="{StaticResource myFontSize}" Visibility="Collapsed" Click="menuFeedback_Click"/>
                         <MenuFlyoutItem Name="menuPrivacyPolicy" Text="Privacy policy" FontSize="{StaticResource myFontSize}" Click="menuPrivacyPolicy_Click"/>

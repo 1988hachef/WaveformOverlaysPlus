@@ -4375,6 +4375,8 @@ namespace WaveformOverlaysPlus
 
         #endregion
 
+        #region Cursor changes
+
         private void spToolButtons_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
             if (Window.Current.CoreWindow.PointerCursor.Type != CoreCursorType.Arrow)
@@ -4410,5 +4412,7 @@ namespace WaveformOverlaysPlus
         {
             Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
         }
+
+        #endregion
     }
 }
