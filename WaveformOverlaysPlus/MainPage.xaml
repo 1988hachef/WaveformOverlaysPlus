@@ -20,7 +20,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Top">
+        <StackPanel Name="spMenuButtons" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Top" PointerEntered="spMenuButtons_PointerEntered">
             <StackPanel.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FFF0F0F0" Offset="0"/>
@@ -78,7 +78,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Column="0" Padding="0,5,3,0" Margin="0" Width="102">
+            <StackPanel Name="spToolButtons" Grid.Column="0" Padding="0,5,3,0" Margin="0" Width="102" PointerEntered="spToolButtons_PointerEntered">
                 <StackPanel.Background>
                     <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
                         <GradientStop Color="#FFF0F0F0" Offset="0"/>
@@ -501,7 +501,7 @@
                         </Grid.RenderTransform>
                         <Line IsHitTestVisible="False" Name="lineHrulerPres" VerticalAlignment="Center" Stroke="Transparent" StrokeThickness="2" StrokeDashArray="10,5" Margin="40,0,0,0" X2="{Binding ActualWidth, ElementName=gridMain, Mode=OneWay}" />
                         <StackPanel Orientation="Horizontal" Width="47" HorizontalAlignment="Left" VerticalAlignment="Center" FlowDirection="RightToLeft">
-                            <Polygon Name="polygonHpres" Points="0,0 14,10, 0,20" Fill="Black" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Margin="0,0,1,0" ManipulationMode="TranslateY" ManipulationDelta="horizontal_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted">
+                            <Polygon Name="polygonHpres" Points="0,0 14,10, 0,20" Fill="Black" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Margin="0,0,1,0" ManipulationMode="TranslateY" ManipulationDelta="horizontal_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted" PointerEntered="HrulerGrips_PointerEntered" PointerExited="HrulerGrips_PointerExited">
                                 <Polygon.RenderTransform>
                                     <CompositeTransform Rotation="180"/>
                                 </Polygon.RenderTransform>
@@ -515,7 +515,7 @@
                         </Grid.RenderTransform>
                         <Line IsHitTestVisible="False" Name="lineHrulerZero" VerticalAlignment="Center" Stroke="Transparent" StrokeThickness="2" StrokeDashArray="10,5" Margin="40,0,0,0" X2="{Binding ActualWidth, ElementName=gridMain, Mode=OneWay}"/>
                         <StackPanel Orientation="Horizontal" Width="47" HorizontalAlignment="Left" VerticalAlignment="Center" FlowDirection="RightToLeft">
-                            <Polygon Name="polygonHzero" Points="0,0 14,10, 0,20" Fill="Black" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Margin="0,0,1,0" ManipulationMode="TranslateY" ManipulationDelta="horizontal_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted" >
+                            <Polygon Name="polygonHzero" Points="0,0 14,10, 0,20" Fill="Black" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Margin="0,0,1,0" ManipulationMode="TranslateY" ManipulationDelta="horizontal_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted" PointerEntered="HrulerGrips_PointerEntered" PointerExited="HrulerGrips_PointerExited" >
                                 <Polygon.RenderTransform>
                                     <CompositeTransform Rotation="180"/>
                                 </Polygon.RenderTransform>
@@ -529,7 +529,7 @@
                         </Grid.RenderTransform>
                         <Line IsHitTestVisible="False" Name="lineVrulerZero" Stroke="Transparent" StrokeThickness="2" StrokeDashArray="10,5" HorizontalAlignment="Center" Y2="{Binding ActualHeight, ElementName=gridMain, Mode=OneWay}"/>
                         <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center">
-                            <Polygon Name="polygonVzero" Points="0,0 14,10, 0,20" Fill="Black" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" Margin="0" ManipulationMode="TranslateX" ManipulationDelta="vertical_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted">
+                            <Polygon Name="polygonVzero" Points="0,0 14,10, 0,20" Fill="Black" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" Margin="0" ManipulationMode="TranslateX" ManipulationDelta="vertical_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted" PointerEntered="VrulerGrips_PointerEntered" PointerExited="VrulerGrips_PointerExited">
                                 <Polygon.RenderTransform>
                                     <CompositeTransform Rotation="-90"/>
                                 </Polygon.RenderTransform>
@@ -543,7 +543,7 @@
                         </Grid.RenderTransform>
                         <Line IsHitTestVisible="False" Name="lineVruler720" Stroke="Transparent" StrokeThickness="2" StrokeDashArray="10,5" HorizontalAlignment="Center" Y2="{Binding ActualHeight, ElementName=gridMain, Mode=OneWay}"/>
                         <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center">
-                            <Polygon Name="polygonV720" Points="0,0 14,10, 0,20" Fill="Black" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" Margin="0" ManipulationMode="TranslateX" ManipulationDelta="vertical_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted">
+                            <Polygon Name="polygonV720" Points="0,0 14,10, 0,20" Fill="Black" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" Margin="0" ManipulationMode="TranslateX" ManipulationDelta="vertical_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted" PointerEntered="VrulerGrips_PointerEntered" PointerExited="VrulerGrips_PointerExited">
                                 <Polygon.RenderTransform>
                                     <CompositeTransform Rotation="-90"/>
                                 </Polygon.RenderTransform>
@@ -557,32 +557,32 @@
                             <CompositeTransform x:Name="transformV2"/>
                         </Grid.RenderTransform>
                         <Line StrokeThickness="2" Visibility="Collapsed" Name="lineV2" Stroke="#FF00FF" Y2="{Binding ActualHeight, ElementName=gridMain, Mode=OneWay}" HorizontalAlignment="Center" StrokeDashArray="4" IsHitTestVisible="False"/>
-                        <Rectangle Name="rectV2" Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Fill="#FF00FF" Stroke="Black" ManipulationMode="TranslateX" ManipulationDelta="vertical_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted"/>
+                        <Rectangle Name="rectV2" Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Fill="#FF00FF" Stroke="Black" ManipulationMode="TranslateX" ManipulationDelta="vertical_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted" PointerEntered="VrulerGrips_PointerEntered" PointerExited="VrulerGrips_PointerExited"/>
                     </Grid>
                     <Grid Name="gridVline1" HorizontalAlignment="Right" ManipulationMode="TranslateX">
                         <Grid.RenderTransform>
                             <CompositeTransform x:Name="transformV1"/>
                         </Grid.RenderTransform>
                         <Line IsHitTestVisible="False" StrokeThickness="2" Visibility="Collapsed" Name="lineV1" Stroke="#FF00FF" Y2="{Binding ActualHeight, ElementName=gridMain, Mode=OneWay}" HorizontalAlignment="Center" StrokeDashArray="4"/>
-                        <Rectangle Name="rectV1" Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Fill="#FF00FF" Stroke="Black" ManipulationMode="TranslateX" ManipulationDelta="vertical_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted"/>
+                        <Rectangle Name="rectV1" Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Fill="#FF00FF" Stroke="Black" ManipulationMode="TranslateX" ManipulationDelta="vertical_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted" PointerExited="VrulerGrips_PointerExited" PointerEntered="VrulerGrips_PointerEntered"/>
                     </Grid>
                     <Grid Name="gridHline2" VerticalAlignment="Top" ManipulationMode="TranslateY">
                         <Grid.RenderTransform>
                             <CompositeTransform x:Name="transformH2"/>
                         </Grid.RenderTransform>
                         <Line IsHitTestVisible="False" Visibility="Collapsed" Name="lineH2" Stroke="#9D00FF" StrokeDashArray="4" VerticalAlignment="Center" X2="{Binding ActualWidth, ElementName=gridMain, Mode=OneWay}" StrokeThickness="2"/>
-                        <Rectangle Name="rectH2" Width="10" Height="10" Fill="#9D00FF" Stroke="Black" HorizontalAlignment="Left" ManipulationMode="TranslateY" ManipulationDelta="horizontal_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted"/>
+                        <Rectangle Name="rectH2" Width="10" Height="10" Fill="#9D00FF" Stroke="Black" HorizontalAlignment="Left" ManipulationMode="TranslateY" ManipulationDelta="horizontal_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted" PointerExited="HrulerGrips_PointerExited" PointerEntered="HrulerGrips_PointerEntered"/>
                     </Grid>
                     <Grid Name="gridHline1" VerticalAlignment="Top" ManipulationMode="TranslateY">
                         <Grid.RenderTransform>
                             <CompositeTransform x:Name="transformH1"/>
                         </Grid.RenderTransform>
                         <Line IsHitTestVisible="False" StrokeThickness="2" Visibility="Collapsed" Name="lineH1" Stroke="#9D00FF" StrokeDashArray="4" VerticalAlignment="Center" X2="{Binding ActualWidth, ElementName=gridMain, Mode=OneWay}"/>
-                        <Rectangle Name="rectH1" Width="10" Height="10" Fill="#9D00FF" Stroke="Black" HorizontalAlignment="Left" ManipulationMode="TranslateY" ManipulationDelta="horizontal_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted"/>
+                        <Rectangle Name="rectH1" Width="10" Height="10" Fill="#9D00FF" Stroke="Black" HorizontalAlignment="Left" ManipulationMode="TranslateY" ManipulationDelta="horizontal_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted" PointerEntered="HrulerGrips_PointerEntered" PointerExited="HrulerGrips_PointerExited"/>
                     </Grid>
 
                     <Grid Name="gridForOtherInput" Background="Transparent" Visibility="Collapsed" PointerPressed="gridForOtherInput_PointerPressed" PointerReleased="gridForOtherInput_PointerReleased"/>
-                    
+
                     <InkCanvas x:Name="inkCanvas" Visibility="Collapsed"/>
 
                 </Grid>

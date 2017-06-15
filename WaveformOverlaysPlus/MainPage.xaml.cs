@@ -45,6 +45,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Markup;
 using WaveformOverlaysPlus.UndoRedoCommands;
 using System.Windows.Input;
+using Windows.UI.Input.Inking.Core;
 
 namespace WaveformOverlaysPlus
 {
@@ -86,7 +87,6 @@ namespace WaveformOverlaysPlus
         double heightStart;
         double widthEnd;
         double heightEnd;
-        RadioButton previousSizeRadioButtonChecked;
         #endregion
 
         #region For Custom Ink Rendering and Erase
@@ -4356,5 +4356,41 @@ namespace WaveformOverlaysPlus
         }
 
         #endregion
+
+        private void spToolButtons_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            if (Window.Current.CoreWindow.PointerCursor.Type != CoreCursorType.Arrow)
+            {
+                Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
+            }
+        }
+
+        private void spMenuButtons_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            if (Window.Current.CoreWindow.PointerCursor.Type != CoreCursorType.Arrow)
+            {
+                Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
+            }
+        }
+
+        private void HrulerGrips_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.SizeNorthSouth, 0);
+        }
+
+        private void HrulerGrips_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
+        }
+
+        private void VrulerGrips_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.SizeWestEast, 0);
+        }
+
+        private void VrulerGrips_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
+        }
     }
 }
