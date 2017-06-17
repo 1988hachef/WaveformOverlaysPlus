@@ -281,9 +281,12 @@ namespace WaveformOverlaysPlus
             dataTransferManager = DataTransferManager.GetForCurrentView();
             dataTransferManager.DataRequested += new TypedEventHandler<DataTransferManager, DataRequestedEventArgs>(this.ShareImageHandler);
 
-            // Set the input focus to ensure that keyboard events are raised.
-            this.Loaded += delegate { this.Focus(FocusState.Programmatic); };
+            // For shortcut keys
+            Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
+            Window.Current.CoreWindow.KeyUp += CoreWindow_KeyUp;
         }
+
+        
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
@@ -292,6 +295,8 @@ namespace WaveformOverlaysPlus
             printDoc.Paginate -= Paginate;
             printDoc.GetPreviewPage -= GetPreviewPage;
             printDoc.AddPages -= AddPages;
+            Window.Current.CoreWindow.KeyDown -= CoreWindow_KeyDown;
+            Window.Current.CoreWindow.KeyUp -= CoreWindow_KeyUp;
         }
         #endregion
 
@@ -4495,12 +4500,12 @@ namespace WaveformOverlaysPlus
 
         #endregion
 
-        private void Grid_KeyDown(object sender, KeyRoutedEventArgs e)
+        private void CoreWindow_KeyDown(CoreWindow sender, KeyEventArgs args)
         {
-            if (e.Key == VirtualKey.Control) isCtrlKeyPressed = true;
+            if (args.VirtualKey == VirtualKey.Control) isCtrlKeyPressed = true;
             else if (isCtrlKeyPressed)
             {
-                switch (e.Key)
+                switch (args.VirtualKey)
                 {
                     case VirtualKey.V: Paste(); break;
                     case VirtualKey.Z: Undo(); break;
@@ -4514,9 +4519,9 @@ namespace WaveformOverlaysPlus
             }
         }
 
-        private void Grid_KeyUp(object sender, KeyRoutedEventArgs e)
+        private void CoreWindow_KeyUp(CoreWindow sender, KeyEventArgs args)
         {
-            if (e.Key == VirtualKey.Control) isCtrlKeyPressed = false;
+            if (args.VirtualKey == VirtualKey.Control) isCtrlKeyPressed = false;
         }
     }
 }
