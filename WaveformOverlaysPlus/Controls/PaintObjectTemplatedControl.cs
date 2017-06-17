@@ -49,7 +49,7 @@ namespace WaveformOverlaysPlus.Controls
             set { SetValue(ImageScaleProperty, value); }
         }
         public static readonly DependencyProperty ImageScaleProperty =
-            DependencyProperty.Register("ImageScale", typeof(double), typeof(PaintObjectTemplatedControl), new PropertyMetadata(1));
+            DependencyProperty.Register("ImageScale", typeof(double), typeof(PaintObjectTemplatedControl), new PropertyMetadata(1.0));
 
 
         public bool IsForCropper

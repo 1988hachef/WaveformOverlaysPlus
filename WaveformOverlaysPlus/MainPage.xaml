@@ -13,7 +13,7 @@
 
     </Grid>-->
 
-    <Grid Background="White">
+    <Grid Background="White" KeyDown="Grid_KeyDown" KeyUp="Grid_KeyUp">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
