@@ -67,8 +67,8 @@
 
             <Rectangle Margin="10,0" Width="1" Height="20" Fill="#FF909090"/>
 
-            <Button Name="btnUndo" Style="{StaticResource styleMenuButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE7A7;" FontSize="14" Height="25" IsEnabled="False" Click="btnUndo_Click" ToolTipService.ToolTip="Undo"/>
-            <Button Name="btnRedo" Style="{StaticResource styleMenuButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE7A6;" FontSize="14" Height="25" IsEnabled="False" Click="btnRedo_Click" ToolTipService.ToolTip="Redo"/>
+            <Button Name="btnUndo" Style="{StaticResource styleMenuButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE7A7;" FontSize="14" Height="25" IsEnabled="False" Click="btnUndo_Click" ToolTipService.ToolTip="Undo (Ctrl+ Z)"/>
+            <Button Name="btnRedo" Style="{StaticResource styleMenuButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE7A6;" FontSize="14" Height="25" IsEnabled="False" Click="btnRedo_Click" ToolTipService.ToolTip="Redo (Ctrl+ Y)"/>
 
         </StackPanel>
 
@@ -349,10 +349,18 @@
                 </Grid>
 
                 <Grid Name="gridToContainOthers" Margin="50,15,20,40">
+                    <FlyoutBase.AttachedFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Name="flyoutCopy" Text="Copy" Click="flyoutCopy_Click"/>
+                            <MenuFlyoutItem Name="flyoutPaste" Text="Paste" Click="flyoutPaste_Click"/>
+                        </MenuFlyout>
+                    </FlyoutBase.AttachedFlyout>
 
-                    <Grid Name="gridMain" Background="{Binding Background, ElementName=borderForPageColor}">
-                        <TextBlock Name="tblock" Text="test" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                        <Button Content="button" Click="Button_Click"/>
+                    <Grid Name="gridMain" Background="{Binding Background, ElementName=borderForPageColor}" RightTapped="General_RightTapped">
+                        
+                        <!--<TextBlock Name="tblock" Text="test" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                        <Button Content="button" Click="Button_Click"/>-->
+                        
                     </Grid>
 
                     <Grid Name="gridCompressionOverlay" ManipulationMode="TranslateX" HorizontalAlignment="Left" VerticalAlignment="Top" Opacity="0.001" IsHitTestVisible="False" Width="721">
@@ -455,7 +463,7 @@
                         <TextBlock Name="tblockComp" Grid.Column="36" Grid.ColumnSpan="13" HorizontalAlignment="Center" Grid.Row="4" TextWrapping="Wrap" Text="Compression" VerticalAlignment="Center" FontWeight="Bold" FontSize="12"/>
                     </Grid>
 
-                    <Grid Name="gridExhOverlap" Visibility="Collapsed" Height="550" VerticalAlignment="Bottom" ManipulationMode="TranslateX, TranslateY" HorizontalAlignment="Left" SizeChanged="gridExhOverlap_SizeChanged">
+                    <Grid Name="gridExhOverlap" Visibility="Collapsed" Height="550" VerticalAlignment="Bottom" ManipulationMode="TranslateX, TranslateY" HorizontalAlignment="Left" SizeChanged="gridExhOverlap_SizeChanged" RightTapped="General_RightTapped">
                         <Grid.RenderTransform>
                             <CompositeTransform x:Name="transformExh"/>
                         </Grid.RenderTransform>
@@ -474,7 +482,7 @@
                         <Rectangle Name="rectRed" Fill="Red" Opacity="0.2" Margin="0,30,0,0"/>
                     </Grid>
 
-                    <Grid Name="gridIntOverlap" Visibility="Collapsed" Height="450" VerticalAlignment="Bottom" HorizontalAlignment="Left" ManipulationMode="TranslateX, TranslateY" SizeChanged="gridIntOverlap_SizeChanged">
+                    <Grid Name="gridIntOverlap" Visibility="Collapsed" Height="450" VerticalAlignment="Bottom" HorizontalAlignment="Left" ManipulationMode="TranslateX, TranslateY" SizeChanged="gridIntOverlap_SizeChanged" RightTapped="General_RightTapped">
                         <Grid.RenderTransform>
                             <CompositeTransform x:Name="transformInt"/>
                         </Grid.RenderTransform>
@@ -581,9 +589,15 @@
                         <Rectangle Name="rectH1" Width="10" Height="10" Fill="#9D00FF" Stroke="Black" HorizontalAlignment="Left" ManipulationMode="TranslateY" ManipulationDelta="horizontal_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted" PointerEntered="HrulerGrips_PointerEntered" PointerExited="HrulerGrips_PointerExited"/>
                     </Grid>
 
-                    <Grid Name="gridForOtherInput" Background="Transparent" Visibility="Collapsed" PointerPressed="gridForOtherInput_PointerPressed" PointerReleased="gridForOtherInput_PointerReleased"/>
+                    <Grid Name="gridForOtherInput" Background="Transparent" Visibility="Collapsed" PointerPressed="gridForOtherInput_PointerPressed" PointerReleased="gridForOtherInput_PointerReleased" RightTapped="General_RightTapped"/>
 
                     <InkCanvas x:Name="inkCanvas" Visibility="Collapsed"/>
+
+                    <Rectangle Name="rectForFlyoutPosition" HorizontalAlignment="Left" VerticalAlignment="Top" ManipulationMode="TranslateX, TranslateY">
+                        <Rectangle.RenderTransform>
+                            <CompositeTransform x:Name="transformRectForFlyoutPosition"/>
+                        </Rectangle.RenderTransform>
+                    </Rectangle>
 
                 </Grid>
             </Grid>

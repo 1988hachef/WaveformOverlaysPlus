@@ -310,15 +310,15 @@
                           BorderThickness="{TemplateBinding BorderThickness}" 
                           Background="{TemplateBinding Background}"
                           BorderBrush="{TemplateBinding BorderBrush}">
+                        
+                        <FlyoutBase.AttachedFlyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Name="menuBringToFront" Text="Bring to Front"/>
+                                <MenuFlyoutItem Name="menuSendToBack" Text="Send to Back"/>
+                            </MenuFlyout>
+                        </FlyoutBase.AttachedFlyout>
 
-                        <ContentPresenter x:Name="ContentPresenter">
-                            <FlyoutBase.AttachedFlyout>
-                                <MenuFlyout x:Name="flyoutZOrder">
-                                    <MenuFlyoutItem Name="menuBringToFront" Text="Bring to Front"/>
-                                    <MenuFlyoutItem Name="menuSendToBack" Text="Send to Back"/>
-                                </MenuFlyout>
-                            </FlyoutBase.AttachedFlyout>
-                        </ContentPresenter>
+                        <ContentPresenter x:Name="ContentPresenter"/>
 
                         <Grid>
                             <Grid.RowDefinitions>

@@ -127,7 +127,6 @@ namespace WaveformOverlaysPlus.Controls
             _contentPresenter.ManipulationDelta += _contentPresenter_ManipulationDelta;
             _contentPresenter.PointerEntered += _contentPresenter_PointerEntered;
             _contentPresenter.PointerExited += _contentPresenter_PointerExited;
-            _contentPresenter.RightTapped += _contentPresenter_RightTapped;
 
             _closeButton.Click += _closeButton_Click;
 
@@ -136,46 +135,39 @@ namespace WaveformOverlaysPlus.Controls
 
             _myWindow.PointerEntered += _myWindow_PointerEntered;
             _myWindow.PointerExited += _myWindow_PointerExited;
+            _myWindow.RightTapped += _myWindow_RightTapped;
 
             _rectRight.ManipulationDelta += _rectRight_ManipulationDelta;
             _rectRight.PointerEntered += _PointerEntered;
             _rectRight.PointerExited += _PointerExited;
-            _rectRight.RightTapped += _rect_RightTapped;
 
             _rectTopLeft.ManipulationDelta += _rectTopLeft_ManipulationDelta;
             _rectTopLeft.PointerEntered += _PointerEntered;
             _rectTopLeft.PointerExited += _PointerExited;
-            _rectTopLeft.RightTapped += _rect_RightTapped;
 
             _rectTop.ManipulationDelta += _rectTop_ManipulationDelta;
             _rectTop.PointerEntered += _PointerEntered;
             _rectTop.PointerExited += _PointerExited;
-            _rectTop.RightTapped += _rect_RightTapped;
 
             _rectTopRight.ManipulationDelta += _rectTopRight_ManipulationDelta;
             _rectTopRight.PointerEntered += _PointerEntered;
             _rectTopRight.PointerExited += _PointerExited;
-            _rectTopRight.RightTapped += _rect_RightTapped;
 
             _rectLeft.ManipulationDelta += _rectLeft_ManipulationDelta;
             _rectLeft.PointerEntered += _PointerEntered;
             _rectLeft.PointerExited += _PointerExited;
-            _rectLeft.RightTapped += _rect_RightTapped;
 
             _rectBottomLeft.ManipulationDelta += _rectBottomLeft_ManipulationDelta;
             _rectBottomLeft.PointerEntered += _PointerEntered;
             _rectBottomLeft.PointerExited += _PointerExited;
-            _rectBottomLeft.RightTapped += _rect_RightTapped;
 
             _rectBottom.ManipulationDelta += _rectBottom_ManipulationDelta;
             _rectBottom.PointerEntered += _PointerEntered;
             _rectBottom.PointerExited += _PointerExited;
-            _rectBottom.RightTapped += _rect_RightTapped;
 
             _rectBottomRight.ManipulationDelta += _rectBottomRight_ManipulationDelta;
             _rectBottomRight.PointerEntered += _PointerEntered;
             _rectBottomRight.PointerExited += _PointerExited;
-            _rectBottomRight.RightTapped += _rect_RightTapped;
 
             transform_myControl = new CompositeTransform();
             this.RenderTransform = transform_myControl;
@@ -289,28 +281,19 @@ namespace WaveformOverlaysPlus.Controls
             ((Panel)this.Parent).Children.Remove(this);
         }
 
-        private void _contentPresenter_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        private void _myWindow_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             Point pointerPosition = e.GetPosition(this);
             transform_rectForFlyout.TranslateX = pointerPosition.X;
             transform_rectForFlyout.TranslateY = pointerPosition.Y;
 
-            FlyoutBase flyout = FlyoutBase.GetAttachedFlyout(_contentPresenter);
+            FlyoutBase flyout = FlyoutBase.GetAttachedFlyout(_myWindow);
             flyout.Placement = FlyoutPlacementMode.Right;
             flyout.ShowAt(_rectForFlyoutPosition);
+
+            e.Handled = true;
 
             //FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
-        }
-
-        private void _rect_RightTapped(object sender, RightTappedRoutedEventArgs e)
-        {
-            Point position = e.GetPosition(this);
-            transform_rectForFlyout.TranslateX = position.X;
-            transform_rectForFlyout.TranslateY = position.Y;
-
-            FlyoutBase flyout = FlyoutBase.GetAttachedFlyout(_contentPresenter);
-            flyout.Placement = FlyoutPlacementMode.Right;
-            flyout.ShowAt(_rectForFlyoutPosition);
         }
 
         private void _menuBringToFront_Click(object sender, RoutedEventArgs e)

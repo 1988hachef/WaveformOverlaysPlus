@@ -4500,6 +4500,8 @@ namespace WaveformOverlaysPlus
 
         #endregion
 
+        #region Shortcut Keys
+
         private void CoreWindow_KeyDown(CoreWindow sender, KeyEventArgs args)
         {
             if (args.VirtualKey == VirtualKey.Control) isCtrlKeyPressed = true;
@@ -4523,5 +4525,37 @@ namespace WaveformOverlaysPlus
         {
             if (args.VirtualKey == VirtualKey.Control) isCtrlKeyPressed = false;
         }
+
+        #endregion
+
+        #region Copy/Paste Flyout
+
+        private void General_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            Point position = e.GetPosition(gridToContainOthers);
+            ShowCopyPasteFlyout(position);
+        }
+
+        void ShowCopyPasteFlyout(Point point)
+        {
+            transformRectForFlyoutPosition.TranslateX = point.X;
+            transformRectForFlyoutPosition.TranslateY = point.Y;
+
+            FlyoutBase flyout = FlyoutBase.GetAttachedFlyout(gridToContainOthers);
+            flyout.Placement = FlyoutPlacementMode.Right;
+            flyout.ShowAt(rectForFlyoutPosition);
+        }
+
+        private void flyoutCopy_Click(object sender, RoutedEventArgs e)
+        {
+            Copy();
+        }
+
+        private void flyoutPaste_Click(object sender, RoutedEventArgs e)
+        {
+            Paste();
+        }
+
+        #endregion
     }
 }
