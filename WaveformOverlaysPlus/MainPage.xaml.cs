@@ -4250,7 +4250,6 @@ namespace WaveformOverlaysPlus
         {
             //GeneralTransform gt = rectEVC.TransformToVisual(rectZeroDegrees);
             //Point p = gt.TransformPoint(new Point(0, 0));
-
             //tblock.Text = p.X.ToString();
         }
 
@@ -4556,6 +4555,10 @@ namespace WaveformOverlaysPlus
             Paste();
         }
 
+
         #endregion
+
+        
+
     }
 }

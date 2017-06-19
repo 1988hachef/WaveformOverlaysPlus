@@ -51,8 +51,10 @@
                                     </VisualState>
                                     <VisualState x:Name="PointerOver">
                                         <Storyboard>
+                                            
+                                            <!--change-->
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundPointerOver}"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListLowBrush}"/>
                                             </ObjectAnimationUsingKeyFrames>
 
                                             <!--Commenting out border animation for the PointerOver event-->
@@ -108,7 +110,7 @@
             <Setter Property="Foreground" Value="{ThemeResource ButtonForeground}"/>
 
             <!--<Setter Property="BorderBrush" Value="{ThemeResource ButtonBorderBrush}"/>-->
-            <Setter Property="BorderBrush" Value="DimGray"/>
+            <Setter Property="BorderBrush" Value="Black"/>
 
             <!--<Setter Property="BorderThickness" Value="{ThemeResource ButtonBorderThemeThickness}"/>-->
             <Setter Property="BorderThickness" Value="1"/>
@@ -472,6 +474,9 @@
             <Setter Property="PlaceholderText" Value="Click here to type"/>
             <Setter Property="AcceptsReturn" Value="True"/>
             <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
 
             <Setter Property="Template">
                 <Setter.Value>
@@ -483,11 +488,12 @@
                                        Fill="{TemplateBinding Background}"
                                        RadiusX="7" RadiusY="7"/>
                             <ScrollViewer x:Name="ContentElement" 
-                                          IsTabStop="False"  
                                           Margin="{TemplateBinding BorderThickness}" 
-                                          Padding="{TemplateBinding Padding}" 
-                                          VerticalScrollBarVisibility="Hidden"  
+                                          Padding="{TemplateBinding Padding}"  
+                                          IsTabStop="False"
+                                          VerticalScrollBarVisibility="Hidden"
                                           ZoomMode="Disabled"/>
+
                             <ContentControl x:Name="PlaceholderTextContentPresenter"
                                             Content="{TemplateBinding PlaceholderText}" 
                                             Foreground="Gray"
@@ -684,7 +690,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="MenuFlyoutPresenter">
-                        <Grid Background="#FFD6D6D6">
+                        <Grid Background="#FFE6E6E6">
                             <ScrollViewer x:Name="MenuFlyoutPresenterScrollViewer"
             Padding="{TemplateBinding Padding}"
             Margin="{TemplateBinding BorderThickness}"
@@ -707,6 +713,112 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        
+        <Style x:Key="styleUndoRedoBtns" TargetType="Button">
+
+            <!--Changed Background to White-->
+            <Setter Property="Background" Value="Transparent"/>
+
+            <!--Change Foreground to a shade of blue-->
+            <Setter Property="Foreground" Value="DodgerBlue"/>
+            
+            <Setter Property="BorderBrush" Value="{ThemeResource ButtonBorderBrush}"/>
+            
+            <!--Change-->
+            <Setter Property="BorderThickness" Value="1"/>
+
+            <Setter Property="Padding" Value="8,0"/>
+            <!--<Setter Property="Padding" Value="8,4,8,4"/>-->
+
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+
+            <!--add this-->
+            <Setter Property="Margin" Value="0,2,0,5"/>
+
+            <!--Changed FontSize to 12-->
+            <Setter Property="FontSize" Value="12"/>
+
+            <Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <Setter Property="FocusVisualMargin" Value="-3"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal">
+                                        <Storyboard>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            
+                                            <!--chagne-->
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource LightBlueBackground}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            
+                                            <!--change-->
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource LightBlueBorderBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+
+                                            <!--Commenting out foreground change on pointer over-->
+                                            
+                                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundPointerOver}"/>
+                                            </ObjectAnimationUsingKeyFrames>-->
+                                            
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundPressed}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushPressed}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundPressed}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerDownThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            
+                                            <!--Comment out background change for disabled state-->
+                                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>-->
+                                            
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            
+                                            <!--Change Foreground for disabled state-->
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FFB2B2B2"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
 
     </Application.Resources>
 

@@ -32,11 +32,11 @@
             <Button Name="btnFile" Content="File" Style="{StaticResource styleMenuButton}" Height="25" Padding="8,-2,8,0" >
                 <Button.Flyout>
                     <MenuFlyout MenuFlyoutPresenterStyle="{StaticResource styleMenuFlyout}">
-                        <MenuFlyoutItem Name="menuNew" Text="New" FontSize="{StaticResource myFontSize}" Click="menuNew_Click"/>
-                        <MenuFlyoutItem Name="menuOpen" Text="Open" FontSize="{StaticResource myFontSize}" Click="menuOpen_Click"/>
-                        <MenuFlyoutItem Name="menuSave" Text="Save" FontSize="{StaticResource myFontSize}" Click="menuSave_Click"/>
+                        <MenuFlyoutItem Name="menuNew" Text="New                 Ctrl+ N" FontSize="{StaticResource myFontSize}" Click="menuNew_Click"/>
+                        <MenuFlyoutItem Name="menuOpen" Text="Open               Ctrl+ O" FontSize="{StaticResource myFontSize}" Click="menuOpen_Click"/>
+                        <MenuFlyoutItem Name="menuSave" Text="Save                 Ctrl+ S" FontSize="{StaticResource myFontSize}" Click="menuSave_Click"/>
                         <MenuFlyoutSeparator/>
-                        <MenuFlyoutItem Name="menuPrint" Text="Print" Click="PrintButtonClick" FontSize="{StaticResource myFontSize}"/>
+                        <MenuFlyoutItem Name="menuPrint" Text="Print                 Ctrl+ P" Click="PrintButtonClick" FontSize="{StaticResource myFontSize}"/>
                         <MenuFlyoutItem Name="menuShare" Text="Share" FontSize="{StaticResource myFontSize}" Click="menuShare_Click"/>
                         <MenuFlyoutSeparator/>
                         <MenuFlyoutItem Name="menuExit" Text="Exit" FontSize="{StaticResource myFontSize}" Click="menuExit_Click"/>
@@ -47,8 +47,8 @@
             <Button Content="Edit" Style="{StaticResource styleMenuButton}" Height="25" Padding="8,-2,8,0" >
                 <Button.Flyout>
                     <MenuFlyout MenuFlyoutPresenterStyle="{StaticResource styleMenuFlyout}">
-                        <MenuFlyoutItem Name="menuCopy" Text="Copy" FontSize="{StaticResource myFontSize}" Click="menuCopy_Click"/>
-                        <MenuFlyoutItem Name="menuPaste" Text="Paste" FontSize="{StaticResource myFontSize}" Click="menuPaste_Click"/>
+                        <MenuFlyoutItem Name="menuCopy" Text="Copy             Ctrl+ C" FontSize="{StaticResource myFontSize}" Click="menuCopy_Click"/>
+                        <MenuFlyoutItem Name="menuPaste" Text="Paste             Ctrl+ V" FontSize="{StaticResource myFontSize}" Click="menuPaste_Click"/>
                     </MenuFlyout>
                 </Button.Flyout>
             </Button>
@@ -67,198 +67,16 @@
 
             <Rectangle Margin="10,0" Width="1" Height="20" Fill="#FF909090"/>
 
-            <Button Name="btnUndo" Style="{StaticResource styleMenuButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE7A7;" FontSize="14" Height="25" IsEnabled="False" Click="btnUndo_Click" ToolTipService.ToolTip="Undo (Ctrl+ Z)"/>
-            <Button Name="btnRedo" Style="{StaticResource styleMenuButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE7A6;" FontSize="14" Height="25" IsEnabled="False" Click="btnRedo_Click" ToolTipService.ToolTip="Redo (Ctrl+ Y)"/>
+            <Button Name="btnUndo" Style="{StaticResource styleUndoRedoBtns}" FontFamily="Segoe MDL2 Assets" Content="&#xE7A7;" FontSize="14" Height="25" IsEnabled="False" Click="btnUndo_Click" ToolTipService.ToolTip="Undo (Ctrl+ Z)"/>
+            <Button Name="btnRedo" Style="{StaticResource styleUndoRedoBtns}" FontFamily="Segoe MDL2 Assets" Content="&#xE7A6;" FontSize="14" Height="25" IsEnabled="False" Click="btnRedo_Click" ToolTipService.ToolTip="Redo (Ctrl+ Y)"/>
 
         </StackPanel>
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="102"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-
-            <StackPanel Name="spToolButtons" Grid.Column="0" Padding="0,5,3,0" Margin="0" Width="102" PointerEntered="spToolButtons_PointerEntered">
-                <StackPanel.Background>
-                    <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
-                        <GradientStop Color="#FFF0F0F0" Offset="0"/>
-                        <GradientStop Color="#FFA8A4A4" Offset="1"/>
-                        <GradientStop Color="#FFF0F0F0" Offset="0.948"/>
-                    </LinearGradientBrush>
-                </StackPanel.Background>
-
-                <StackPanel Orientation="Horizontal">
-                    <Button Name="btnComp" Style="{StaticResource styleMenuButton}" Width="38" Padding="0" Margin="8,0,0,0" Height="38" Click="btnComp_Click" ToolTipService.ToolTip="Compression">
-                        <Button.Content>
-                            <Image Source="/Assets/IconCompDivs.bmp" Height="30" Width="30"/>
-                        </Button.Content>
-                    </Button>
-                    <Button Name="btnCyl" Style="{StaticResource styleMenuButton}" Width="38" Padding="0" Margin="8,0,0,0" Height="38" Click="btnCyl_Click" ToolTipService.ToolTip="Cylinder Id">
-                        <Button.Content>
-                            <Image Source="/Assets/IconCylinderIDOverlay.bmp" Width="30" Height="30"/>
-                        </Button.Content>
-                    </Button>
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal">
-                    <Button Name="btnOverlap" Style="{StaticResource styleMenuButton}" Width="38" Padding="0" Margin="8,0,0,0" Height="38" Click="btnOverlap_Click" ToolTipService.ToolTip="Valve overlap">
-                        <Button.Content>
-                            <Image Source="/Assets/IconValveOverlap.bmp" Width="30" Height="30"/>
-                        </Button.Content>
-                    </Button>
-                </StackPanel>
-
-                <Rectangle Fill="Gray" Height="1" Margin="8,5,10,5"/>
-
-                <StackPanel Orientation="Horizontal">
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE7C9;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="cursor" IsChecked="True" ToolTipService.ToolTip="Pointer"/>
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE123;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="crop" Click="crop_Click" ToolTipService.ToolTip="Crop Image"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xEE56;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="pen" Click="PenOrEraser_Clicked" ToolTipService.ToolTip="Pen"/>
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xED60;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="eraser" Click="PenOrEraser_Clicked" ToolTipService.ToolTip="Erase pen strokes"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE8D2;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="text" Click="text_Click" ToolTipService.ToolTip="TextBox"/>
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE8DB;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="line" Click="ArrowOrLine_Clicked" ToolTipService.ToolTip="Line"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE741;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="arrow" Click="ArrowOrLine_Clicked" ToolTipService.ToolTip="Arrow"/>
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xEA3A;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="ellipse" Click="ellipse_Click" ToolTipService.ToolTip="Ellipse"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE739;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,0" Checked="tool_Checked" Name="rectangle" Click="RectOrRoundRect_Clicked" ToolTipService.ToolTip="Rectangle"/>
-                    <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,0" Checked="tool_Checked" Name="roundedRectangle" Click="RectOrRoundRect_Clicked" ToolTipService.ToolTip="Rounded rectangle">
-                        <RadioButton.Content>
-                            <Rectangle Stroke="Black" Width="20" Height="20" RadiusX="4" RadiusY="4"/>
-                        </RadioButton.Content>
-                    </RadioButton>
-                </StackPanel>
-
-                <Rectangle Fill="Gray" Height="1" Margin="8,5,10,5"/>
-
-                <StackPanel Margin="0">
-
-                    <RadioButton Tag="1" Name="rbSize1" GroupName="sizes" Style="{StaticResource styleToolRadioButton}" Margin="5,0" Width="88"  Height="17" HorizontalAlignment="Center" Checked="sizes_Checked" Click="sizes_Clicked">
-                        <RadioButton.Content>
-                            <Rectangle Width="56" Height="1" Fill="Black"/>
-                        </RadioButton.Content>
-                    </RadioButton>
-
-                    <RadioButton Tag="2" Name="rbSize2" GroupName="sizes" Style="{StaticResource styleToolRadioButton}" Margin="5,0" Width="88"  Height="18" HorizontalAlignment="Center" Checked="sizes_Checked" Click="sizes_Clicked">
-                        <RadioButton.Content>
-                            <Rectangle Width="56" Height="2" Fill="Black"/>
-                        </RadioButton.Content>
-                    </RadioButton>
-
-                    <RadioButton Tag="6" Name="rbSize6" GroupName="sizes" Style="{StaticResource styleToolRadioButton}" Margin="5,0" Width="88"  Height="22" HorizontalAlignment="Center" Checked="sizes_Checked" Click="sizes_Clicked" IsChecked="True">
-                        <RadioButton.Content>
-                            <Rectangle Width="56" Height="6" Fill="Black"/>
-                        </RadioButton.Content>
-                    </RadioButton>
-
-                    <RadioButton Tag="10" Name="rbSize10" GroupName="sizes" Style="{StaticResource styleToolRadioButton}" Margin="5,0" Width="88"  Height="26" HorizontalAlignment="Center" Checked="sizes_Checked" Click="sizes_Clicked">
-                        <RadioButton.Content>
-                            <Rectangle Width="56" Height="10" Fill="Black"/>
-                        </RadioButton.Content>
-                    </RadioButton>
-
-                </StackPanel>
-
-                <Rectangle Name="rectSeparator" Fill="Gray" Height="1" Margin="8,5,10,5"/>
-
-                <RadioButton Name="strokeColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" IsChecked="True" Checked="colorChanger_Checked">
-                    <RadioButton.Content>
-                        <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
-                            <Border Name="borderForStrokeColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Black" BorderThickness="1">
-                                <TextBlock Name="strokeX" Visibility="Collapsed" FontFamily="Segoe MDL2 Assets" Text="&#xE8BB;" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
-                            </Border>
-                            <TextBlock Text="Stroke:" FontSize="{StaticResource myFontSize}" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </RadioButton.Content>
-                </RadioButton>
-
-                <RadioButton Name="fillColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" Checked="colorChanger_Checked">
-                    <RadioButton.Content>
-                        <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
-                            <Border Name="borderForFillColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Transparent" BorderThickness="1">
-                                <TextBlock Name="fillX" FontFamily="Segoe MDL2 Assets" Text="&#xE8BB;" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
-                            </Border>
-                            <TextBlock Text="Fill:" FontSize="{StaticResource myFontSize}" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </RadioButton.Content>
-                </RadioButton>
-
-                <RadioButton Name="textColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" Checked="colorChanger_Checked">
-                    <RadioButton.Content>
-                        <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
-                            <Border Name="borderForTextColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Black" BorderThickness="1">
-                                <TextBlock Name="textX" Visibility="Collapsed" FontFamily="Segoe MDL2 Assets" Text="&#xE8BB;" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
-                            </Border>
-                            <TextBlock Text="Text:" FontSize="{StaticResource myFontSize}" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </RadioButton.Content>
-                </RadioButton>
-
-                <RadioButton Name="pageColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" Checked="colorChanger_Checked">
-                    <RadioButton.Content>
-                        <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
-                            <Border Name="borderForPageColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="White" BorderThickness="1"/>
-                            <TextBlock Text="Page:" FontSize="{StaticResource myFontSize}" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </RadioButton.Content>
-                </RadioButton>
-
-                <RadioButton Name="compLinesColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" Checked="colorChanger_Checked" Visibility="Collapsed">
-                    <RadioButton.Content>
-                        <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
-                            <Border Name="borderForCompLinesColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Gray" BorderThickness="1"/>
-                            <TextBlock Text=":" FontSize="12"/>
-                            <Image Source="/Assets/IconCompressionOverlay.bmp" Width="18" Height="18" Margin="1,0,0,0"/>
-                        </StackPanel>
-                    </RadioButton.Content>
-                </RadioButton>
-
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,2,0">
-                    <Button Background="#FFFA2732" Style="{StaticResource styleColorButton}" Click="color_Click"/>
-                    <Button Background="#FFC29A1F" Style="{StaticResource styleColorButton}" Click="color_Click"/>
-                    <Button Background="#FF00A84F" Style="{StaticResource styleColorButton}" Click="color_Click"/>
-                    <Button Background="Blue" Style="{StaticResource styleColorButton}" Click="color_Click"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,2,0">
-                    <Button Background="Red" Style="{StaticResource styleColorButton}" Click="color_Click"/>
-                    <Button Background="Yellow" Style="{StaticResource styleColorButton}" Click="color_Click"/>
-                    <Button Background="Lime" Style="{StaticResource styleColorButton}" Click="color_Click"/>
-                    <Button Background="Cyan" Style="{StaticResource styleColorButton}" Click="color_Click"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,2,0">
-                    <Button Background="#FFFFAEC9" Style="{StaticResource styleColorButton}" Click="color_Click"/>
-                    <Button Background="Orange" Style="{StaticResource styleColorButton}" Click="color_Click"/>
-                    <Button Background="#FFB5E61D" Style="{StaticResource styleColorButton}" Click="color_Click"/>
-                    <Button Background="#FF99D9EA" Style="{StaticResource styleColorButton}" Click="color_Click"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,2,0">
-                    <Button Background="HotPink" Style="{StaticResource styleColorButton}" Click="color_Click"/>
-                    <Button Background="#FFFF7F27" Style="{StaticResource styleColorButton}" Click="color_Click"/>
-                    <Button Background="White" Style="{StaticResource styleColorButton}" Click="color_Click"/>
-                    <Button Background="#FFC8BFE7" Style="{StaticResource styleColorButton}" Click="color_Click"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,2,0">
-                    <Button Background="#FFA349A4" Style="{StaticResource styleColorButton}" Click="color_Click"/>
-                    <Button Background="SaddleBrown" Style="{StaticResource styleColorButton}" Click="color_Click"/>
-                    <Button Background="LightGray" Style="{StaticResource styleColorButton}" Click="color_Click"/>
-                    <Button Background="#FF00A2E8" Style="{StaticResource styleColorButton}" Click="color_Click"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,2,0">
-                    <Button Name="btnTransparent" Background="Transparent" Style="{StaticResource styleColorButton}" Click="color_Click">
-                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8BB;" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
-                    </Button>
-                    <Button Background="#FF880015" Style="{StaticResource styleColorButton}" Click="color_Click"/>
-                    <Button Background="Black" Style="{StaticResource styleColorButton}" Click="color_Click"/>
-                    <Button Background="#FF3F48CC" Style="{StaticResource styleColorButton}" Click="color_Click"/>
-                </StackPanel>
-
-            </StackPanel>
 
             <Grid Name="gridForOverall" Grid.Column="1" Background="#FFD7E0EE">
 
@@ -357,7 +175,7 @@
                     </FlyoutBase.AttachedFlyout>
 
                     <Grid Name="gridMain" Background="{Binding Background, ElementName=borderForPageColor}" RightTapped="General_RightTapped">
-                        
+
                         <!--<TextBlock Name="tblock" Text="test" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                         <Button Content="button" Click="Button_Click"/>-->
                         
@@ -463,7 +281,7 @@
                         <TextBlock Name="tblockComp" Grid.Column="36" Grid.ColumnSpan="13" HorizontalAlignment="Center" Grid.Row="4" TextWrapping="Wrap" Text="Compression" VerticalAlignment="Center" FontWeight="Bold" FontSize="12"/>
                     </Grid>
 
-                    <Grid Name="gridExhOverlap" Visibility="Collapsed" Height="550" VerticalAlignment="Bottom" ManipulationMode="TranslateX, TranslateY" HorizontalAlignment="Left" SizeChanged="gridExhOverlap_SizeChanged" RightTapped="General_RightTapped">
+                    <Grid Name="gridExhOverlap" Visibility="Collapsed" Height="545" VerticalAlignment="Bottom" ManipulationMode="TranslateX, TranslateY" HorizontalAlignment="Left" SizeChanged="gridExhOverlap_SizeChanged" RightTapped="General_RightTapped">
                         <Grid.RenderTransform>
                             <CompositeTransform x:Name="transformExh"/>
                         </Grid.RenderTransform>
@@ -602,6 +420,190 @@
                 </Grid>
             </Grid>
 
+            <ScrollViewer Name="scrollForTools" Grid.Column="0" Margin="0,0,-10,0" VerticalScrollBarVisibility="Auto">
+                <StackPanel Name="spToolButtons" Grid.Column="0" Padding="0,5,3,0" Margin="0" Width="102" PointerEntered="spToolButtons_PointerEntered" HorizontalAlignment="Left">
+                    <StackPanel.Background>
+                        <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
+                            <GradientStop Color="#FFF0F0F0" Offset="0"/>
+                            <GradientStop Color="#FFA8A4A4" Offset="1"/>
+                            <GradientStop Color="#FFF0F0F0" Offset="0.948"/>
+                        </LinearGradientBrush>
+                    </StackPanel.Background>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Button Name="btnComp" Style="{StaticResource styleUndoRedoBtns}" Width="38" Padding="0" Margin="8,0,0,0" Height="38" Click="btnComp_Click" ToolTipService.ToolTip="Compression">
+                            <Button.Content>
+                                <Image Source="/Assets/IconCompDivs.bmp" Height="30" Width="30"/>
+                            </Button.Content>
+                        </Button>
+                        <Button Name="btnCyl" Style="{StaticResource styleUndoRedoBtns}" Width="38" Padding="0" Margin="8,0,0,0" Height="38" Click="btnCyl_Click" ToolTipService.ToolTip="Cylinder Id">
+                            <Button.Content>
+                                <Image Source="/Assets/IconCylinderIDOverlay.bmp" Width="30" Height="30"/>
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Button Name="btnOverlap" Style="{StaticResource styleUndoRedoBtns}" Width="38" Padding="0" Margin="8,0,0,0" Height="38" Click="btnOverlap_Click" ToolTipService.ToolTip="Valve overlap">
+                            <Button.Content>
+                                <Image Source="/Assets/IconValveOverlap.bmp" Width="30" Height="30"/>
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+
+                    <Rectangle Fill="Gray" Height="1" Margin="8,5,10,5"/>
+
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE7C9;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="cursor" IsChecked="True" ToolTipService.ToolTip="Pointer"/>
+                        <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE123;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="crop" Click="crop_Click" ToolTipService.ToolTip="Crop Image"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xEE56;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="pen" Click="PenOrEraser_Clicked" ToolTipService.ToolTip="Pen"/>
+                        <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xED60;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="eraser" Click="PenOrEraser_Clicked" ToolTipService.ToolTip="Erase pen strokes"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE8D2;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="text" Click="text_Click" ToolTipService.ToolTip="TextBox"/>
+                        <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE8DB;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="line" Click="ArrowOrLine_Clicked" ToolTipService.ToolTip="Line"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE741;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="arrow" Click="ArrowOrLine_Clicked" ToolTipService.ToolTip="Arrow"/>
+                        <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xEA3A;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,5" Checked="tool_Checked" Name="ellipse" Click="ellipse_Click" ToolTipService.ToolTip="Ellipse"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontFamily="Segoe MDL2 Assets" Content="&#xE739;" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,0" Checked="tool_Checked" Name="rectangle" Click="RectOrRoundRect_Clicked" ToolTipService.ToolTip="Rectangle"/>
+                        <RadioButton GroupName="tools" Style="{StaticResource styleToolRadioButton}" FontSize="20" Width="38" Height="38" HorizontalContentAlignment="Center" Margin="8,0,0,0" Checked="tool_Checked" Name="roundedRectangle" Click="RectOrRoundRect_Clicked" ToolTipService.ToolTip="Rounded rectangle">
+                            <RadioButton.Content>
+                                <Rectangle Stroke="Black" Width="20" Height="20" RadiusX="4" RadiusY="4"/>
+                            </RadioButton.Content>
+                        </RadioButton>
+                    </StackPanel>
+
+                    <Rectangle Fill="Gray" Height="1" Margin="8,5,10,5"/>
+
+                    <StackPanel Margin="0">
+
+                        <RadioButton Tag="1" Name="rbSize1" GroupName="sizes" Style="{StaticResource styleToolRadioButton}" Margin="5,0" Width="88"  Height="17" HorizontalAlignment="Center" Checked="sizes_Checked" Click="sizes_Clicked">
+                            <RadioButton.Content>
+                                <Rectangle Width="56" Height="1" Fill="Black"/>
+                            </RadioButton.Content>
+                        </RadioButton>
+
+                        <RadioButton Tag="2" Name="rbSize2" GroupName="sizes" Style="{StaticResource styleToolRadioButton}" Margin="5,0" Width="88"  Height="18" HorizontalAlignment="Center" Checked="sizes_Checked" Click="sizes_Clicked">
+                            <RadioButton.Content>
+                                <Rectangle Width="56" Height="2" Fill="Black"/>
+                            </RadioButton.Content>
+                        </RadioButton>
+
+                        <RadioButton Tag="6" Name="rbSize6" GroupName="sizes" Style="{StaticResource styleToolRadioButton}" Margin="5,0" Width="88"  Height="22" HorizontalAlignment="Center" Checked="sizes_Checked" Click="sizes_Clicked" IsChecked="True">
+                            <RadioButton.Content>
+                                <Rectangle Width="56" Height="6" Fill="Black"/>
+                            </RadioButton.Content>
+                        </RadioButton>
+
+                        <RadioButton Tag="10" Name="rbSize10" GroupName="sizes" Style="{StaticResource styleToolRadioButton}" Margin="5,0" Width="88"  Height="26" HorizontalAlignment="Center" Checked="sizes_Checked" Click="sizes_Clicked">
+                            <RadioButton.Content>
+                                <Rectangle Width="56" Height="10" Fill="Black"/>
+                            </RadioButton.Content>
+                        </RadioButton>
+
+                    </StackPanel>
+
+                    <Rectangle Name="rectSeparator" Fill="Gray" Height="1" Margin="8,5,10,5"/>
+
+                    <RadioButton Name="strokeColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" IsChecked="True" Checked="colorChanger_Checked">
+                        <RadioButton.Content>
+                            <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
+                                <Border Name="borderForStrokeColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Black" BorderThickness="1">
+                                    <TextBlock Name="strokeX" Visibility="Collapsed" FontFamily="Segoe MDL2 Assets" Text="&#xE8BB;" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                                </Border>
+                                <TextBlock Text="Stroke:" FontSize="{StaticResource myFontSize}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </RadioButton.Content>
+                    </RadioButton>
+
+                    <RadioButton Name="fillColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" Checked="colorChanger_Checked">
+                        <RadioButton.Content>
+                            <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
+                                <Border Name="borderForFillColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Transparent" BorderThickness="1">
+                                    <TextBlock Name="fillX" FontFamily="Segoe MDL2 Assets" Text="&#xE8BB;" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                                </Border>
+                                <TextBlock Text="Fill:" FontSize="{StaticResource myFontSize}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </RadioButton.Content>
+                    </RadioButton>
+
+                    <RadioButton Name="textColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" Checked="colorChanger_Checked">
+                        <RadioButton.Content>
+                            <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
+                                <Border Name="borderForTextColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Black" BorderThickness="1">
+                                    <TextBlock Name="textX" Visibility="Collapsed" FontFamily="Segoe MDL2 Assets" Text="&#xE8BB;" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                                </Border>
+                                <TextBlock Text="Text:" FontSize="{StaticResource myFontSize}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </RadioButton.Content>
+                    </RadioButton>
+
+                    <RadioButton Name="pageColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" Checked="colorChanger_Checked">
+                        <RadioButton.Content>
+                            <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
+                                <Border Name="borderForPageColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="White" BorderThickness="1"/>
+                                <TextBlock Text="Page:" FontSize="{StaticResource myFontSize}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </RadioButton.Content>
+                    </RadioButton>
+
+                    <RadioButton Name="compLinesColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" Checked="colorChanger_Checked" Visibility="Collapsed">
+                        <RadioButton.Content>
+                            <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
+                                <Border Name="borderForCompLinesColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Gray" BorderThickness="1"/>
+                                <TextBlock Text=":" FontSize="12"/>
+                                <Image Source="/Assets/IconCompressionOverlay.bmp" Width="18" Height="18" Margin="1,0,0,0"/>
+                            </StackPanel>
+                        </RadioButton.Content>
+                    </RadioButton>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,2,0">
+                        <Button Background="#FFFA2732" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                        <Button Background="#FFC29A1F" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                        <Button Background="#FF00A84F" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                        <Button Background="Blue" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,2,0">
+                        <Button Background="Red" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                        <Button Background="Yellow" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                        <Button Background="Lime" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                        <Button Background="Cyan" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,2,0">
+                        <Button Background="#FFFFAEC9" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                        <Button Background="Orange" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                        <Button Background="#FFB5E61D" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                        <Button Background="#FF99D9EA" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,2,0">
+                        <Button Background="HotPink" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                        <Button Background="#FFFF7F27" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                        <Button Background="White" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                        <Button Background="#FFC8BFE7" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,2,0">
+                        <Button Background="#FFA349A4" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                        <Button Background="SaddleBrown" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                        <Button Background="LightGray" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                        <Button Background="#FF00A2E8" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,2,0">
+                        <Button Name="btnTransparent" Background="Transparent" Style="{StaticResource styleColorButton}" Click="color_Click">
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8BB;" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                        </Button>
+                        <Button Background="#FF880015" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                        <Button Background="Black" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                        <Button Background="#FF3F48CC" Style="{StaticResource styleColorButton}" Click="color_Click"/>
+                    </StackPanel>
+
+                </StackPanel>
+            </ScrollViewer>
+            
         </Grid>
 
         <!--<StackPanel Grid.Row="2" Height="45">
