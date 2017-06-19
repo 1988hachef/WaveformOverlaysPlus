@@ -132,12 +132,12 @@ namespace WaveformOverlaysPlus
         Line rulerLine;
         Shape gripShape;
         CompositeTransform rulerTransform;
-        double UnitsPerX;
-        double UnitsPerY;
-        double amountBetweenVs;
-        double amountBetweenHs;
-        double VstartValue = 0;
-        double HstartValue = 0;
+        decimal UnitsPerX;
+        decimal UnitsPerY;
+        decimal amountBetweenVs;
+        decimal amountBetweenHs;
+        decimal VstartValue = 0;
+        decimal HstartValue = 0;
         #endregion
 
         #region Dependency Properties
@@ -865,10 +865,10 @@ namespace WaveformOverlaysPlus
             SetAmountBetween(tboxVpos);
             
 
-            transformExh.TranslateX = 140 / UnitsPerX;
-            gridExhOverlap.Width = 230 / UnitsPerX;
-            transformInt.TranslateX = 350 / UnitsPerX;
-            gridIntOverlap.Width = 235 / UnitsPerX;
+            transformExh.TranslateX = 140 / Convert.ToDouble(UnitsPerX);
+            gridExhOverlap.Width = 230 / Convert.ToDouble(UnitsPerX);
+            transformInt.TranslateX = 350 / Convert.ToDouble(UnitsPerX);
+            gridIntOverlap.Width = 235 / Convert.ToDouble(UnitsPerX);
 
         }
 
@@ -1841,7 +1841,8 @@ namespace WaveformOverlaysPlus
 
             if (pt.X != 0)
             {
-                UnitsPerX = amountBetweenVs / pt.X;
+                decimal x = Convert.ToDecimal(pt.X);
+                UnitsPerX = amountBetweenVs / x;
             }
             else
             {
@@ -1856,7 +1857,8 @@ namespace WaveformOverlaysPlus
 
             if (pt.Y != 0)
             {
-                UnitsPerY = amountBetweenHs / pt.Y;
+                decimal y = Convert.ToDecimal(pt.Y);
+                UnitsPerY = amountBetweenHs / y;
             }
             else
             {
@@ -1873,9 +1875,11 @@ namespace WaveformOverlaysPlus
                     GeneralTransform gt1 = rulerLine.TransformToVisual(rectZeroDegrees);
                     Point point = gt1.TransformPoint(new Point(0, 0));
 
-                    if (gripName == "rectV1") { tblockPink1.Text = (Math.Round((point.X * UnitsPerX) + VstartValue)).ToString(); }
-                    if (gripName == "rectV2") { tblockPink2.Text = (Math.Round((point.X * UnitsPerX) + VstartValue)).ToString(); }
-                    if (tblockPink1.Text != "--" && tblockPink2.Text != "--") { tblockPinkDelta.Text = Math.Round(Math.Abs((Convert.ToDouble(tblockPink1.Text) - Convert.ToDouble(tblockPink2.Text)))).ToString(); }
+                    decimal x = Convert.ToDecimal(point.X);
+
+                    if (gripName == "rectV1") { tblockPink1.Text = (Math.Round((x * UnitsPerX) + VstartValue)).ToString(); }
+                    if (gripName == "rectV2") { tblockPink2.Text = (Math.Round((x * UnitsPerX) + VstartValue)).ToString(); }
+                    if (tblockPink1.Text != "--" && tblockPink2.Text != "--") { tblockPinkDelta.Text = (Math.Abs(Convert.ToInt32(tblockPink1.Text) - Convert.ToInt32(tblockPink2.Text))).ToString(); }
                 }
             }
             else
@@ -1885,18 +1889,22 @@ namespace WaveformOverlaysPlus
                     GeneralTransform gt1 = lineV1.TransformToVisual(rectZeroDegrees);
                     Point point = gt1.TransformPoint(new Point(0, 0));
 
-                    tblockPink1.Text = (Math.Round((point.X * UnitsPerX) + VstartValue)).ToString();
+                    decimal x = Convert.ToDecimal(point.X);
+
+                    tblockPink1.Text = (Math.Round((x * UnitsPerX) + VstartValue)).ToString();
                 }
                 if (tblockPink2.Text != "--")
                 {
                     GeneralTransform gt1 = lineV2.TransformToVisual(rectZeroDegrees);
                     Point point = gt1.TransformPoint(new Point(0, 0));
 
-                    tblockPink2.Text = (Math.Round((point.X * UnitsPerX) + VstartValue)).ToString();
+                    decimal x = Convert.ToDecimal(point.X);
+
+                    tblockPink2.Text = (Math.Round((x * UnitsPerX) + VstartValue)).ToString();
                 }
                 if (tblockPink1.Text != "--" && tblockPink2.Text != "--")
                 {
-                    tblockPinkDelta.Text = Math.Round(Math.Abs((Convert.ToDouble(tblockPink1.Text) - Convert.ToDouble(tblockPink2.Text)))).ToString();
+                    tblockPinkDelta.Text = (Math.Abs(Convert.ToInt32(tblockPink1.Text) - Convert.ToInt32(tblockPink2.Text))).ToString();
                 }
             }
         }
@@ -1910,9 +1918,11 @@ namespace WaveformOverlaysPlus
                     GeneralTransform gt1 = rulerLine.TransformToVisual(lineHrulerZero);
                     Point point = gt1.TransformPoint(new Point(0, 0));
 
-                    if (gripName == "rectH1") { tblockPurple1.Text = (Math.Round((point.Y * UnitsPerY) + HstartValue)).ToString(); }
-                    if (gripName == "rectH2") { tblockPurple2.Text = (Math.Round((point.Y * UnitsPerY) + HstartValue)).ToString(); }
-                    if (tblockPurple1.Text != "--" && tblockPurple2.Text != "--") { tblockPurpleDelta.Text = Math.Round(Math.Abs((Convert.ToDouble(tblockPurple1.Text) - Convert.ToDouble(tblockPurple2.Text)))).ToString(); }
+                    decimal y = Convert.ToDecimal(point.Y);
+
+                    if (gripName == "rectH1") { tblockPurple1.Text = (Math.Round((y * UnitsPerY) + HstartValue)).ToString(); }
+                    if (gripName == "rectH2") { tblockPurple2.Text = (Math.Round((y * UnitsPerY) + HstartValue)).ToString(); }
+                    if (tblockPurple1.Text != "--" && tblockPurple2.Text != "--") { tblockPurpleDelta.Text = (Math.Abs(Convert.ToInt32(tblockPurple1.Text) - Convert.ToInt32(tblockPurple2.Text))).ToString(); }
                 }
             }
             else
@@ -1922,18 +1932,22 @@ namespace WaveformOverlaysPlus
                     GeneralTransform gt1 = lineH1.TransformToVisual(lineHrulerZero);
                     Point point = gt1.TransformPoint(new Point(0, 0));
 
-                    tblockPurple1.Text = (Math.Round((point.Y * UnitsPerY) + HstartValue)).ToString();
+                    decimal y = Convert.ToDecimal(point.Y);
+
+                    tblockPurple1.Text = (Math.Round((y * UnitsPerY) + HstartValue)).ToString();
                 }
                 if (tblockPurple2.Text != "--")
                 {
                     GeneralTransform gt1 = lineH2.TransformToVisual(lineHrulerZero);
                     Point point = gt1.TransformPoint(new Point(0, 0));
 
-                    tblockPurple2.Text = (Math.Round((point.Y * UnitsPerY) + HstartValue)).ToString();
+                    decimal y = Convert.ToDecimal(point.Y);
+
+                    tblockPurple2.Text = (Math.Round((y * UnitsPerY) + HstartValue)).ToString();
                 }
                 if (tblockPurple1.Text != "--" && tblockPurple2.Text != "--")
                 {
-                    tblockPurpleDelta.Text = Math.Round(Math.Abs((Convert.ToDouble(tblockPurple1.Text) - Convert.ToDouble(tblockPurple2.Text)))).ToString();
+                    tblockPurpleDelta.Text = (Math.Abs(Convert.ToInt32(tblockPurple1.Text) - Convert.ToInt32(tblockPurple2.Text))).ToString();
                 }
             }
         }
@@ -1950,8 +1964,8 @@ namespace WaveformOverlaysPlus
             {
                 try
                 {
-                    double low = Convert.ToDouble(tboxVzero.Text);
-                    double high = Convert.ToDouble(tboxVpos.Text);
+                    decimal low = Convert.ToDecimal(tboxVzero.Text);
+                    decimal high = Convert.ToDecimal(tboxVpos.Text);
                     amountBetweenVs = high - low;
                     VstartValue = low;
                 }
@@ -1968,8 +1982,8 @@ namespace WaveformOverlaysPlus
             {
                 try
                 {
-                    double low = Convert.ToDouble(tboxHzero.Text);
-                    double high = Convert.ToDouble(tboxHpos.Text);
+                    decimal low = Convert.ToDecimal(tboxHzero.Text);
+                    decimal high = Convert.ToDecimal(tboxHpos.Text);
                     amountBetweenHs = high - low;
                     HstartValue = low;
                 }
@@ -2426,11 +2440,12 @@ namespace WaveformOverlaysPlus
             GeneralTransform gt = rectEVO.TransformToVisual(rectZeroDegrees);
             Point p = gt.TransformPoint(new Point(0, 0));
 
-            var numForText = (p.X * UnitsPerX) + VstartValue;
+            decimal x = Convert.ToDecimal(p.X);
+            decimal numForText = (x * UnitsPerX) + VstartValue;
 
             if (numForText <= 180)
             {
-                tblockExhOpen.Text = Math.Round(180 - numForText).ToString();
+                tblockExhOpen.Text = (Math.Round(180 - numForText)).ToString();
                 if (tblockEVO.Text != "\u00BA BBC")
                 {
                     tblockEVO.Text = "\u00BA BBC";
@@ -2438,7 +2453,7 @@ namespace WaveformOverlaysPlus
             }
             else
             {
-                tblockExhOpen.Text = Math.Round(numForText - 180).ToString();
+                tblockExhOpen.Text = (Math.Round(numForText - 180)).ToString();
                 if (tblockEVO.Text != "\u00BA ABC")
                 {
                     tblockEVO.Text = "\u00BA ABC";
@@ -2451,11 +2466,12 @@ namespace WaveformOverlaysPlus
             GeneralTransform gt = rectEVC.TransformToVisual(rectZeroDegrees);
             Point p = gt.TransformPoint(new Point(0, 0));
 
-            var numForText = (p.X * UnitsPerX) + VstartValue;
+            decimal x = Convert.ToDecimal(p.X);
+            decimal numForText = (x * UnitsPerX) + VstartValue;
 
             if (numForText >= 360)
             {
-                tblockExhClose.Text = Math.Round(numForText - 360).ToString();
+                tblockExhClose.Text = (Math.Round(numForText - 360)).ToString();
                 if (tblockEVC.Text != "\u00BA ATC")
                 {
                     tblockEVC.Text = "\u00BA ATC";
@@ -2463,7 +2479,7 @@ namespace WaveformOverlaysPlus
             }
             else
             {
-                tblockExhClose.Text = Math.Round(360 - numForText).ToString();
+                tblockExhClose.Text = (Math.Round(360 - numForText)).ToString();
                 if (tblockEVC.Text != "\u00BA BTC")
                 {
                     tblockEVC.Text = "\u00BA BTC";
@@ -2476,11 +2492,12 @@ namespace WaveformOverlaysPlus
             GeneralTransform gt = rectIVO.TransformToVisual(rectZeroDegrees);
             Point p = gt.TransformPoint(new Point(0, 0));
 
-            var numForText = (p.X * UnitsPerX) + VstartValue;
+            decimal x = Convert.ToDecimal(p.X);
+            var numForText = (x * UnitsPerX) + VstartValue;
 
             if (numForText <= 360)
             {
-                tblockIntOpen.Text = Math.Round(360 - numForText).ToString();
+                tblockIntOpen.Text = (Math.Round(360 - numForText)).ToString();
                 if (tblockIVO.Text != "\u00BA BTC")
                 {
                     tblockIVO.Text = "\u00BA BTC";
@@ -2488,7 +2505,7 @@ namespace WaveformOverlaysPlus
             }
             else
             {
-                tblockIntOpen.Text = Math.Round(numForText - 360).ToString();
+                tblockIntOpen.Text = (Math.Round(numForText - 360)).ToString();
                 if (tblockIVO.Text != "\u00BA ATC")
                 {
                     tblockIVO.Text = "\u00BA ATC";
@@ -2501,11 +2518,12 @@ namespace WaveformOverlaysPlus
             GeneralTransform gt = rectIVC.TransformToVisual(rectZeroDegrees);
             Point p = gt.TransformPoint(new Point(0, 0));
 
-            var numForText = (p.X * UnitsPerX) + VstartValue;
+            decimal x = Convert.ToDecimal(p.X);
+            var numForText = (x * UnitsPerX) + VstartValue;
 
             if (numForText >= 540)
             {
-                tblockIntClose.Text = Math.Round(numForText - 540).ToString();
+                tblockIntClose.Text = (Math.Round(numForText - 540)).ToString();
                 if (tblockIVC.Text != "\u00BA ABC")
                 {
                     tblockIVC.Text = "\u00BA ABC";
@@ -2513,7 +2531,7 @@ namespace WaveformOverlaysPlus
             }
             else
             {
-                tblockIntClose.Text = Math.Round(540 - numForText).ToString();
+                tblockIntClose.Text = (Math.Round(540 - numForText)).ToString();
                 if (tblockIVC.Text != "\u00BA BBC")
                 {
                     tblockIVC.Text = "\u00BA BBC";
@@ -4557,8 +4575,5 @@ namespace WaveformOverlaysPlus
 
 
         #endregion
-
-        
-
     }
 }
