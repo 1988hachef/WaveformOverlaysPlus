@@ -176,12 +176,12 @@
 
                     <Grid Name="gridMain" Background="{Binding Background, ElementName=borderForPageColor}" RightTapped="General_RightTapped">
 
-                        <!--<TextBlock Name="tblock" Text="test" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                        <Button Content="button" Click="Button_Click"/>-->
+                        <!--<TextBlock Name="tblock" Text="test" HorizontalAlignment="Left" VerticalAlignment="Top"/>-->
+                        <Button Content="button" Click="Button_Click" Margin="-20,0,0,0"/>
                         
                     </Grid>
 
-                    <Grid Name="gridCompressionOverlay" ManipulationMode="TranslateX" HorizontalAlignment="Left" VerticalAlignment="Top" Opacity="0.001" IsHitTestVisible="False" Width="721">
+                    <Grid Name="gridCompressionOverlay" ManipulationMode="TranslateX" HorizontalAlignment="Left" VerticalAlignment="Top" Opacity="0.001" IsHitTestVisible="False" Width="721" UseLayoutRounding="False">
                         <Grid.RenderTransform>
                             <CompositeTransform x:Name="transformComp"/>
                         </Grid.RenderTransform>
@@ -281,7 +281,7 @@
                         <TextBlock Name="tblockComp" Grid.Column="36" Grid.ColumnSpan="13" HorizontalAlignment="Center" Grid.Row="4" TextWrapping="Wrap" Text="Compression" VerticalAlignment="Center" FontWeight="Bold" FontSize="12"/>
                     </Grid>
 
-                    <Grid Name="gridExhOverlap" Visibility="Collapsed" Height="545" VerticalAlignment="Bottom" ManipulationMode="TranslateX, TranslateY" HorizontalAlignment="Left" SizeChanged="gridExhOverlap_SizeChanged" RightTapped="General_RightTapped">
+                    <Grid Name="gridExhOverlap" Visibility="Collapsed" Height="270" VerticalAlignment="Bottom" ManipulationMode="TranslateX, TranslateY" HorizontalAlignment="Left" SizeChanged="gridExhOverlap_SizeChanged" RightTapped="General_RightTapped">
                         <Grid.RenderTransform>
                             <CompositeTransform x:Name="transformExh"/>
                         </Grid.RenderTransform>
@@ -300,7 +300,7 @@
                         <Rectangle Name="rectRed" Fill="Red" Opacity="0.2" Margin="0,30,0,0"/>
                     </Grid>
 
-                    <Grid Name="gridIntOverlap" Visibility="Collapsed" Height="450" VerticalAlignment="Bottom" HorizontalAlignment="Left" ManipulationMode="TranslateX, TranslateY" SizeChanged="gridIntOverlap_SizeChanged" RightTapped="General_RightTapped">
+                    <Grid Name="gridIntOverlap" Visibility="Collapsed" Height="220" VerticalAlignment="Bottom" HorizontalAlignment="Left" ManipulationMode="TranslateX, TranslateY" SizeChanged="gridIntOverlap_SizeChanged" RightTapped="General_RightTapped">
                         <Grid.RenderTransform>
                             <CompositeTransform x:Name="transformInt"/>
                         </Grid.RenderTransform>

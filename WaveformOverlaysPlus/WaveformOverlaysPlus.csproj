@@ -99,6 +99,7 @@
     <Compile Include="Controls\PaintObjectTemplatedControl.cs" />
     <Compile Include="Converters\OpacityBindingConverter.cs" />
     <Compile Include="Helpers\ImageUtils.cs" />
+    <Compile Include="Helpers\MathUtil.cs" />
     <Compile Include="Helpers\WriteableBitmapExtensions.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>

@@ -852,24 +852,26 @@ namespace WaveformOverlaysPlus
                 {
                     await file.DeleteAsync(StorageDeleteOption.Default);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    
+                    await new MessageDialog("Error deleting old image files " + ex.Message).ShowAsync();
                 }
             }
 
-            // Set these to initial values
+            // Set some initial values
+            gridForOverall.Width = gridForOverall.ActualWidth;
+            gridForOverall.Height = gridForOverall.ActualHeight;
             gridCompressionOverlay.Width = gridMain.ActualWidth;
             gridCompressionOverlay.Height = gridMain.ActualHeight;
+            gridExhOverlap.Height = gridMain.ActualHeight * 0.6;
+            gridIntOverlap.Height = (gridMain.ActualHeight * 0.6) - 46;
             SetAmountBetween(tboxHpos);
             SetAmountBetween(tboxVpos);
-            
 
             transformExh.TranslateX = 140 / Convert.ToDouble(UnitsPerX);
             gridExhOverlap.Width = 230 / Convert.ToDouble(UnitsPerX);
             transformInt.TranslateX = 350 / Convert.ToDouble(UnitsPerX);
             gridIntOverlap.Width = 235 / Convert.ToDouble(UnitsPerX);
-
         }
 
         private void PenOrEraser_Clicked(object sender, RoutedEventArgs e)
@@ -2012,7 +2014,7 @@ namespace WaveformOverlaysPlus
             {
                 if (gripName == "polygonVzero")
                 {
-                    var minWidth = (prisonerTopLeftPoint.X + gridCompressionOverlay.ActualWidth) - 5;
+                    var minWidth = (prisonerTopLeftPoint.X + gridCompressionOverlay.ActualWidth) - 30;
                     if (rightAdjust <= minWidth)
                     {
                         transformComp.TranslateX += e.Delta.Translation.X;
@@ -2023,7 +2025,7 @@ namespace WaveformOverlaysPlus
                 }
                 else if (gripName == "polygonV720")
                 {
-                    var minWidth = (prisonerTopLeftPoint.X - gridCompressionOverlay.ActualWidth) + 5;
+                    var minWidth = (prisonerTopLeftPoint.X - gridCompressionOverlay.ActualWidth) + 30;
                     if (leftAdjust >= minWidth)
                     {
                         gridCompressionOverlay.Width = gridCompressionOverlay.ActualWidth + e.Delta.Translation.X;
@@ -2144,7 +2146,7 @@ namespace WaveformOverlaysPlus
             {
                 _UndoRedo.InsertInUnDoRedoForMoveOrResize(Xchange, Ychange, 0, 0, rulerContainer);
                 ManageUndoRedoButtons();
-            }  
+            }
         }
 
         void SetSomeStuffOnRulerManipulationCompleted()
@@ -4266,9 +4268,67 @@ namespace WaveformOverlaysPlus
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //GeneralTransform gt = rectEVC.TransformToVisual(rectZeroDegrees);
-            //Point p = gt.TransformPoint(new Point(0, 0));
-            //tblock.Text = p.X.ToString();
+            InkStrokeBuilder isb = new InkStrokeBuilder();
+            Matrix3x2 mat = Matrix3x2.CreateScale(1.0f);
+            //List<InkPoint> inkPoints = new List<InkPoint>();
+            List<Point> myPoints = new List<Point>();
+            InkStrokeContainer container = new InkStrokeContainer();
+
+            Point p1 = new Point(10, 10);
+            Point p2 = new Point(300, 300);
+
+
+
+            Point ptA = p1;
+            Point ptB = p2;
+
+            // Find the arrow shaft unit vector.
+            float vx = (float)(ptB.X - ptA.X);
+            float vy = (float)(ptB.Y - ptA.Y);
+            float dist = (float)Math.Sqrt(vx * vx + vy * vy);
+            vx /= dist;
+            vy /= dist;
+
+            var length = 20;
+            float ax = length * (-vy - vx);
+            float ay = length * (vx - vy);
+            Point pointArrow1 = new Point(ptB.X + ax, ptB.Y + ay);
+            Point pointArrow2 = new Point(ptB.X - ay, ptB.Y + ax);
+
+            //InkPoint ip1 = new InkPoint(p1, 2);
+            //InkPoint ip2 = new InkPoint(p2, 2);
+            //InkPoint ip3 = new InkPoint(pointArrow1, 2);
+            //InkPoint ip4 = new InkPoint(p2, 2);
+            //InkPoint ip5 = new InkPoint(pointArrow2, 2);
+
+            //inkPoints.Add(ip1);
+            //inkPoints.Add(ip2);
+            //inkPoints.Add(ip3);
+            //inkPoints.Add(ip4);
+            //inkPoints.Add(ip5);
+
+
+            myPoints.Add(p1);
+            myPoints.Add(p2);
+            myPoints.Add(pointArrow1);
+            myPoints.Add(p2);
+            myPoints.Add(pointArrow2);
+
+            SolidColorBrush myBrush = borderForStrokeColor.Background as SolidColorBrush;
+            InkDrawingAttributes _drawAtt = new InkDrawingAttributes();
+            _drawAtt.Color = myBrush.Color;
+            _drawAtt.IgnorePressure = true;
+            _drawAtt.PenTip = PenTipShape.Circle;
+            _drawAtt.Size = new Size(currentSizeSelected, currentSizeSelected);
+
+            isb.SetDefaultDrawingAttributes(_drawAtt);
+
+            InkStroke myNewStroke = isb.CreateStroke(myPoints);
+
+            container.AddStroke(myNewStroke);
+
+            _strokes.Add(container);
+            DrawingCanvas.Invalidate();
         }
 
         #region Undo Redo buttons
