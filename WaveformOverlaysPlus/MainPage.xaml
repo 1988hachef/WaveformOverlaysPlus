@@ -175,9 +175,9 @@
                     </FlyoutBase.AttachedFlyout>
 
                     <Grid Name="gridMain" Background="{Binding Background, ElementName=borderForPageColor}" RightTapped="General_RightTapped">
-
-                        <!--<TextBlock Name="tblock" Text="test" HorizontalAlignment="Left" VerticalAlignment="Top"/>-->
-                        <Button Content="button" Click="Button_Click" Margin="-20,0,0,0"/>
+                        
+                        <!--<TextBlock Name="tblock" Text="test" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                        <Button Content="button" Click="Button_Click" Margin="-20,0,0,0"/>-->
                         
                     </Grid>
 
@@ -418,6 +418,11 @@
                     </Rectangle>
 
                 </Grid>
+
+                <Grid Name="gridForPrint" Visibility="Visible">
+                    <Image Name="imageForPrint"/>
+                </Grid>
+
             </Grid>
 
             <ScrollViewer Name="scrollForTools" Grid.Column="0" Margin="0,0,-10,0" VerticalScrollBarVisibility="Auto">
@@ -447,6 +452,11 @@
                         <Button Name="btnOverlap" Style="{StaticResource styleUndoRedoBtns}" Width="38" Padding="0" Margin="8,0,0,0" Height="38" Click="btnOverlap_Click" ToolTipService.ToolTip="Valve overlap">
                             <Button.Content>
                                 <Image Source="/Assets/IconValveOverlap.bmp" Width="30" Height="30"/>
+                            </Button.Content>
+                        </Button>
+                        <Button Name="btnCylLabels" Style="{StaticResource styleUndoRedoBtns}" Width="38" Padding="0" Margin="8,0,0,0" Height="38" ToolTipService.ToolTip="Cylinder labels" Click="btnCylLabels_Click">
+                            <Button.Content>
+                                <Image Source="/Assets/Square44x44Logo.scale-200.png" Width="30" Height="30"/>
                             </Button.Content>
                         </Button>
                     </StackPanel>
@@ -626,12 +636,8 @@
             </Grid>
         </Grid>
 
-        <Grid Grid.RowSpan="3" Name="gridForPrint" Width="1050" Height="810" Visibility="Collapsed">
-            <Image Name="imageForPrint" Margin="10,0,0,0" />
-        </Grid>
-
         <Grid Grid.RowSpan="3" Name="gridForCrop" Background="#B2000000" Visibility="Collapsed">
-            <Grid Margin="30" Background="LightGray" BorderBrush="Black" BorderThickness="1">
+            <Grid Margin="30,15" Background="LightGray" BorderBrush="Black" BorderThickness="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
@@ -644,7 +650,7 @@
                     <Button Name="btnClose" Content="Close" Background="#66FF0000" Margin="5" FontSize="{StaticResource myFontSize}" Click="btnClose_Click"/>
                 </StackPanel>
 
-                <Grid Name="gridCropping" Grid.Row="1" Margin="10,0,10,10" Background="Beige">
+                <Grid Name="gridCropping" Grid.Row="1" Margin="10,0,10,10" Background="White">
                     <Grid Name="gridImageContainer">
                         <!--<Image Source="Assets/Square150x150Logo.scale-200.png" Stretch="None"/>-->
                         <local1:PaintObjectTemplatedControl x:Name="controlCropOutline" Width="200" Height="200" IsForCropper="True" PointerPressed="CropOutline_PointerPressed" PointerReleased="CropOutline_PointerReleased" PointerEntered="CropOutline_PointerEntered" >
@@ -667,7 +673,7 @@
                 <GridView Grid.Row="1" Name="gridviewImages" Margin="10,0,10,10" Background="White" Visibility="Collapsed" IsItemClickEnabled="True" ItemClick="gridviewImages_ItemClick">
                     <GridView.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Width="300" Height="220" Background="Beige">
+                            <StackPanel Width="300" Height="220" Background="White" Margin="5">
                                 <Image Source="{Binding FilePath}"  Width="300" Height="200"/>
                                 <Border Background="LightGray" Height="20">
                                     <TextBlock FontSize="12" Text="{Binding FileName}" VerticalAlignment="Center" Margin="5,0,0,0"/>
@@ -681,7 +687,7 @@
         </Grid>
 
         <Grid Name="gridCylinderIDSelections" Grid.RowSpan="2" Background="#B2000000" Visibility="Collapsed">
-            <Border Background="White" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Border Background="#FFEFEFEF" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <StackPanel>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,4,0">
@@ -904,6 +910,25 @@
                 </StackPanel>
             </Border>
         </Grid>
+
+        <StackPanel Name="spLabelChooser" Visibility="Collapsed" Grid.RowSpan="3" Background="#FFEFEFEF" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20">
+            <TextBlock Text="How many labels would you like?" Margin="0,0,0,5"/>
+            <StackPanel Orientation="Horizontal">
+                <Button Content="1" Margin="5" Click="labelChooserButtons_Click"/>
+                <Button Content="2" Margin="5" Click="labelChooserButtons_Click"/>
+                <Button Content="3" Margin="5" Click="labelChooserButtons_Click"/>
+                <Button Content="4" Margin="5" Click="labelChooserButtons_Click"/>
+                <Button Content="5" Margin="5" Click="labelChooserButtons_Click"/>
+                <Button Content="6" Margin="5" Click="labelChooserButtons_Click"/>
+                <Button Content="7" Margin="5" Click="labelChooserButtons_Click"/>
+                <Button Content="8" Margin="5" Click="labelChooserButtons_Click"/>
+                <Button Content="9" Margin="5" Click="labelChooserButtons_Click"/>
+                <Button Content="10" Margin="5" Click="labelChooserButtons_Click"/>
+                <Button Content="11" Margin="5" Click="labelChooserButtons_Click"/>
+                <Button Content="12" Margin="5" Click="labelChooserButtons_Click"/>
+            </StackPanel>
+            <Button Name="btnLabelCancel" Content="Cancel" HorizontalAlignment="Center" Margin="0,20,0,0" Background="#7FFF0000" Click="btnLabelCancel_Click"/>
+        </StackPanel>
 
     </Grid>
 

@@ -452,7 +452,6 @@ namespace WaveformOverlaysPlus
 
         async void Print()
         {
-            gridCover.Visibility = Visibility.Visible;
             gridBranding.Visibility = Visibility.Visible;
 
             RenderTargetBitmap rtb = new RenderTargetBitmap();
@@ -467,6 +466,10 @@ namespace WaveformOverlaysPlus
 
             imageForPrint.Source = wb;
             gridForPrint.Visibility = Visibility.Visible;
+            if (gridForPrint.ActualWidth > 1055)
+            {
+                gridForPrint.Width = 1055;
+            }
 
             if (PrintManager.IsSupported())
             {
@@ -501,7 +504,6 @@ namespace WaveformOverlaysPlus
                 imageForPrint.ClearValue(Image.SourceProperty);
                 gridForPrint.Visibility = Visibility.Collapsed;
                 gridBranding.Visibility = Visibility.Collapsed;
-                gridCover.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -866,6 +868,8 @@ namespace WaveformOverlaysPlus
             gridCompressionOverlay.Height = gridMain.ActualHeight;
             gridExhOverlap.Height = gridMain.ActualHeight * 0.6;
             gridIntOverlap.Height = (gridMain.ActualHeight * 0.6) - 46;
+            gridImageContainer.Width = gridMain.ActualWidth;
+            gridImageContainer.Height = gridMain.ActualHeight;
             SetAmountBetween(tboxHpos);
             SetAmountBetween(tboxVpos);
 
@@ -4601,5 +4605,73 @@ namespace WaveformOverlaysPlus
 
 
         #endregion
+
+        private void btnCylLabels_Click(object sender, RoutedEventArgs e)
+        {
+            gridCover.Visibility = Visibility.Visible;
+            spLabelChooser.Visibility = Visibility.Visible;
+        }
+
+        private void labelChooserButtons_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as Button;
+            var numberOfLabels = Convert.ToInt32(btn.Content);
+
+            Grid labelGrid = new Grid();
+            labelGrid.Background = new SolidColorBrush(Colors.Transparent);
+
+            if (numberOfLabels == 1)
+            {
+                TextBox textbox = new TextBox() { Style = App.Current.Resources["styleTextBoxDividers"] as Style };
+                labelGrid.Children.Add(textbox);
+            }
+            else
+            {
+                for (int i = 1; i < numberOfLabels; i++)
+                {
+                    ColumnDefinition def1 = new ColumnDefinition() { Width = GridLength.Auto };
+                    ColumnDefinition def2 = new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) };
+
+                    labelGrid.ColumnDefinitions.Add(def1);
+                    labelGrid.ColumnDefinitions.Add(def2);
+                }
+
+                ColumnDefinition defFinal = new ColumnDefinition() { Width = GridLength.Auto };
+                labelGrid.ColumnDefinitions.Add(defFinal);
+
+                int columnPosition = 0;
+                for (int i = 0; i < numberOfLabels; i++)
+                {
+                    TextBox textbox = new TextBox() { Style = App.Current.Resources["styleTextBoxDividers"] as Style };
+                    labelGrid.Children.Add(textbox);
+                    Grid.SetColumn(textbox, columnPosition);
+
+                    columnPosition += 2;
+                }
+            }
+
+            PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
+            paintObject.Content = labelGrid;
+            paintObject.Height = 60;
+            paintObject.Width = numberOfLabels * 50;
+            paintObject.Closing += GeneralPaintObject_Closing;
+            paintObject.ManipulationStarting += GeneralPaintObj_ManipStarting;
+            paintObject.ManipulationCompleted += GeneralPaintObj_ManipCompleted;
+            paintObject.Z_Order_Changed += GeneralPaintObject_Z_Order_Changed;
+
+            gridMain.Children.Add(paintObject);
+
+            spLabelChooser.Visibility = Visibility.Collapsed;
+            gridCover.Visibility = Visibility.Collapsed;
+
+            _UndoRedo.InsertInUnDoRedoForAddRemoveElement(true, paintObject, gridMain);
+            ManageUndoRedoButtons();
+        }
+
+        private void btnLabelCancel_Click(object sender, RoutedEventArgs e)
+        {
+            spLabelChooser.Visibility = Visibility.Collapsed;
+            gridCover.Visibility = Visibility.Collapsed;
+        }
     }
 }
