@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Graphics.Display;
@@ -37,26 +38,63 @@ namespace WaveformOverlaysPlus.Helpers
             return file;
         }
 
-        public static async Task CaptureElementToFile(UIElement uiElement, StorageFile file)
+        public static async Task CaptureElementToFile(UIElement uiElement, StorageFile outputFile)
         {
             RenderTargetBitmap renderTargetBitmap = new RenderTargetBitmap();
             await renderTargetBitmap.RenderAsync(uiElement);
             IBuffer pixelBuffer = await renderTargetBitmap.GetPixelsAsync();
 
             DisplayInformation dispInfo = DisplayInformation.GetForCurrentView();
+            Guid encoderId = GetBitmapEncoderId(outputFile.Name);
 
-            using (var stream = await file.OpenAsync(FileAccessMode.ReadWrite))
+            using (var stream = await outputFile.OpenAsync(FileAccessMode.ReadWrite))
             {
-                var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.BmpEncoderId, stream);
+                var encoder = await BitmapEncoder.CreateAsync(encoderId, stream);
 
-                encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Straight,
-                    (uint)renderTargetBitmap.PixelWidth,
-                    (uint)renderTargetBitmap.PixelHeight,
-                    dispInfo.LogicalDpi, dispInfo.LogicalDpi,
-                    pixelBuffer.ToArray());
+                encoder.SetPixelData(BitmapPixelFormat.Bgra8, 
+                                     BitmapAlphaMode.Straight,
+                                     (uint)renderTargetBitmap.PixelWidth,
+                                     (uint)renderTargetBitmap.PixelHeight,
+                                     dispInfo.LogicalDpi,
+                                     dispInfo.LogicalDpi,
+                                     pixelBuffer.ToArray());
 
                 await encoder.FlushAsync();
             }
+        }
+
+        private static Guid GetBitmapEncoderId(string fileName)
+        {
+            Guid encoderId;
+
+            var ext = Path.GetExtension(fileName);
+
+            if (new[] { ".bmp", ".dib" }.Contains(ext))
+            {
+                encoderId = BitmapEncoder.BmpEncoderId;
+            }
+            else if (new[] { ".tiff", ".tif" }.Contains(ext))
+            {
+                encoderId = BitmapEncoder.TiffEncoderId;
+            }
+            else if (new[] { ".gif" }.Contains(ext))
+            {
+                encoderId = BitmapEncoder.GifEncoderId;
+            }
+            else if (new[] { ".jpg", ".jpeg", ".jpe", ".jfif", ".jif" }.Contains(ext))
+            {
+                encoderId = BitmapEncoder.JpegEncoderId;
+            }
+            else if (new[] { ".hdp", ".jxr", ".wdp" }.Contains(ext))
+            {
+                encoderId = BitmapEncoder.JpegXREncoderId;
+            }
+            else //if (new [] {".png"}.Contains(ext))
+            {
+                encoderId = BitmapEncoder.PngEncoderId;
+            }
+
+            return encoderId;
         }
     }
 }

@@ -97,6 +97,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\PaintObjectTemplatedControl.cs" />
+    <Compile Include="Converters\ColorConverters.cs" />
     <Compile Include="Converters\OpacityBindingConverter.cs" />
     <Compile Include="Helpers\ImageUtils.cs" />
     <Compile Include="Helpers\MathUtil.cs" />

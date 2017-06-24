@@ -28,11 +28,11 @@ namespace WaveformOverlaysPlus.Helpers
             }
             else if (new[] { ".gif" }.Contains(ext))
             {
-                encoderId = BitmapEncoder.TiffEncoderId;
+                encoderId = BitmapEncoder.GifEncoderId;
             }
             else if (new[] { ".jpg", ".jpeg", ".jpe", ".jfif", ".jif" }.Contains(ext))
             {
-                encoderId = BitmapEncoder.TiffEncoderId;
+                encoderId = BitmapEncoder.JpegEncoderId;
             }
             else if (new[] { ".hdp", ".jxr", ".wdp" }.Contains(ext))
             {
@@ -46,9 +46,7 @@ namespace WaveformOverlaysPlus.Helpers
             return encoderId;
         }
 
-        public static async Task SaveAsync(
-            this WriteableBitmap writeableBitmap,
-            StorageFile outputFile)
+        public static async Task SaveAsync(this WriteableBitmap writeableBitmap, StorageFile outputFile)
         {
             var encoderId = GetEncoderId(outputFile.Name);
 
@@ -80,15 +78,12 @@ namespace WaveformOverlaysPlus.Helpers
             }
             catch (Exception ex)
             {
-                var msgDialog = new MessageDialog("Failed to save file:  " + ex);
-                await msgDialog.ShowAsync();
+                // Your exception handling here..
                 throw;
             }
         }
 
-        public static async Task<WriteableBitmap> LoadAsync(
-            this WriteableBitmap writeableBitmap,
-            StorageFile storageFile)
+        public static async Task<WriteableBitmap> LoadAsync(this WriteableBitmap writeableBitmap, StorageFile storageFile)
         {
             var wb = writeableBitmap;
 

@@ -47,6 +47,7 @@ using WaveformOverlaysPlus.UndoRedoCommands;
 using System.Windows.Input;
 using Windows.UI.Input.Inking.Core;
 using Windows.System;
+using WaveformOverlaysPlus.Converters;
 
 namespace WaveformOverlaysPlus
 {
@@ -1030,18 +1031,17 @@ namespace WaveformOverlaysPlus
             {
                 var strokes = item.GetStrokes();
 
+                // For adding effects
                 using (var list = new CanvasCommandList(session))
                 {
+                    // First draw the thing we want to apply effects to
                     using (var listSession = list.CreateDrawingSession())
                     {
                         listSession.DrawInk(strokes);
                     }
 
-                    using (var shadowEffect = new ShadowEffect
-                    {
-                        ShadowColor = Colors.DarkRed,
-                        Source = list,
-                    })
+                    // Then draw the effects
+                    using (var shadowEffect = new ShadowEffect { ShadowColor = Colors.DimGray, Source = list, })
                     {
                         session.DrawImage(shadowEffect, new Vector2(2, 2));
                     }
@@ -1075,13 +1075,11 @@ namespace WaveformOverlaysPlus
 
         private void gridForOtherInput_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            (sender as Grid).CapturePointer(e.Pointer);
+            (sender as UIElement).CapturePointer(e.Pointer);
 
             lineForArrow = new Line();
-            if (currentToolChosen == "arrow")
-            {
-                lineForArrow.StrokeEndLineCap = PenLineCap.Triangle;
-            }
+            lineForArrow.StrokeStartLineCap = PenLineCap.Round;
+            lineForArrow.StrokeEndLineCap = PenLineCap.Round;
             lineForArrow.Stroke = borderForStrokeColor.Background;
             lineForArrow.StrokeThickness = currentSizeSelected;
             lineForArrow.IsHitTestVisible = false;
@@ -1156,57 +1154,81 @@ namespace WaveformOverlaysPlus
             // Remove the pointer moved event
             gridForOtherInput.PointerMoved -= gridForOtherInput_PointerMoved;
 
-            if (currentToolChosen == "arrow")
+            (sender as UIElement).ReleasePointerCapture(e.Pointer);
+
+            InkStrokeBuilder strokeBuilder = new InkStrokeBuilder();
+            List<Point> listOfPoints = new List<Point>();
+            InkStrokeContainer strokeContainer = new InkStrokeContainer();
+            InkStroke myNewStroke;
+            InkDrawingAttributes drawingAttributes = inkCanvas.InkPresenter.CopyDefaultDrawingAttributes();
+            Point ptA = new Point(lineForArrow.X1, lineForArrow.Y1);
+            Point ptB = new Point(lineForArrow.X2, lineForArrow.Y2);
+
+            if (currentToolChosen == "line")
+            {
+                listOfPoints.Add(ptA);
+                listOfPoints.Add(ptB);
+
+                drawingAttributes.IgnorePressure = true;
+                strokeBuilder.SetDefaultDrawingAttributes(drawingAttributes);
+
+                myNewStroke = strokeBuilder.CreateStroke(listOfPoints);
+                strokeContainer.AddStroke(myNewStroke);
+                _strokes.Add(strokeContainer);
+
+                DrawingCanvas.Invalidate();
+            }
+            else // currentToolChosen == "arrow"
             {
                 // Determine the length to make the arrow head lines
                 int arrowHeadLength =
                     currentSizeSelected == 1 ? 10
-                  : currentSizeSelected == 2 ? 8
-                  : currentSizeSelected == 6 ? 6
-                  : currentSizeSelected == 10 ? 4
-                  : 12;
+                  : currentSizeSelected == 2 ? 12
+                  : currentSizeSelected == 6 ? 14
+                  : currentSizeSelected == 10 ? 16
+                  : 14;
 
-                Point ptA = new Point(lineForArrow.X1, lineForArrow.Y1);
-                Point ptB = new Point(lineForArrow.X2, lineForArrow.Y2);
+                // Get arrowhead points
+                Point[] arrowheadPoints = GetArrowheadPoints(arrowHeadLength, ptA, ptB);
+                Point ptC = arrowheadPoints[0];
+                Point ptD = arrowheadPoints[1];
 
-                // Find the arrow shaft unit vector.
-                float vx = (float)(ptB.X - ptA.X);
-                float vy = (float)(ptB.Y - ptA.Y);
-                float dist = (float)Math.Sqrt(vx * vx + vy * vy);
-                vx /= dist;
-                vy /= dist;
+                listOfPoints.Add(ptA);
+                listOfPoints.Add(ptB);
+                listOfPoints.Add(ptC);
+                listOfPoints.Add(ptB);
+                listOfPoints.Add(ptD);
 
-                var length = arrowHeadLength;
-                float ax = length * (-vy - vx);
-                float ay = length * (vx - vy);
-                Point pointArrow1 = new Point(ptB.X + ax, ptB.Y + ay);
-                Point pointArrow2 = new Point(ptB.X - ay, ptB.Y + ax);
+                drawingAttributes.IgnorePressure = true;
+                strokeBuilder.SetDefaultDrawingAttributes(drawingAttributes);
 
-                Polyline arrowHead = new Polyline();
-                arrowHead.StrokeLineJoin = PenLineJoin.Miter;
-                arrowHead.Stroke = borderForStrokeColor.Background;
-                arrowHead.Fill = borderForStrokeColor.Background;
-                arrowHead.StrokeThickness = currentSizeSelected;
-                arrowHead.IsHitTestVisible = false;
-                arrowHead.Points.Add(pointArrow1);
-                arrowHead.Points.Add(ptB);
-                arrowHead.Points.Add(pointArrow2);
-                arrowHead.Points.Add(pointArrow1);
-                arrowHead.Points.Add(ptB);
+                myNewStroke = strokeBuilder.CreateStroke(listOfPoints);
+                strokeContainer.AddStroke(myNewStroke);
+                _strokes.Add(strokeContainer);
 
-                gridMain.Children.Add(arrowHead);
-                BringToFront(arrowHead);
-
-                (sender as Grid).ReleasePointerCapture(e.Pointer);
-
-                _UndoRedo.InsertInUnDoRedoForLineOrArrow(lineForArrow, arrowHead, gridMain);
-                ManageUndoRedoButtons();
+                DrawingCanvas.Invalidate();
             }
-            else
-            {
-                _UndoRedo.InsertInUnDoRedoForLineOrArrow(lineForArrow, null, gridMain);
-                ManageUndoRedoButtons();
-            }
+
+            gridMain.Children.Remove(lineForArrow);
+
+            _UndoRedo.InsertInUnDoRedoForDrawStroke(_strokes, strokeContainer, DrawingCanvas);
+            ManageUndoRedoButtons();
+        }
+
+        private Point[] GetArrowheadPoints(int arrowheadLength, Point arrowshaftStartPoint, Point arrowshaftEndPoint)
+        {
+            // Find the arrow shaft unit vector.
+            float vx = (float)(arrowshaftEndPoint.X - arrowshaftStartPoint.X);
+            float vy = (float)(arrowshaftEndPoint.Y - arrowshaftStartPoint.Y);
+            float dist = (float)Math.Sqrt(vx * vx + vy * vy);
+            vx /= dist;
+            vy /= dist;
+
+            float ax = arrowheadLength * (-vy - vx);
+            float ay = arrowheadLength * (vx - vy);
+
+            return new Point[] { new Point(arrowshaftEndPoint.X + ax, arrowshaftEndPoint.Y + ay),
+                                 new Point(arrowshaftEndPoint.X - ay, arrowshaftEndPoint.Y + ax)};
         }
 
         #endregion
@@ -1765,6 +1787,8 @@ namespace WaveformOverlaysPlus
 
         private void CropOutline_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
+            (sender as UIElement).CapturePointer(e.Pointer);
+
             foreach (Rectangle r in gridCrop.Children)
             {
                 if (r.Width == 12)
@@ -1776,6 +1800,8 @@ namespace WaveformOverlaysPlus
 
         private void CropOutline_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
+            (sender as UIElement).ReleasePointerCapture(e.Pointer);
+
             foreach (Rectangle r in gridCrop.Children)
             {
                 if (r.Visibility == Visibility.Collapsed)
@@ -4268,67 +4294,7 @@ namespace WaveformOverlaysPlus
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            InkStrokeBuilder isb = new InkStrokeBuilder();
-            Matrix3x2 mat = Matrix3x2.CreateScale(1.0f);
-            //List<InkPoint> inkPoints = new List<InkPoint>();
-            List<Point> myPoints = new List<Point>();
-            InkStrokeContainer container = new InkStrokeContainer();
 
-            Point p1 = new Point(10, 10);
-            Point p2 = new Point(300, 300);
-
-
-
-            Point ptA = p1;
-            Point ptB = p2;
-
-            // Find the arrow shaft unit vector.
-            float vx = (float)(ptB.X - ptA.X);
-            float vy = (float)(ptB.Y - ptA.Y);
-            float dist = (float)Math.Sqrt(vx * vx + vy * vy);
-            vx /= dist;
-            vy /= dist;
-
-            var length = 20;
-            float ax = length * (-vy - vx);
-            float ay = length * (vx - vy);
-            Point pointArrow1 = new Point(ptB.X + ax, ptB.Y + ay);
-            Point pointArrow2 = new Point(ptB.X - ay, ptB.Y + ax);
-
-            //InkPoint ip1 = new InkPoint(p1, 2);
-            //InkPoint ip2 = new InkPoint(p2, 2);
-            //InkPoint ip3 = new InkPoint(pointArrow1, 2);
-            //InkPoint ip4 = new InkPoint(p2, 2);
-            //InkPoint ip5 = new InkPoint(pointArrow2, 2);
-
-            //inkPoints.Add(ip1);
-            //inkPoints.Add(ip2);
-            //inkPoints.Add(ip3);
-            //inkPoints.Add(ip4);
-            //inkPoints.Add(ip5);
-
-
-            myPoints.Add(p1);
-            myPoints.Add(p2);
-            myPoints.Add(pointArrow1);
-            myPoints.Add(p2);
-            myPoints.Add(pointArrow2);
-
-            SolidColorBrush myBrush = borderForStrokeColor.Background as SolidColorBrush;
-            InkDrawingAttributes _drawAtt = new InkDrawingAttributes();
-            _drawAtt.Color = myBrush.Color;
-            _drawAtt.IgnorePressure = true;
-            _drawAtt.PenTip = PenTipShape.Circle;
-            _drawAtt.Size = new Size(currentSizeSelected, currentSizeSelected);
-
-            isb.SetDefaultDrawingAttributes(_drawAtt);
-
-            InkStroke myNewStroke = isb.CreateStroke(myPoints);
-
-            container.AddStroke(myNewStroke);
-
-            _strokes.Add(container);
-            DrawingCanvas.Invalidate();
         }
 
         #region Undo Redo buttons
