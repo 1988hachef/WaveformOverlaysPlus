@@ -78,11 +78,14 @@ namespace WaveformOverlaysPlus
         TextBlock label10;
         TextBlock label11;
 
-        #region For Shortcut keys
-        bool isCtrlKeyPressed;
-        #endregion
+#region For Shortcut keys
 
-        #region For UndoRedo
+        bool isCtrlKeyPressed;
+
+#endregion
+
+#region For UndoRedo
+
         UndoRedoManager.UnDoRedo _UndoRedo;
         Point pointStartOfManipulation;
         Point pointEndOfManipuluation;
@@ -92,32 +95,42 @@ namespace WaveformOverlaysPlus
         double heightStart;
         double widthEnd;
         double heightEnd;
-        #endregion
 
-        #region For Custom Ink Rendering and Erase
+#endregion
+
+#region For Custom Ink Rendering and Erase
+
         private readonly List<InkStrokeContainer> _strokes = new List<InkStrokeContainer>();
         private InkSynchronizer _inkSynchronizer;
         private bool _isErasing;
         private Point _lastPoint;
         private int _deferredDryDelay;
         private IReadOnlyList<InkStroke> _pendingDry;
-        #endregion
 
-        #region For Ink
+#endregion
+
+#region For Ink
+
         InkPresenter _inkPresenter;
-        #endregion
 
-        #region For Printing
+#endregion
+
+#region For Printing
+
         private PrintManager printMan;
         private PrintDocument printDoc;
         private IPrintDocumentSource printDocSource;
-        #endregion
 
-        #region For Sharing
+#endregion
+
+#region For Sharing
+
         DataTransferManager dataTransferManager;
-        #endregion
 
-        #region For Arrow and Line
+#endregion
+
+#region For Arrow and Line
+
         Line lineForArrow;
         double topLineLimiter;
         double bottomLineLimiter;
@@ -125,9 +138,11 @@ namespace WaveformOverlaysPlus
         double rightLineLimiter;
         double firstY;
         double firstX;
-        #endregion
 
-        #region For Rulers
+#endregion
+
+#region For Rulers
+
         Grid rulerContainer;
         string gripName;
         Line rulerLine;
@@ -139,19 +154,20 @@ namespace WaveformOverlaysPlus
         decimal amountBetweenHs;
         decimal VstartValue = 0;
         decimal HstartValue = 0;
-        #endregion
 
-        #region Dependency Properties
+#endregion
+
+#region Dependency Properties
 
         public double currentSizeSelected
         {
             get { return (double)GetValue(currentSizeSelectedProperty); }
             set { SetValue(currentSizeSelectedProperty, value); }
         }
-
-        // Using a DependencyProperty as the backing store for currentSizeSelected.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty currentSizeSelectedProperty =
             DependencyProperty.Register("currentSizeSelected", typeof(double), typeof(MainPage), new PropertyMetadata(6.0));
+
+
 
         public double currentFontSize
         {
@@ -167,12 +183,10 @@ namespace WaveformOverlaysPlus
                 SetValue(currentFontSizeProperty, value);
             }
         }
-
-        // Using a DependencyProperty as the backing store for currentFontSize.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty currentFontSizeProperty =
             DependencyProperty.Register("currentFontSize", typeof(double), typeof(MainPage), new PropertyMetadata(24.0));
 
-        #endregion
+#endregion
 
         public MainPage()
         {
@@ -264,7 +278,8 @@ namespace WaveformOverlaysPlus
             }
         }
 
-        #region OnNavigated
+#region OnNavigated
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             // Register for PrintTaskRequested event
@@ -287,8 +302,6 @@ namespace WaveformOverlaysPlus
             Window.Current.CoreWindow.KeyUp += CoreWindow_KeyUp;
         }
 
-        
-
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             dataTransferManager.DataRequested -= ShareImageHandler;
@@ -299,9 +312,10 @@ namespace WaveformOverlaysPlus
             Window.Current.CoreWindow.KeyDown -= CoreWindow_KeyDown;
             Window.Current.CoreWindow.KeyUp -= CoreWindow_KeyUp;
         }
-        #endregion
+#endregion
 
-        #region New and Exit
+#region New and Exit
+
         private void menuNew_Click(object sender, RoutedEventArgs e)
         {
             New();
@@ -316,9 +330,10 @@ namespace WaveformOverlaysPlus
         {
             Application.Current.Exit();
         }
-        #endregion
 
-        #region Open
+#endregion
+
+#region Open
 
         private void menuOpen_Click(object sender, RoutedEventArgs e)
         {
@@ -400,9 +415,9 @@ namespace WaveformOverlaysPlus
             }
         }
 
-        #endregion
+#endregion
 
-        #region Save
+#region Save
 
         private void menuSave_Click(object sender, RoutedEventArgs e)
         {
@@ -441,9 +456,9 @@ namespace WaveformOverlaysPlus
             }
         }
 
-        #endregion
+#endregion
 
-        #region Print
+#region Print
 
         private void PrintButtonClick(object sender, RoutedEventArgs e)
         {
@@ -579,9 +594,9 @@ namespace WaveformOverlaysPlus
             }
         }
 
-        #endregion
+#endregion
 
-        #region Share
+#region Share
 
         private async void ShareImageHandler(DataTransferManager sender, DataRequestedEventArgs e)
         {
@@ -633,9 +648,9 @@ namespace WaveformOverlaysPlus
             DataTransferManager.ShowShareUI();
         }
 
-        #endregion
+#endregion
 
-        #region Copy and Paste
+#region Copy and Paste
 
         private void menuCopy_Click(object sender, RoutedEventArgs e)
         {
@@ -667,95 +682,109 @@ namespace WaveformOverlaysPlus
 
         async void Paste()
         {
+            DataPackageView dataView = Clipboard.GetContent();
+            
+            if (!(dataView.Contains(StandardDataFormats.StorageItems)) && !(dataView.Contains(StandardDataFormats.Bitmap)))
+            {
+                await new MessageDialog("Sorry, could not Paste the item(s). Please use File -> Open to open the image(s).").ShowAsync();
+            }
+            else
+            {
+                if (dataView.Contains(StandardDataFormats.StorageItems))
+                {
+                    ProcessDataPackageViewForImages(dataView);
+                }
+
+                if (dataView.Contains(StandardDataFormats.Bitmap))
+                {
+                    PasteBitmapFromDataPackageView(dataView);
+                }
+            }
+        }
+
+        async void PasteBitmapFromDataPackageView(DataPackageView dataView)
+        {
             string newName;
             string newPath;
             double newScale = 1.0;
 
-            DataPackageView dataPackageView = Clipboard.GetContent();
-            if (dataPackageView.Contains(StandardDataFormats.Bitmap))
+            IRandomAccessStreamReference imageStreamReference = null;
+            try
             {
-                IRandomAccessStreamReference imageStreamReference = null;
-                try
-                {
-                    imageStreamReference = await dataPackageView.GetBitmapAsync();
-                }
-                catch (Exception ex)
-                {
-                    var dialog = new MessageDialog("Error retrieving image from Clipboard: " + ex.Message).ShowAsync();
-                }
-
-                if (imageStreamReference != null)
-                {
-                    double _height = 0;
-                    double _width = 0;
-
-                    Image image = new Image();
-                    image.Stretch = Stretch.Fill;
-
-                    // Set the image source and get the image width and height
-                    using (IRandomAccessStreamWithContentType imageStream = await imageStreamReference.OpenReadAsync())
-                    {
-                        WriteableBitmap wb = new WriteableBitmap(1,1);
-                        await wb.SetSourceAsync(imageStream);
-                        _height = wb.PixelHeight;
-                        _width = wb.PixelWidth;
-                        image.Source = wb;
-
-                        // Save to local storage
-                        string nameForFile = "_image";
-                        if (!(String.IsNullOrEmpty(dataPackageView.Properties.Title) || String.IsNullOrWhiteSpace(dataPackageView.Properties.Title)))
-                        {
-                            nameForFile = dataPackageView.Properties.Title;
-                        }
-                        StorageFile sFile = await ImageUtils.WriteableBitmapToStorageFile(wb, nameForFile);
-
-                        newName = sFile.Name;
-                        newPath = "ms-appdata:///local/" + newName;
-                    }
-
-                    if (_width < 40 || _height < 40)
-                    {
-                        var dialog = new MessageDialog("Image too small. Please choose a larger image.").ShowAsync();
-                    }
-
-                    if (_width > gridMain.ActualWidth || _height > gridMain.ActualHeight)
-                    {
-                        newScale = Math.Min(gridMain.ActualWidth / _width, gridMain.ActualHeight / _height);
-                        _width = (_width * newScale) - 1;
-                        _height = (_height * newScale) - 1;
-                    }
-
-                    PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
-                    paintObject.Width = _width;
-                    paintObject.Height = _height;
-                    paintObject.Content = image;
-                    paintObject.ImageFileName = newName;
-                    paintObject.ImageFilePath = newPath;
-                    paintObject.ImageScale = newScale;
-                    paintObject.OpacitySliderIsVisible = true;
-                    paintObject.Unloaded += PaintObject_Unloaded;
-                    paintObject.ManipulationStarting += GeneralPaintObj_ManipStarting;
-                    paintObject.ManipulationCompleted += GeneralPaintObj_ManipCompleted;
-                    paintObject.Closing += GeneralPaintObject_Closing;
-                    paintObject.Z_Order_Changed += GeneralPaintObject_Z_Order_Changed;
-
-                    gridMain.Children.Add(paintObject);
-
-                    _UndoRedo.InsertInUnDoRedoForAddRemoveElement(true, paintObject, gridMain);
-                    ManageUndoRedoButtons();
-
-                    imageCollection.Add(new StoredImage { FileName = newName, FilePath = newPath });
-                }
+                imageStreamReference = await dataView.GetBitmapAsync();
             }
-            else
+            catch (Exception ex)
             {
-                var dialog = new MessageDialog("Only bitmap (.bmp) images can be pasted. Use File>Open for other image file types.").ShowAsync();
+                var dialog = new MessageDialog("Error retrieving image from Clipboard: " + ex.Message).ShowAsync();
+            }
+
+            if (imageStreamReference != null)
+            {
+                double _height = 0;
+                double _width = 0;
+
+                Image image = new Image();
+                image.Stretch = Stretch.Fill;
+
+                // Set the image source and get the image width and height
+                using (IRandomAccessStreamWithContentType imageStream = await imageStreamReference.OpenReadAsync())
+                {
+                    WriteableBitmap wb = new WriteableBitmap(1, 1);
+                    await wb.SetSourceAsync(imageStream);
+                    _height = wb.PixelHeight;
+                    _width = wb.PixelWidth;
+                    image.Source = wb;
+
+                    // Save to local storage
+                    string nameForFile = "_image";
+                    if (!(String.IsNullOrEmpty(dataView.Properties.Title) || String.IsNullOrWhiteSpace(dataView.Properties.Title)))
+                    {
+                        nameForFile = dataView.Properties.Title;
+                    }
+                    StorageFile sFile = await ImageUtils.WriteableBitmapToStorageFile(wb, nameForFile);
+
+                    newName = sFile.Name;
+                    newPath = "ms-appdata:///local/" + newName;
+                }
+
+                if (_width < 40 || _height < 40)
+                {
+                    var dialog = new MessageDialog("Image too small. Please choose a larger image.").ShowAsync();
+                }
+
+                if (_width > gridMain.ActualWidth || _height > gridMain.ActualHeight)
+                {
+                    newScale = Math.Min(gridMain.ActualWidth / _width, gridMain.ActualHeight / _height);
+                    _width = (_width * newScale) - 1;
+                    _height = (_height * newScale) - 1;
+                }
+
+                PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
+                paintObject.Width = _width;
+                paintObject.Height = _height;
+                paintObject.Content = image;
+                paintObject.ImageFileName = newName;
+                paintObject.ImageFilePath = newPath;
+                paintObject.ImageScale = newScale;
+                paintObject.OpacitySliderIsVisible = true;
+                paintObject.Unloaded += PaintObject_Unloaded;
+                paintObject.ManipulationStarting += GeneralPaintObj_ManipStarting;
+                paintObject.ManipulationCompleted += GeneralPaintObj_ManipCompleted;
+                paintObject.Closing += GeneralPaintObject_Closing;
+                paintObject.Z_Order_Changed += GeneralPaintObject_Z_Order_Changed;
+
+                gridMain.Children.Add(paintObject);
+
+                _UndoRedo.InsertInUnDoRedoForAddRemoveElement(true, paintObject, gridMain);
+                ManageUndoRedoButtons();
+
+                imageCollection.Add(new StoredImage { FileName = newName, FilePath = newPath });
             }
         }
 
-        #endregion
+#endregion
 
-        #region Help menu items
+#region Help menu items
 
         private async void menuFeedback_Click(object sender, RoutedEventArgs e)
         {
@@ -802,9 +831,9 @@ namespace WaveformOverlaysPlus
             spanelText.Children.Clear();
         }
 
-        #endregion
+#endregion
 
-        #region Custom Ink Rendering with Erase
+#region Custom Ink Rendering with Erase
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
@@ -1068,9 +1097,9 @@ namespace WaveformOverlaysPlus
             DrawingCanvas.Invalidate();
         }
 
-        #endregion
+#endregion
 
-        #region Arrow and Line
+#region Arrow and Line
 
         private void ArrowOrLine_Clicked(object sender, RoutedEventArgs e)
         {
@@ -1235,9 +1264,9 @@ namespace WaveformOverlaysPlus
                                  new Point(arrowshaftEndPoint.X - ay, arrowshaftEndPoint.Y + ax)};
         }
 
-        #endregion
+#endregion
 
-        #region Adding TextBox, Rectangles, or Ellipse
+#region Adding TextBox, Rectangles, or Ellipse
 
         private void GeneralPaintObject_Z_Order_Changed(object sender, PaintObjectTemplatedControl.Z_Change_EventArgs e)
         {
@@ -1371,9 +1400,9 @@ namespace WaveformOverlaysPlus
             ManageUndoRedoButtons();
         }
 
-        #endregion
+#endregion
 
-        #region Bind and UnBindLast
+#region Bind and UnBindLast
 
         void Bind(FrameworkElement target)
         {
@@ -1456,9 +1485,9 @@ namespace WaveformOverlaysPlus
             }
         }
 
-        #endregion
+#endregion
 
-        #region Size and Color selections
+#region Size and Color selections
 
         private void sizes_Checked(object sender, RoutedEventArgs e)
         {
@@ -1551,9 +1580,9 @@ namespace WaveformOverlaysPlus
             ColorChangerBox = colorChangerBoxButton.Name;
         }
 
-        #endregion
+#endregion
 
-        #region Crop
+#region Crop
 
         private async void crop_Click(object sender, RoutedEventArgs e)
         {
@@ -1862,9 +1891,9 @@ namespace WaveformOverlaysPlus
             }
         }
 
-        #endregion
+#endregion
 
-        #region Ruler Manipulations
+#region Ruler Manipulations
 
         void SetUnitsPerX()
         {
@@ -2244,9 +2273,9 @@ namespace WaveformOverlaysPlus
             }
         }
 
-        #endregion
+#endregion
 
-        #region Comp overlays
+#region Comp overlays
 
         private void btnComp_Click(object sender, RoutedEventArgs e)
         {
@@ -2571,9 +2600,9 @@ namespace WaveformOverlaysPlus
             }
         }
 
-        #endregion
+#endregion
 
-        #region Cyl overlay
+#region Cyl overlay
 
         private void btnCyl_Click(object sender, RoutedEventArgs e)
         {
@@ -4294,14 +4323,9 @@ namespace WaveformOverlaysPlus
             }
         }
 
-        #endregion
+#endregion
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        #region Undo Redo buttons
+#region Undo Redo buttons
 
         private void btnUndo_Click(object sender, RoutedEventArgs e)
         {
@@ -4505,9 +4529,9 @@ namespace WaveformOverlaysPlus
             }
         }
 
-        #endregion
+#endregion
 
-        #region Cursor changes
+#region Cursor changes
 
         private void spToolButtons_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
@@ -4545,9 +4569,9 @@ namespace WaveformOverlaysPlus
             Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
         }
 
-        #endregion
+#endregion
 
-        #region Shortcut Keys
+#region Shortcut Keys
 
         private void CoreWindow_KeyDown(CoreWindow sender, KeyEventArgs args)
         {
@@ -4573,9 +4597,9 @@ namespace WaveformOverlaysPlus
             if (args.VirtualKey == VirtualKey.Control) isCtrlKeyPressed = false;
         }
 
-        #endregion
+#endregion
 
-        #region Copy/Paste Flyout
+#region Right click flyout, copy/paste
 
         private void General_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
@@ -4603,8 +4627,9 @@ namespace WaveformOverlaysPlus
             Paste();
         }
 
+#endregion
 
-        #endregion
+#region Label maker
 
         private void btnCylLabels_Click(object sender, RoutedEventArgs e)
         {
@@ -4673,5 +4698,135 @@ namespace WaveformOverlaysPlus
             spLabelChooser.Visibility = Visibility.Collapsed;
             gridCover.Visibility = Visibility.Collapsed;
         }
+
+#endregion
+
+#region Drag and Drop
+
+        private void gridMain_DragOver(object sender, DragEventArgs e)
+        {
+            e.AcceptedOperation = DataPackageOperation.Copy;
+            e.DragUIOverride.IsCaptionVisible = false;
+            e.DragUIOverride.IsGlyphVisible = false;
+        }
+
+        private async void gridMain_Drop(object sender, DragEventArgs e)
+        {
+            DataPackageView dataView = e.DataView;
+
+            if (dataView.Contains(StandardDataFormats.StorageItems))
+            {
+                ProcessDataPackageViewForImages(dataView);
+            }
+            else
+            {
+                await new MessageDialog("No items detected").ShowAsync();
+            }
+        }
+
+        async void LoadDataPackageViewImage(StorageFile droppedFile, BitmapImage bitmapFromDroppedFile)
+        {
+            Image image = new Image();
+            image.Stretch = Stretch.Fill;
+            image.Source = bitmapFromDroppedFile;
+
+            double height = bitmapFromDroppedFile.PixelHeight;
+            double width = bitmapFromDroppedFile.PixelWidth;
+            double scale = 1;
+
+            if (width > gridMain.ActualWidth || height > gridMain.ActualHeight)
+            {
+                scale = Math.Min(gridMain.ActualWidth / width, gridMain.ActualHeight / height);
+                width = (width * scale) - 1;
+                height = (height * scale) - 1;
+            }
+
+            // Save to local storage and generate unique name in case two of the same image are opened.
+            StorageFile file2 = await droppedFile.CopyAsync(ApplicationData.Current.LocalFolder, droppedFile.Name, NameCollisionOption.GenerateUniqueName);
+
+            string name = file2.Name;
+            string path = "ms-appdata:///local/" + name;
+
+            PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
+            paintObject.Width = width;
+            paintObject.Height = height;
+            paintObject.Content = image;
+            paintObject.ImageFileName = name;
+            paintObject.ImageFilePath = path;
+            paintObject.ImageScale = scale;
+            paintObject.OpacitySliderIsVisible = true;
+            paintObject.Unloaded += PaintObject_Unloaded;
+            paintObject.ManipulationStarting += GeneralPaintObj_ManipStarting;
+            paintObject.ManipulationCompleted += GeneralPaintObj_ManipCompleted;
+            paintObject.Closing += GeneralPaintObject_Closing;
+            paintObject.Z_Order_Changed += GeneralPaintObject_Z_Order_Changed;
+
+            gridMain.Children.Add(paintObject);
+
+            _UndoRedo.InsertInUnDoRedoForAddRemoveElement(true, paintObject, gridMain);
+            ManageUndoRedoButtons();
+
+            imageCollection.Add(new StoredImage { FileName = name, FilePath = path });
+        }
+
+        async void ProcessDataPackageViewForImages(DataPackageView dataView)
+        {
+            var items = await dataView.GetStorageItemsAsync();
+            if (items.Count > 0 && items.Count < 5)
+            {
+                var failCount = 0;
+                var failString = "";
+
+                try
+                {
+                    foreach (StorageFile file in items)
+                    {
+                        try
+                        {
+                            BitmapImage bitmap = new BitmapImage();
+                            bitmap.SetSource(await file.OpenAsync(FileAccessMode.Read));
+
+                            if (bitmap.PixelWidth < 42 || bitmap.PixelHeight < 42)
+                            {
+                                failCount++;
+                                failString = failString + " One file too small;";
+                            }
+                            else
+                            {
+                                LoadDataPackageViewImage(file, bitmap);
+                            }
+                        }
+                        catch
+                        {
+                            failCount++;
+                            failString = failString + " One file of type " + file.FileType + " did not load;";
+                        }
+                    }
+                }
+                catch
+                {
+                    failCount++;
+                    failString = failString + " The item is not supported in this app;";
+                }
+
+
+                if (failCount > 0)
+                {
+                    await new MessageDialog(failCount.ToString() + " items could not be loaded. Additional info: " + failString).ShowAsync();
+                }
+            }
+            else
+            {
+                await new MessageDialog("Too many items. A maximum of four items at a time are allowed.").ShowAsync();
+            }
+        }
+
+        #endregion
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
     }
 }

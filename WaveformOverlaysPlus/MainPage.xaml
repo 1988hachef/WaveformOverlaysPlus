@@ -174,7 +174,7 @@
                         </MenuFlyout>
                     </FlyoutBase.AttachedFlyout>
 
-                    <Grid Name="gridMain" Background="{Binding Background, ElementName=borderForPageColor}" RightTapped="General_RightTapped">
+                    <Grid Name="gridMain" Background="{Binding Background, ElementName=borderForPageColor}" AllowDrop="True" RightTapped="General_RightTapped" DragOver="gridMain_DragOver" Drop="gridMain_Drop">
                         
                         <!--<TextBlock Name="tblock" Text="test" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                         <Button Content="button" Click="Button_Click" Margin="-20,0,0,0"/>-->
@@ -456,7 +456,7 @@
                         </Button>
                         <Button Name="btnCylLabels" Style="{StaticResource styleUndoRedoBtns}" Width="38" Padding="0" Margin="8,0,0,0" Height="38" ToolTipService.ToolTip="Cylinder labels" Click="btnCylLabels_Click">
                             <Button.Content>
-                                <Image Source="/Assets/Square44x44Logo.scale-200.png" Width="30" Height="30"/>
+                                <Image Source="/Assets/LabelsIcon.bmp" Width="30" Height="30"/>
                             </Button.Content>
                         </Button>
                     </StackPanel>

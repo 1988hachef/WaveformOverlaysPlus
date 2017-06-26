@@ -119,9 +119,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\IconCompDivs.bmp" />
-    <Content Include="Assets\IconCompressionOverlay.bmp" />
     <Content Include="Assets\IconCylinderIDOverlay.bmp" />
     <Content Include="Assets\IconValveOverlap.bmp" />
+    <Content Include="Assets\LabelsIcon.bmp" />
     <Content Include="MyXamlTextFiles\EightGridXamlText.txt" />
     <Content Include="MyXamlTextFiles\ElevenGridXamlText.txt" />
     <Content Include="MyXamlTextFiles\FiveGridXamlText.txt" />
