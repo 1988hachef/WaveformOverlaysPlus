@@ -48,6 +48,7 @@ using System.Windows.Input;
 using Windows.UI.Input.Inking.Core;
 using Windows.System;
 using WaveformOverlaysPlus.Converters;
+using Windows.UI.Xaml.Media.Animation;
 
 namespace WaveformOverlaysPlus
 {
@@ -61,6 +62,7 @@ namespace WaveformOverlaysPlus
     {
         ObservableCollection<StoredImage> imageCollection;
 
+        bool mightNeedToSave = false;
         string ColorChangerBox;
         string currentToolChosen;
         string nameOfFile;
@@ -318,7 +320,32 @@ namespace WaveformOverlaysPlus
 
         private void menuNew_Click(object sender, RoutedEventArgs e)
         {
+            if (gridMain.Children.Count == 0 && _strokes.Count == 0 || mightNeedToSave == false)
+            {
+                New();
+            }
+            else
+            {
+                gridCover.Visibility = Visibility.Visible;
+                spSaveBeforeNewDialog.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void btnSaveBeforeNew_Click(object sender, RoutedEventArgs e)
+        {
+            spSaveBeforeNewDialog.Visibility = Visibility.Collapsed;
+            Save();
+        }
+
+        private void btnDontSaveBeforeNew_Click(object sender, RoutedEventArgs e)
+        {
             New();
+        }
+
+        private void btnCancelSaveBeforeNew_Click(object sender, RoutedEventArgs e)
+        {
+            spSaveBeforeNewDialog.Visibility = Visibility.Collapsed;
+            gridCover.Visibility = Visibility.Collapsed;
         }
 
         void New()
@@ -442,6 +469,7 @@ namespace WaveformOverlaysPlus
                 if (file != null)
                 {
                     await ImageUtils.CaptureElementToFile(gridForOverall, file);
+                    mightNeedToSave = false;
                 }
             }
             catch (Exception ex)
@@ -1215,11 +1243,11 @@ namespace WaveformOverlaysPlus
             {
                 // Determine the length to make the arrow head lines
                 int arrowHeadLength =
-                    currentSizeSelected == 1 ? 10
-                  : currentSizeSelected == 2 ? 12
-                  : currentSizeSelected == 6 ? 14
-                  : currentSizeSelected == 10 ? 16
-                  : 14;
+                    currentSizeSelected == 1 ? 8
+                  : currentSizeSelected == 2 ? 10
+                  : currentSizeSelected == 6 ? 12
+                  : currentSizeSelected == 10 ? 14
+                  : 8;
 
                 // Get arrowhead points
                 Point[] arrowheadPoints = GetArrowheadPoints(arrowHeadLength, ptA, ptB);
@@ -1250,6 +1278,12 @@ namespace WaveformOverlaysPlus
 
         private Point[] GetArrowheadPoints(int arrowheadLength, Point arrowshaftStartPoint, Point arrowshaftEndPoint)
         {
+            // start and end points cannot be the same, otherwise the arrowhead points cannot be calculated.
+            if (arrowshaftStartPoint == arrowshaftEndPoint)
+            {
+                arrowshaftEndPoint.X = arrowshaftStartPoint.X + 1;
+            }
+
             // Find the arrow shaft unit vector.
             float vx = (float)(arrowshaftEndPoint.X - arrowshaftStartPoint.X);
             float vy = (float)(arrowshaftEndPoint.Y - arrowshaftStartPoint.Y);
@@ -1938,9 +1972,9 @@ namespace WaveformOverlaysPlus
 
                     decimal x = Convert.ToDecimal(point.X);
 
-                    if (gripName == "rectV1") { tblockPink1.Text = (Math.Round((x * UnitsPerX) + VstartValue)).ToString(); }
-                    if (gripName == "rectV2") { tblockPink2.Text = (Math.Round((x * UnitsPerX) + VstartValue)).ToString(); }
-                    if (tblockPink1.Text != "--" && tblockPink2.Text != "--") { tblockPinkDelta.Text = (Math.Abs(Convert.ToInt32(tblockPink1.Text) - Convert.ToInt32(tblockPink2.Text))).ToString(); }
+                    if (gripName == "rectV1") { tblockPink1.Text = (Math.Round(((x * UnitsPerX) + VstartValue), 1, MidpointRounding.AwayFromZero)).ToString(); }
+                    if (gripName == "rectV2") { tblockPink2.Text = (Math.Round(((x * UnitsPerX) + VstartValue), 1, MidpointRounding.AwayFromZero)).ToString(); }
+                    if (tblockPink1.Text != "--" && tblockPink2.Text != "--") { tblockPinkDelta.Text = (Math.Abs(Convert.ToDecimal(tblockPink1.Text) - Convert.ToDecimal(tblockPink2.Text))).ToString(); }
                 }
             }
             else
@@ -1952,7 +1986,7 @@ namespace WaveformOverlaysPlus
 
                     decimal x = Convert.ToDecimal(point.X);
 
-                    tblockPink1.Text = (Math.Round((x * UnitsPerX) + VstartValue)).ToString();
+                    tblockPink1.Text = (Math.Round(((x * UnitsPerX) + VstartValue), 1, MidpointRounding.AwayFromZero)).ToString();
                 }
                 if (tblockPink2.Text != "--")
                 {
@@ -1961,11 +1995,11 @@ namespace WaveformOverlaysPlus
 
                     decimal x = Convert.ToDecimal(point.X);
 
-                    tblockPink2.Text = (Math.Round((x * UnitsPerX) + VstartValue)).ToString();
+                    tblockPink2.Text = (Math.Round(((x * UnitsPerX) + VstartValue), 1, MidpointRounding.AwayFromZero)).ToString();
                 }
                 if (tblockPink1.Text != "--" && tblockPink2.Text != "--")
                 {
-                    tblockPinkDelta.Text = (Math.Abs(Convert.ToInt32(tblockPink1.Text) - Convert.ToInt32(tblockPink2.Text))).ToString();
+                    tblockPinkDelta.Text = (Math.Abs(Convert.ToDecimal(tblockPink1.Text) - Convert.ToDecimal(tblockPink2.Text))).ToString();
                 }
             }
         }
@@ -1981,9 +2015,9 @@ namespace WaveformOverlaysPlus
 
                     decimal y = Convert.ToDecimal(point.Y);
 
-                    if (gripName == "rectH1") { tblockPurple1.Text = (Math.Round((y * UnitsPerY) + HstartValue)).ToString(); }
-                    if (gripName == "rectH2") { tblockPurple2.Text = (Math.Round((y * UnitsPerY) + HstartValue)).ToString(); }
-                    if (tblockPurple1.Text != "--" && tblockPurple2.Text != "--") { tblockPurpleDelta.Text = (Math.Abs(Convert.ToInt32(tblockPurple1.Text) - Convert.ToInt32(tblockPurple2.Text))).ToString(); }
+                    if (gripName == "rectH1") { tblockPurple1.Text = (Math.Round(((y * UnitsPerY) + HstartValue), 1, MidpointRounding.AwayFromZero)).ToString(); }
+                    if (gripName == "rectH2") { tblockPurple2.Text = (Math.Round(((y * UnitsPerY) + HstartValue), 1, MidpointRounding.AwayFromZero)).ToString(); }
+                    if (tblockPurple1.Text != "--" && tblockPurple2.Text != "--") { tblockPurpleDelta.Text = (Math.Abs(Convert.ToDecimal(tblockPurple1.Text) - Convert.ToDecimal(tblockPurple2.Text))).ToString(); }
                 }
             }
             else
@@ -1995,7 +2029,7 @@ namespace WaveformOverlaysPlus
 
                     decimal y = Convert.ToDecimal(point.Y);
 
-                    tblockPurple1.Text = (Math.Round((y * UnitsPerY) + HstartValue)).ToString();
+                    tblockPurple1.Text = (Math.Round(((y * UnitsPerY) + HstartValue), 1, MidpointRounding.AwayFromZero)).ToString();
                 }
                 if (tblockPurple2.Text != "--")
                 {
@@ -2004,11 +2038,11 @@ namespace WaveformOverlaysPlus
 
                     decimal y = Convert.ToDecimal(point.Y);
 
-                    tblockPurple2.Text = (Math.Round((y * UnitsPerY) + HstartValue)).ToString();
+                    tblockPurple2.Text = (Math.Round(((y * UnitsPerY) + HstartValue), 1, MidpointRounding.AwayFromZero)).ToString();
                 }
                 if (tblockPurple1.Text != "--" && tblockPurple2.Text != "--")
                 {
-                    tblockPurpleDelta.Text = (Math.Abs(Convert.ToInt32(tblockPurple1.Text) - Convert.ToInt32(tblockPurple2.Text))).ToString();
+                    tblockPurpleDelta.Text = (Math.Abs(Convert.ToDecimal(tblockPurple1.Text) - Convert.ToDecimal(tblockPurple2.Text))).ToString();
                 }
             }
         }
@@ -2061,7 +2095,7 @@ namespace WaveformOverlaysPlus
 
         void MoveSideToSide(Shape shape, CompositeTransform transform, ManipulationDeltaRoutedEventArgs e)
         {
-            GeneralTransform gt = shape.TransformToVisual(gridMain);
+            GeneralTransform gt = shape.TransformToVisual(gridToContainOthers);
             Point prisonerTopLeftPoint = gt.TransformPoint(new Point(0, 0));
 
             double left = prisonerTopLeftPoint.X;
@@ -2169,14 +2203,14 @@ namespace WaveformOverlaysPlus
             gripShape = sender as Shape;
             gripName = gripShape.Name;
 
-            if (gripName.StartsWith("r"))
+            if (gripName.StartsWith("r")) // it is one of the colored ruler
             {
                 rulerContainer = gripShape.Parent as Grid;
                 rulerLine = rulerContainer.Children[0] as Line;
                 gridDelta.Visibility = Visibility.Visible;
                 rulerLine.Visibility = Visibility.Visible;
             }
-            else
+            else // it is one of the other rulers
             {
                 var parent = gripShape.Parent as StackPanel;
                 rulerContainer = parent.Parent as Grid;
@@ -2185,7 +2219,7 @@ namespace WaveformOverlaysPlus
             }
             rulerTransform = rulerContainer.RenderTransform as CompositeTransform;
 
-            GeneralTransform gt = rulerContainer.TransformToVisual(gridMain);
+            GeneralTransform gt = rulerContainer.TransformToVisual(gridToContainOthers);
             Point p = gt.TransformPoint(new Point(0, 0));
             pointStartOfManipulation = p;
         }
@@ -2194,7 +2228,7 @@ namespace WaveformOverlaysPlus
         {
             SetSomeStuffOnRulerManipulationCompleted();
 
-            GeneralTransform gt = rulerContainer.TransformToVisual(gridMain);
+            GeneralTransform gt = rulerContainer.TransformToVisual(gridToContainOthers);
             Point p = gt.TransformPoint(new Point(0, 0));
             pointEndOfManipuluation = p;
 
@@ -2303,10 +2337,21 @@ namespace WaveformOverlaysPlus
         {
             if (gridIntOverlap.Visibility == Visibility.Collapsed)
             {
+                // Make visible
                 gridIntOverlap.Visibility = Visibility.Visible;
                 gridExhOverlap.Visibility = Visibility.Visible;
                 tblockExh.Foreground = new SolidColorBrush(Colors.Red);
                 tblockInt.Foreground = new SolidColorBrush(Colors.Blue);
+
+                // Get position of zero point of compression overlay for next step
+                GeneralTransform gt = rectZeroDegrees.TransformToVisual(gridToContainOthers);
+                Point zeroPoint = gt.TransformPoint(new Point(0, 0));
+
+                // Move to standard position in relation to compression overlay
+                transformExh.TranslateX = zeroPoint.X + (140 / Convert.ToDouble(UnitsPerX));
+                gridExhOverlap.Width = 230 / Convert.ToDouble(UnitsPerX);
+                transformInt.TranslateX = zeroPoint.X + (350 / Convert.ToDouble(UnitsPerX));
+                gridIntOverlap.Width = 235 / Convert.ToDouble(UnitsPerX);
 
                 _UndoRedo.InsertInUnDoRedoForShowHideOverlap(true, gridExhOverlap, gridIntOverlap, tblockExh, tblockInt);
                 ManageUndoRedoButtons();
@@ -2951,8 +2996,8 @@ namespace WaveformOverlaysPlus
                 colorKey.Visibility = Visibility.Visible;
             }
 
-            var cylIDgrid = sender as PaintObjectTemplatedControl;
-            cylIDgrid.Opacity = 0.6;
+            //var cylIDgrid = sender as PaintObjectTemplatedControl;
+            //cylIDgrid.Opacity = 0.6;
         }
 
         private void PaintObjectCylID_Unloaded(object sender, RoutedEventArgs e)
@@ -2964,7 +3009,7 @@ namespace WaveformOverlaysPlus
                 if (child is PaintObjectTemplatedControl)
                 {
                     var currentChild = child as PaintObjectTemplatedControl;
-                    if (currentChild.Content is Grid)
+                    if (currentChild.Content is Grid && currentChild.OpacitySliderIsVisible == true) // this determines if it is a Cylinder ID overlay
                     {
                         count++;
                     }
@@ -4393,6 +4438,11 @@ namespace WaveformOverlaysPlus
 
         void ManageUndoRedoButtons()
         {
+            if (mightNeedToSave == false)
+            {
+                mightNeedToSave = true;
+            }
+
             if (_UndoRedo.IsUndoPossible())
             {
                 if (!btnUndo.IsEnabled) { btnUndo.IsEnabled = true; }
@@ -4461,8 +4511,8 @@ namespace WaveformOverlaysPlus
                     GeneralTransform gt1 = lineVruler720.TransformToVisual(gridToContainOthers);
                     Point TopLeftPoint1 = gt1.TransformPoint(new Point(0, 0));
 
-                    transformComp.TranslateX = TopLeftPoint.X;
-                    gridCompressionOverlay.Width = TopLeftPoint1.X - TopLeftPoint.X;
+                    transformComp.TranslateX = TopLeftPoint.X - 1; // Subtract 1 because of layout behavior
+                    gridCompressionOverlay.Width = TopLeftPoint1.X - TopLeftPoint.X + 2; // Add 2 because of layout behavior
 
                     SetUnitsPerX();
                     SetTextofPink(false);
@@ -4483,7 +4533,7 @@ namespace WaveformOverlaysPlus
                     GeneralTransform gt1 = lineVruler720.TransformToVisual(gridToContainOthers);
                     Point TopLeftPoint1 = gt1.TransformPoint(new Point(0, 0));
 
-                    gridCompressionOverlay.Width = TopLeftPoint1.X - TopLeftPoint.X;
+                    gridCompressionOverlay.Width = TopLeftPoint1.X - TopLeftPoint.X + 2; // Add 2 because of layout behavior
 
                     SetUnitsPerX();
                     SetTextofPink(false);
@@ -4605,6 +4655,8 @@ namespace WaveformOverlaysPlus
         {
             Point position = e.GetPosition(gridToContainOthers);
             ShowCopyPasteFlyout(position);
+
+            e.Handled = true;
         }
 
         void ShowCopyPasteFlyout(Point point)
@@ -4827,6 +4879,5 @@ namespace WaveformOverlaysPlus
         {
 
         }
-
     }
 }

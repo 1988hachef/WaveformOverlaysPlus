@@ -1,5 +1,4 @@
 ﻿<Grid xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Name="grids">
-     
 	<Grid.ColumnDefinitions>
         <ColumnDefinition Width="45"/>
         <ColumnDefinition Width="2"/>

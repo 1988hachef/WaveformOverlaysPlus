@@ -107,7 +107,7 @@ namespace WaveformOverlaysPlus.Controls
             _rectBottom = GeneralizedGetTemplateChild<Rectangle>("Bottom");
             _rectBottomRight = GeneralizedGetTemplateChild<Rectangle>("BottomRight");
             _rectForFlyoutPosition = GeneralizedGetTemplateChild<Rectangle>("rectForFlyoutPosition");
-
+            
             this.ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY;
             _contentPresenter.ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY;
             _myWindow.ManipulationMode = ManipulationModes.TranslateX | ManipulationModes.TranslateY;

@@ -305,12 +305,17 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local2:PaintObjectTemplatedControl">
-                    
+
                     <Grid Name="myWindow"
                           BorderThickness="{TemplateBinding BorderThickness}" 
                           Background="{TemplateBinding Background}"
                           BorderBrush="{TemplateBinding BorderBrush}">
-                        
+                        <Grid.ChildrenTransitions>
+                            <TransitionCollection>
+                                <EdgeUIThemeTransition Edge="Bottom"/>
+                            </TransitionCollection>
+                        </Grid.ChildrenTransitions>
+
                         <FlyoutBase.AttachedFlyout>
                             <MenuFlyout>
                                 <MenuFlyoutItem Name="menuBringToFront" Text="Bring to Front"/>
