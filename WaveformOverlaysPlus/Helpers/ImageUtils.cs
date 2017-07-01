@@ -16,13 +16,13 @@ namespace WaveformOverlaysPlus.Helpers
     {
         public static async Task<StorageFile> WriteableBitmapToStorageFile(WriteableBitmap WB, string fileName)
         {
-            StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(fileName, CreationCollisionOption.GenerateUniqueName);
-
+            Guid endcoderID = GetBitmapEncoderId(fileName);
             DisplayInformation dispInfo = DisplayInformation.GetForCurrentView();
+            StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync(fileName, CreationCollisionOption.GenerateUniqueName);
 
             using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.ReadWrite))
             {
-                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.BmpEncoderId, stream);
+                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(endcoderID, stream);
                 Stream pixelStream = WB.PixelBuffer.AsStream();
                 byte[] pixels = new byte[pixelStream.Length];
                 await pixelStream.ReadAsync(pixels, 0, pixels.Length);

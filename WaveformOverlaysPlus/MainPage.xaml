@@ -631,8 +631,8 @@
             </StackPanel.Background>
         </StackPanel>-->
 
-        <Grid Name="gridCover" Visibility="Collapsed" Grid.RowSpan="3" Background="#B2000000">
-            <Grid Name="gridDialog" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" Margin="30">
+        <Grid Name="gridCover" Visibility="Collapsed" Grid.RowSpan="3" Background="{StaticResource DialogBackgroundCover}">
+            <Grid Name="gridDialog" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" Margin="30" BorderBrush="Black" BorderThickness="1">
                 <StackPanel>
                     <StackPanel Name="spanelText" Margin="20"/>
                     <Button Name="btnDialogOK" Visibility="Collapsed" Content="OK" Margin="20,0,20,20" Click="btnDialogOK_Click"/>
@@ -641,7 +641,7 @@
             </Grid>
         </Grid>
 
-        <Grid Name="gridForCrop" Grid.RowSpan="3" Background="#B2000000" Visibility="Collapsed">
+        <Grid Name="gridForCrop" Grid.RowSpan="3" Background="{StaticResource DialogBackgroundCover}" Visibility="Collapsed">
             <Grid Margin="30,15" Background="LightGray" BorderBrush="Black" BorderThickness="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -692,8 +692,8 @@
             </Grid>
         </Grid>
 
-        <Grid Name="gridCylinderIDSelections" Grid.RowSpan="2" Background="#B2000000" Visibility="Collapsed">
-            <Border Background="#FFEFEFEF" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <Grid Name="gridCylinderIDSelections" Grid.RowSpan="2" Background="{StaticResource DialogBackgroundCover}" Visibility="Collapsed">
+            <Border Background="#FFEFEFEF" VerticalAlignment="Center" HorizontalAlignment="Center" BorderBrush="Black" BorderThickness="1">
                 <StackPanel>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,4,0">
@@ -917,7 +917,7 @@
             </Border>
         </Grid>
 
-        <StackPanel Name="spLabelChooser" Visibility="Collapsed" Grid.RowSpan="3" Background="#FFEFEFEF" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20">
+        <StackPanel Name="spLabelChooser" Visibility="Collapsed" Grid.RowSpan="3" Background="#FFEFEFEF" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20" BorderBrush="Black" BorderThickness="1">
             <TextBlock Text="How many labels would you like?" Margin="0,0,0,5"/>
             <StackPanel Orientation="Horizontal">
                 <Button Content="1" Margin="5" Click="labelChooserButtons_Click"/>
@@ -936,7 +936,7 @@
             <Button Name="btnLabelCancel" Content="Cancel" HorizontalAlignment="Center" Margin="0,20,0,0" Background="#7FFF0000" Click="btnLabelCancel_Click"/>
         </StackPanel>
 
-        <StackPanel Name="spSaveBeforeNewDialog" Visibility="Collapsed" Grid.RowSpan="3" Background="#FFEFEFEF" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20">
+        <StackPanel Name="spSaveBeforeNewDialog" Visibility="Collapsed" Grid.RowSpan="3" Background="#FFEFEFEF" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20" BorderBrush="Black" BorderThickness="1">
             <TextBlock Text="Do you want to save changes?" Margin="0,0,0,5"/>
             <StackPanel Orientation="Horizontal">
                 <Button Name="btnSaveBeforeNew" FontSize="12" Margin="10" Content="Save" Width="56" Click="btnSaveBeforeNew_Click"/>

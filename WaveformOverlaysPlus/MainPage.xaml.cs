@@ -211,6 +211,91 @@ namespace WaveformOverlaysPlus
             _UndoRedo = new UndoRedoManager.UnDoRedo();
         }
 
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Set initial ink stroke attributes.
+            InkDrawingAttributes drawingAttributes = new InkDrawingAttributes();
+            drawingAttributes.DrawAsHighlighter = false;
+            drawingAttributes.PenTip = PenTipShape.Circle;
+
+            SolidColorBrush initialBrush = new SolidColorBrush(Colors.Blue);
+            if (borderForStrokeColor != null)
+            {
+                initialBrush = borderForStrokeColor.Background as SolidColorBrush;
+            }
+            drawingAttributes.Color = initialBrush.Color;
+
+            if (rbSize10 != null)
+            {
+                drawingAttributes.Size = new Size(currentSizeSelected, currentSizeSelected);
+            }
+
+            drawingAttributes.IgnorePressure = false;
+            drawingAttributes.FitToCurve = true;
+            inkCanvas.InkPresenter.UpdateDefaultDrawingAttributes(drawingAttributes);
+
+            var display = DisplayInformation.GetForCurrentView();
+
+            // 1. Activate custom drawing 
+            _inkSynchronizer = _inkPresenter.ActivateCustomDrying();
+
+            // 2. add use custom drawing when strokes are collected
+            _inkPresenter.StrokesCollected += InkPresenter_StrokesCollected;
+
+            _inkPresenter.InputProcessingConfiguration.RightDragAction = InkInputRightDragAction.LeaveUnprocessed;
+
+            var unprocessedInput = _inkPresenter.UnprocessedInput;
+            unprocessedInput.PointerPressed += UnprocessedInput_PointerPressed;
+            unprocessedInput.PointerMoved += UnprocessedInput_PointerMoved;
+            unprocessedInput.PointerReleased += UnprocessedInput_PointerReleased;
+            unprocessedInput.PointerExited += UnprocessedInput_PointerExited;
+            unprocessedInput.PointerLost += UnprocessedInput_PointerLost;
+
+            // Delete old files from LocalFolder
+            var files = await ApplicationData.Current.LocalFolder.GetFilesAsync();
+
+            if (files.Count > 0)
+            {
+                var fileCount = files.Count;
+
+                try
+                {
+                    foreach (var file in files)
+                    {
+                        await file.DeleteAsync(StorageDeleteOption.Default);
+                        fileCount = files.Count;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    var numberOfFilesRemaining = fileCount.ToString();
+
+                    StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                    logger.Log("MyDeleteLocalFilesError" + " "
+                               + "Number of files remaining:" + " " + numberOfFilesRemaining + " "
+                               + ex.Message + " " + ex.StackTrace);
+                }
+            }
+
+
+            // Set some initial values
+            gridForOverall.Width = gridForOverall.ActualWidth;
+            gridForOverall.Height = gridForOverall.ActualHeight;
+            gridCompressionOverlay.Width = gridMain.ActualWidth;
+            gridCompressionOverlay.Height = gridMain.ActualHeight;
+            gridExhOverlap.Height = gridMain.ActualHeight * 0.6;
+            gridIntOverlap.Height = (gridMain.ActualHeight * 0.6) - 46;
+            gridImageContainer.Width = gridMain.ActualWidth;
+            gridImageContainer.Height = gridMain.ActualHeight;
+            SetAmountBetween(tboxHpos);
+            SetAmountBetween(tboxVpos);
+
+            transformExh.TranslateX = 140 / Convert.ToDouble(UnitsPerX);
+            gridExhOverlap.Width = 230 / Convert.ToDouble(UnitsPerX);
+            transformInt.TranslateX = 350 / Convert.ToDouble(UnitsPerX);
+            gridIntOverlap.Width = 235 / Convert.ToDouble(UnitsPerX);
+        }
+
         private void tool_Checked(object sender, RoutedEventArgs e)
         {
             string name = (sender as RadioButton).Name;
@@ -464,7 +549,6 @@ namespace WaveformOverlaysPlus
 
         async void Save()
         {
-            gridCover.Visibility = Visibility.Visible;
             gridBranding.Visibility = Visibility.Visible;
 
             try
@@ -494,7 +578,6 @@ namespace WaveformOverlaysPlus
             finally
             {
                 gridBranding.Visibility = Visibility.Collapsed;
-                gridCover.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -654,18 +737,17 @@ namespace WaveformOverlaysPlus
         private async void ShareImageHandler(DataTransferManager sender, DataRequestedEventArgs e)
         {
             DataRequest request = e.Request;
-            request.Data.Properties.Title = "Share Image";
-            request.Data.Properties.Description = "share an image.";
+            request.Data.Properties.Title = "Share image";
+            request.Data.Properties.Description = "from Pressure Waveform Overlays";
 
             // Because we are making async calls in the DataRequested event handler,
             //  we need to get the deferral first.
-            DataRequestDeferral deferral = request.GetDeferral();
+            DataRequestDeferral deferral = request.GetDeferral(); // Make sure we always call Complete on the deferral.
 
-            // Make sure we always call Complete on the deferral.
             try
             {
                 // Get the file
-                StorageFile thumbnailFile = await ApplicationData.Current.LocalFolder.GetFileAsync("thumbnail.png");
+                StorageFile thumbnailFile = await ApplicationData.Current.LocalFolder.GetFileAsync("shareFile.png");
                 request.Data.Properties.Thumbnail = RandomAccessStreamReference.CreateFromFile(thumbnailFile);
 
                 StorageFile shareFile = await ApplicationData.Current.LocalFolder.GetFileAsync("shareFile.png");
@@ -705,7 +787,7 @@ namespace WaveformOverlaysPlus
                     await stream.WriteAsync(pixels, 0, pixels.Length);
                 }
 
-                StorageFile thumbnailFile = await ImageUtils.WriteableBitmapToStorageFile(wb, "thumbnail.png");
+                //StorageFile thumbnailFile = await ImageUtils.WriteableBitmapToStorageFile(wb, "thumbnail.bmp");
                 StorageFile shareFile = await ImageUtils.WriteableBitmapToStorageFile(wb, "shareFile.png");
 
                 DataTransferManager.ShowShareUI();
@@ -929,91 +1011,6 @@ namespace WaveformOverlaysPlus
 #endregion
 
 #region Custom Ink Rendering with Erase
-
-        private async void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-            // Set initial ink stroke attributes.
-            InkDrawingAttributes drawingAttributes = new InkDrawingAttributes();
-            drawingAttributes.DrawAsHighlighter = false;
-            drawingAttributes.PenTip = PenTipShape.Circle;
-
-            SolidColorBrush initialBrush = new SolidColorBrush(Colors.Blue);
-            if (borderForStrokeColor != null)
-            {
-                initialBrush = borderForStrokeColor.Background as SolidColorBrush;
-            }
-            drawingAttributes.Color = initialBrush.Color;
-
-            if (rbSize10 != null)
-            {
-                drawingAttributes.Size = new Size(currentSizeSelected, currentSizeSelected);
-            }
-
-            drawingAttributes.IgnorePressure = false;
-            drawingAttributes.FitToCurve = true;
-            inkCanvas.InkPresenter.UpdateDefaultDrawingAttributes(drawingAttributes);
-
-            var display = DisplayInformation.GetForCurrentView();
-
-            // 1. Activate custom drawing 
-            _inkSynchronizer = _inkPresenter.ActivateCustomDrying();
-
-            // 2. add use custom drawing when strokes are collected
-            _inkPresenter.StrokesCollected += InkPresenter_StrokesCollected;
-
-            _inkPresenter.InputProcessingConfiguration.RightDragAction = InkInputRightDragAction.LeaveUnprocessed;
-
-            var unprocessedInput = _inkPresenter.UnprocessedInput;
-            unprocessedInput.PointerPressed += UnprocessedInput_PointerPressed;
-            unprocessedInput.PointerMoved += UnprocessedInput_PointerMoved;
-            unprocessedInput.PointerReleased += UnprocessedInput_PointerReleased;
-            unprocessedInput.PointerExited += UnprocessedInput_PointerExited;
-            unprocessedInput.PointerLost += UnprocessedInput_PointerLost;
-
-            // Delete old files from LocalFolder
-            var files = await ApplicationData.Current.LocalFolder.GetFilesAsync();
-
-            if (files.Count > 0)
-            {
-                var fileCount = files.Count;
-
-                try
-                {
-                    foreach (var file in files)
-                    {
-                        await file.DeleteAsync(StorageDeleteOption.Default);
-                        fileCount = files.Count;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    var numberOfFilesRemaining = fileCount.ToString();
-
-                    StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
-                    logger.Log("MyDeleteLocalFilesError" + " " 
-                               + "Number of files remaining:"  + " " + numberOfFilesRemaining + " " 
-                               + ex.Message + " " + ex.StackTrace);
-                }
-            }
-            
-
-            // Set some initial values
-            gridForOverall.Width = gridForOverall.ActualWidth;
-            gridForOverall.Height = gridForOverall.ActualHeight;
-            gridCompressionOverlay.Width = gridMain.ActualWidth;
-            gridCompressionOverlay.Height = gridMain.ActualHeight;
-            gridExhOverlap.Height = gridMain.ActualHeight * 0.6;
-            gridIntOverlap.Height = (gridMain.ActualHeight * 0.6) - 46;
-            gridImageContainer.Width = gridMain.ActualWidth;
-            gridImageContainer.Height = gridMain.ActualHeight;
-            SetAmountBetween(tboxHpos);
-            SetAmountBetween(tboxVpos);
-
-            transformExh.TranslateX = 140 / Convert.ToDouble(UnitsPerX);
-            gridExhOverlap.Width = 230 / Convert.ToDouble(UnitsPerX);
-            transformInt.TranslateX = 350 / Convert.ToDouble(UnitsPerX);
-            gridIntOverlap.Width = 235 / Convert.ToDouble(UnitsPerX);
-        }
 
         private void PenOrEraser_Clicked(object sender, RoutedEventArgs e)
         {
@@ -5058,7 +5055,7 @@ namespace WaveformOverlaysPlus
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
+            
         }
     }
 }

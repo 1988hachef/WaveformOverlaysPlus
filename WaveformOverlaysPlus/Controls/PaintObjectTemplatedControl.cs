@@ -430,6 +430,9 @@ namespace WaveformOverlaysPlus.Controls
         private void _PointerExited(object sender, PointerRoutedEventArgs e)
         {
             Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 1);
+
+            // Remove transition animation because it will fire on size change events and that is distracting and annoying
+            _myWindow.ChildrenTransitions.Clear();
         }
 
         private void _contentPresenter_PointerExited(object sender, PointerRoutedEventArgs e)
