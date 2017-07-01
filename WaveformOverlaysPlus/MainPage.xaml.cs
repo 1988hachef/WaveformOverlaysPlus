@@ -369,76 +369,87 @@ namespace WaveformOverlaysPlus
 
         async void Open()
         {
-            FileOpenPicker openPicker = new FileOpenPicker();
-            openPicker.ViewMode = PickerViewMode.Thumbnail;
-            openPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-            openPicker.FileTypeFilter.Add(".jpg");
-            openPicker.FileTypeFilter.Add(".bmp");
-            openPicker.FileTypeFilter.Add(".gif");
-            openPicker.FileTypeFilter.Add(".png");
-            StorageFile imgFile = await openPicker.PickSingleFileAsync();
-
-            if (imgFile != null)
+            try
             {
-                double _height = 0;
-                double _width = 0;
+                FileOpenPicker openPicker = new FileOpenPicker();
+                openPicker.ViewMode = PickerViewMode.Thumbnail;
+                openPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+                openPicker.FileTypeFilter.Add(".jpg");
+                openPicker.FileTypeFilter.Add(".bmp");
+                openPicker.FileTypeFilter.Add(".gif");
+                openPicker.FileTypeFilter.Add(".png");
+                StorageFile imgFile = await openPicker.PickSingleFileAsync();
 
-                Image image = new Image();
-                image.Stretch = Stretch.Fill;
-
-                // Set the image source and get the image width and height
-                using (IRandomAccessStream IRASstream = await imgFile.OpenAsync(FileAccessMode.Read))
+                if (imgFile != null)
                 {
-                    BitmapImage bitmapImage = new BitmapImage();
-                    await bitmapImage.SetSourceAsync(IRASstream);
-                    _height = bitmapImage.PixelHeight;
-                    _width = bitmapImage.PixelWidth;
-                    image.Source = bitmapImage;
-                }
+                    double _height = 0;
+                    double _width = 0;
 
-                if (_width < 42 || _height < 42)
-                {
-                    MessageDialog tooSmallMessage = new MessageDialog("Image too small. Please choose a larger image.");
-                    await tooSmallMessage.ShowAsync();
-                }
-                else
-                {
-                    double scale = 1;
+                    Image image = new Image();
+                    image.Stretch = Stretch.Fill;
 
-                    if (_width > gridMain.ActualWidth || _height > gridMain.ActualHeight)
+                    // Set the image source and get the image width and height
+                    using (IRandomAccessStream IRASstream = await imgFile.OpenAsync(FileAccessMode.Read))
                     {
-                        scale = Math.Min(gridMain.ActualWidth / _width, gridMain.ActualHeight / _height);
-                        _width = (_width * scale) - 1;
-                        _height = (_height * scale) - 1;
+                        BitmapImage bitmapImage = new BitmapImage();
+                        await bitmapImage.SetSourceAsync(IRASstream);
+                        _height = bitmapImage.PixelHeight;
+                        _width = bitmapImage.PixelWidth;
+                        image.Source = bitmapImage;
                     }
 
-                    // Save to local storage and generate unique name in case two of the same image are opened.
-                    StorageFile file2 = await imgFile.CopyAsync(ApplicationData.Current.LocalFolder, imgFile.Name, NameCollisionOption.GenerateUniqueName);
+                    if (_width < 42 || _height < 42)
+                    {
+                        MessageDialog tooSmallMessage = new MessageDialog("Image too small. Please choose a larger image.");
+                        await tooSmallMessage.ShowAsync();
+                    }
+                    else
+                    {
+                        double scale = 1;
 
-                    string name = file2.Name;
-                    string path = "ms-appdata:///local/" + name;
+                        if (_width > gridMain.ActualWidth || _height > gridMain.ActualHeight)
+                        {
+                            scale = Math.Min(gridMain.ActualWidth / _width, gridMain.ActualHeight / _height);
+                            _width = (_width * scale) - 1;
+                            _height = (_height * scale) - 1;
+                        }
 
-                    PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
-                    paintObject.Width = _width;
-                    paintObject.Height = _height;
-                    paintObject.Content = image;
-                    paintObject.ImageFileName = name;
-                    paintObject.ImageFilePath = path;
-                    paintObject.ImageScale = scale;
-                    paintObject.OpacitySliderIsVisible = true;
-                    paintObject.Unloaded += PaintObject_Unloaded;
-                    paintObject.ManipulationStarting += GeneralPaintObj_ManipStarting;
-                    paintObject.ManipulationCompleted += GeneralPaintObj_ManipCompleted;
-                    paintObject.Closing += GeneralPaintObject_Closing;
-                    paintObject.Z_Order_Changed += GeneralPaintObject_Z_Order_Changed;
+                        // Save to local storage and generate unique name in case two of the same image are opened.
+                        StorageFile file2 = await imgFile.CopyAsync(ApplicationData.Current.LocalFolder, imgFile.Name, NameCollisionOption.GenerateUniqueName);
 
-                    gridMain.Children.Add(paintObject);
+                        string name = file2.Name;
+                        string path = "ms-appdata:///local/" + name;
 
-                    _UndoRedo.InsertInUnDoRedoForAddRemoveElement(true, paintObject, gridMain);
-                    ManageUndoRedoButtons();
+                        PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
+                        paintObject.Width = _width;
+                        paintObject.Height = _height;
+                        paintObject.Content = image;
+                        paintObject.ImageFileName = name;
+                        paintObject.ImageFilePath = path;
+                        paintObject.ImageScale = scale;
+                        paintObject.OpacitySliderIsVisible = true;
+                        paintObject.Unloaded += PaintObject_Unloaded;
+                        paintObject.ManipulationStarting += GeneralPaintObj_ManipStarting;
+                        paintObject.ManipulationCompleted += GeneralPaintObj_ManipCompleted;
+                        paintObject.Closing += GeneralPaintObject_Closing;
+                        paintObject.Z_Order_Changed += GeneralPaintObject_Z_Order_Changed;
 
-                    imageCollection.Add(new StoredImage { FileName = name, FilePath = path });
+                        gridMain.Children.Add(paintObject);
+
+                        _UndoRedo.InsertInUnDoRedoForAddRemoveElement(true, paintObject, gridMain);
+                        ManageUndoRedoButtons();
+
+                        imageCollection.Add(new StoredImage { FileName = name, FilePath = path });
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                await new MessageDialog("Sorry, a problem occured when trying to open the file.\n\n"
+                                         + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
+
+                StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                logger.Log("MyOpenError" + " " + ex.Message + " " + ex.StackTrace);
             }
         }
 
@@ -474,8 +485,11 @@ namespace WaveformOverlaysPlus
             }
             catch (Exception ex)
             {
-                var dialog = new MessageDialog("The Save File method ran into a problem.    " + ex.Message);
-                await dialog.ShowAsync();
+                await new MessageDialog("Sorry, a problem occured when trying to save the file.\n\n"
+                                         + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
+
+                StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                logger.Log("MySaveError" + " " + ex.Message + " " + ex.StackTrace);
             }
             finally
             {
@@ -488,9 +502,20 @@ namespace WaveformOverlaysPlus
 
 #region Print
 
-        private void PrintButtonClick(object sender, RoutedEventArgs e)
+        private async void PrintButtonClick(object sender, RoutedEventArgs e)
         {
-            Print();
+            try
+            {
+                Print();
+            }
+            catch (Exception ex)
+            {
+                await new MessageDialog("Sorry, a problem occured when trying to print the file.\n\n"
+                                                         + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
+
+                StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                logger.Log("MyPrintError" + " " + ex.Message + " " + ex.StackTrace);
+            }
         }
 
         async void Print()
@@ -646,6 +671,14 @@ namespace WaveformOverlaysPlus
                 StorageFile shareFile = await ApplicationData.Current.LocalFolder.GetFileAsync("shareFile.png");
                 request.Data.SetBitmap(RandomAccessStreamReference.CreateFromFile(shareFile));
             }
+            catch (Exception ex)
+            {
+                await new MessageDialog("Sorry, a problem occured when trying to get the file for sharing.\n\n"
+                                         + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
+
+                StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                logger.Log("MyGetFileForShareError" + " " + ex.Message + " " + ex.StackTrace);
+            }
             finally
             {
                 gridBranding.Visibility = Visibility.Collapsed;
@@ -657,23 +690,34 @@ namespace WaveformOverlaysPlus
 
         private async void menuShare_Click(object sender, RoutedEventArgs e)
         {
-            gridCover.Visibility = Visibility.Visible;
-            gridBranding.Visibility = Visibility.Visible;
-
-            RenderTargetBitmap rtb = new RenderTargetBitmap();
-            await rtb.RenderAsync(gridForOverall);
-            IBuffer pixelBuffer = await rtb.GetPixelsAsync();
-            byte[] pixels = pixelBuffer.ToArray();
-            WriteableBitmap wb = new WriteableBitmap(rtb.PixelWidth, rtb.PixelHeight);
-            using (Stream stream = wb.PixelBuffer.AsStream())
+            try
             {
-                await stream.WriteAsync(pixels, 0, pixels.Length);
+                gridCover.Visibility = Visibility.Visible;
+                gridBranding.Visibility = Visibility.Visible;
+
+                RenderTargetBitmap rtb = new RenderTargetBitmap();
+                await rtb.RenderAsync(gridForOverall);
+                IBuffer pixelBuffer = await rtb.GetPixelsAsync();
+                byte[] pixels = pixelBuffer.ToArray();
+                WriteableBitmap wb = new WriteableBitmap(rtb.PixelWidth, rtb.PixelHeight);
+                using (Stream stream = wb.PixelBuffer.AsStream())
+                {
+                    await stream.WriteAsync(pixels, 0, pixels.Length);
+                }
+
+                StorageFile thumbnailFile = await ImageUtils.WriteableBitmapToStorageFile(wb, "thumbnail.png");
+                StorageFile shareFile = await ImageUtils.WriteableBitmapToStorageFile(wb, "shareFile.png");
+
+                DataTransferManager.ShowShareUI();
             }
+            catch (Exception ex)
+            {
+                await new MessageDialog("Sorry, a problem occured when preparing to share.\n\n"
+                                         + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
 
-            StorageFile thumbnailFile = await ImageUtils.WriteableBitmapToStorageFile(wb, "thumbnail.png");
-            StorageFile shareFile = await ImageUtils.WriteableBitmapToStorageFile(wb, "shareFile.png");
-
-            DataTransferManager.ShowShareUI();
+                StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                logger.Log("MyPrepareToShareError" + " " + ex.Message + " " + ex.StackTrace);
+            }
         }
 
 #endregion
@@ -687,20 +731,31 @@ namespace WaveformOverlaysPlus
 
         async void Copy()
         {
-            gridCover.Visibility = Visibility.Visible;
-            gridBranding.Visibility = Visibility.Visible;
+            try
+            {
+                gridCover.Visibility = Visibility.Visible;
+                gridBranding.Visibility = Visibility.Visible;
 
-            StorageFile file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync("TempImgFile", CreationCollisionOption.ReplaceExisting);
-            await ImageUtils.CaptureElementToFile(gridForOverall, file);
+                StorageFile file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync("TempImgFile", CreationCollisionOption.ReplaceExisting);
+                await ImageUtils.CaptureElementToFile(gridForOverall, file);
 
-            DataPackage dataPackage = new DataPackage();
-            dataPackage.RequestedOperation = DataPackageOperation.Copy;
-            dataPackage.SetBitmap(RandomAccessStreamReference.CreateFromFile(file));
+                DataPackage dataPackage = new DataPackage();
+                dataPackage.RequestedOperation = DataPackageOperation.Copy;
+                dataPackage.SetBitmap(RandomAccessStreamReference.CreateFromFile(file));
 
-            Clipboard.SetContent(dataPackage);
+                Clipboard.SetContent(dataPackage);
 
-            gridBranding.Visibility = Visibility.Collapsed;
-            gridCover.Visibility = Visibility.Collapsed;
+                gridBranding.Visibility = Visibility.Collapsed;
+                gridCover.Visibility = Visibility.Collapsed;
+            }
+            catch (Exception ex)
+            {
+                await new MessageDialog("Sorry, a problem occured when trying to copy.\n\n"
+                                         + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
+
+                StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                logger.Log("MyCopyError" + " " + ex.Message + " " + ex.StackTrace);
+            }
         }
 
         private void menuPaste_Click(object sender, RoutedEventArgs e)
@@ -710,24 +765,36 @@ namespace WaveformOverlaysPlus
 
         async void Paste()
         {
-            DataPackageView dataView = Clipboard.GetContent();
-            
-            if (!(dataView.Contains(StandardDataFormats.StorageItems)) && !(dataView.Contains(StandardDataFormats.Bitmap)))
+            try
             {
-                await new MessageDialog("Sorry, could not Paste the item(s). Please use File -> Open to open the image(s).").ShowAsync();
-            }
-            else
-            {
-                if (dataView.Contains(StandardDataFormats.StorageItems))
-                {
-                    ProcessDataPackageViewForImages(dataView);
-                }
+                DataPackageView dataView = Clipboard.GetContent();
 
-                if (dataView.Contains(StandardDataFormats.Bitmap))
+                if (!(dataView.Contains(StandardDataFormats.StorageItems)) && !(dataView.Contains(StandardDataFormats.Bitmap)))
                 {
-                    PasteBitmapFromDataPackageView(dataView);
+                    await new MessageDialog("Sorry, could not Paste the item(s). Another option is to use File -> Open to open the image(s).").ShowAsync();
+                }
+                else
+                {
+                    if (dataView.Contains(StandardDataFormats.StorageItems))
+                    {
+                        ProcessDataPackageViewForImages(dataView);
+                    }
+
+                    if (dataView.Contains(StandardDataFormats.Bitmap))
+                    {
+                        PasteBitmapFromDataPackageView(dataView);
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                await new MessageDialog("Sorry, a problem occured when trying to paste.\n\n"
+                                         + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
+
+                StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                logger.Log("MyPasteError" + " " + ex.Message + " " + ex.StackTrace);
+            }
+            
         }
 
         async void PasteBitmapFromDataPackageView(DataPackageView dataView)
@@ -823,7 +890,7 @@ namespace WaveformOverlaysPlus
         private async void menuPrivacyPolicy_Click(object sender, RoutedEventArgs e)
         {
             Uri uri = new Uri(@"https://1drv.ms/u/s!AlsPP0wI1WI76nbgs0LoEttkRVnD");
-            bool success = await Windows.System.Launcher.LaunchUriAsync(uri);
+            bool success = await Launcher.LaunchUriAsync(uri);
 
             if (success == false)
             {
@@ -906,17 +973,29 @@ namespace WaveformOverlaysPlus
             // Delete old files from LocalFolder
             var files = await ApplicationData.Current.LocalFolder.GetFilesAsync();
 
-            foreach (var file in files)
+            if (files.Count > 0)
             {
+                var fileCount = files.Count;
+
                 try
                 {
-                    await file.DeleteAsync(StorageDeleteOption.Default);
+                    foreach (var file in files)
+                    {
+                        await file.DeleteAsync(StorageDeleteOption.Default);
+                        fileCount = files.Count;
+                    }
                 }
                 catch (Exception ex)
                 {
-                    await new MessageDialog("Error deleting old image files " + ex.Message).ShowAsync();
+                    var numberOfFilesRemaining = fileCount.ToString();
+
+                    StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                    logger.Log("MyDeleteLocalFilesError" + " " 
+                               + "Number of files remaining:"  + " " + numberOfFilesRemaining + " " 
+                               + ex.Message + " " + ex.StackTrace);
                 }
             }
+            
 
             // Set some initial values
             gridForOverall.Width = gridForOverall.ActualWidth;
@@ -1752,7 +1831,11 @@ namespace WaveformOverlaysPlus
             }
             catch (Exception ex)
             {
-                var dialog = await new MessageDialog("The cropping method ran into a problem. Cannot crop image.    " + ex.Message).ShowAsync();
+                await new MessageDialog("Sorry, a problem occured when trying to crop the image.\n\n"
+                                         + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
+
+                StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                logger.Log("MyCropError" + " " + ex.Message + " " + ex.StackTrace);
             }
 
             CloseCropper();
@@ -1775,74 +1858,85 @@ namespace WaveformOverlaysPlus
 
         async void LoadImageIntoCropper(string filePath)
         {
-            string fileName = filePath.Substring(20);
-            double height = 0;
-            double width = 0;
-
-            StorageFile imgFile = await ApplicationData.Current.LocalFolder.GetFileAsync(fileName);
-
-            Image img = new Image();
-            using (IRandomAccessStream IRASstream = await imgFile.OpenAsync(FileAccessMode.Read))
+            try
             {
-                BitmapImage bitmapImage = new BitmapImage();
-                await bitmapImage.SetSourceAsync(IRASstream);
-                height = bitmapImage.PixelHeight;
-                width = bitmapImage.PixelWidth;
-                img.Source = bitmapImage;
-            }
+                string fileName = filePath.Substring(20);
+                double height = 0;
+                double width = 0;
 
-            if (width < 42 || height < 42)
-            {
-                MessageDialog tooSmallMessage = new MessageDialog("Image too small. Please choose a larger image.");
-                await tooSmallMessage.ShowAsync();
+                StorageFile imgFile = await ApplicationData.Current.LocalFolder.GetFileAsync(fileName);
 
-                if (imageCollection.Count < 2)
+                Image img = new Image();
+                using (IRandomAccessStream IRASstream = await imgFile.OpenAsync(FileAccessMode.Read))
                 {
-                    gridForCrop.Visibility = Visibility.Collapsed;
-                }
-                else
-                {
-                    BackToImagesGridView();
-                }
-            }
-            else
-            {
-                tblockFileName.Text = fileName;
-
-                if (width > gridCropping.ActualWidth || height > gridCropping.ActualHeight)
-                {
-                    double scale = Math.Min(gridCropping.ActualWidth / width, gridCropping.ActualHeight / height);
-                    width = (width * scale) - 1;
-                    height = (height * scale) - 1;
+                    BitmapImage bitmapImage = new BitmapImage();
+                    await bitmapImage.SetSourceAsync(IRASstream);
+                    height = bitmapImage.PixelHeight;
+                    width = bitmapImage.PixelWidth;
+                    img.Source = bitmapImage;
                 }
 
-                img.Width = width;
-                img.Height = height;
-
-                if (width < 82 || height < 82)
+                if (width < 42 || height < 42)
                 {
-                    controlCropOutline.Width = 41;
-                    controlCropOutline.Height = 41;
-                }
-                else
-                {
-                    controlCropOutline.Width = width / 2;
-                    controlCropOutline.Height = height / 2;
-                }
+                    MessageDialog tooSmallMessage = new MessageDialog("Image too small. Please choose a larger image.");
+                    await tooSmallMessage.ShowAsync();
 
-                gridImageContainer.Children.Add(img);
-                gridImageContainer.Width = width;
-                gridImageContainer.Height = height;
-                controlCropOutline.transform_myControl.TranslateX = 0;
-                controlCropOutline.transform_myControl.TranslateY = 0;
-
-                foreach (Rectangle r in gridCrop.Children)
-                {
-                    if (r.Visibility == Visibility.Collapsed)
+                    if (imageCollection.Count < 2)
                     {
-                        r.Visibility = Visibility.Visible;
+                        gridForCrop.Visibility = Visibility.Collapsed;
+                    }
+                    else
+                    {
+                        BackToImagesGridView();
                     }
                 }
+                else
+                {
+                    tblockFileName.Text = fileName;
+
+                    if (width > gridCropping.ActualWidth || height > gridCropping.ActualHeight)
+                    {
+                        double scale = Math.Min(gridCropping.ActualWidth / width, gridCropping.ActualHeight / height);
+                        width = (width * scale) - 1;
+                        height = (height * scale) - 1;
+                    }
+
+                    img.Width = width;
+                    img.Height = height;
+
+                    if (width < 82 || height < 82)
+                    {
+                        controlCropOutline.Width = 41;
+                        controlCropOutline.Height = 41;
+                    }
+                    else
+                    {
+                        controlCropOutline.Width = width / 2;
+                        controlCropOutline.Height = height / 2;
+                    }
+
+                    gridImageContainer.Children.Add(img);
+                    gridImageContainer.Width = width;
+                    gridImageContainer.Height = height;
+                    controlCropOutline.transform_myControl.TranslateX = 0;
+                    controlCropOutline.transform_myControl.TranslateY = 0;
+
+                    foreach (Rectangle r in gridCrop.Children)
+                    {
+                        if (r.Visibility == Visibility.Collapsed)
+                        {
+                            r.Visibility = Visibility.Visible;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await new MessageDialog("Sorry, a problem occured when trying to load image into cropper.\n\n"
+                                         + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
+
+                StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                logger.Log("MyLoadImageIntoCropperError" + " " + ex.Message + " " + ex.StackTrace);
             }
         }
 
@@ -1867,7 +1961,10 @@ namespace WaveformOverlaysPlus
 
         private void CropOutline_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            (sender as UIElement).ReleasePointerCapture(e.Pointer);
+            var frameworkEl = sender as FrameworkElement;
+            var pointerPoint = e.GetCurrentPoint(frameworkEl);
+            var x = pointerPoint.Position.X;
+            var y = pointerPoint.Position.Y;
 
             foreach (Rectangle r in gridCrop.Children)
             {
@@ -1876,17 +1973,14 @@ namespace WaveformOverlaysPlus
                     r.Visibility = Visibility.Visible;
                 }
             }
-        }
 
-        private void CropOutline_PointerEntered(object sender, PointerRoutedEventArgs e)
-        {
-            foreach (Rectangle r in gridCrop.Children)
+            if (x < 0 || x > frameworkEl.ActualWidth || y < 0 || y > frameworkEl.ActualHeight) // pointer point is outside of the FrameworkElement
             {
-                if (r.Visibility == Visibility.Collapsed)
-                {
-                    r.Visibility = Visibility.Visible;
-                }
+                Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
             }
+
+            frameworkEl.ReleasePointerCapture(e.Pointer);
+            frameworkEl.ClearValue(PointerCapturesProperty);
         }
 
         void CloseCropper()
@@ -2647,7 +2741,7 @@ namespace WaveformOverlaysPlus
 
 #endregion
 
-#region Cyl overlay
+#region Cyl ID overlay
 
         private void btnCyl_Click(object sender, RoutedEventArgs e)
         {
@@ -2980,11 +3074,11 @@ namespace WaveformOverlaysPlus
                 }
                 catch (Exception ex)
                 {
-                    var dialog = new MessageDialog("A problem occured when trying to load overlay.   " + ex.Message);
-                    await dialog.ShowAsync();
+                    await new MessageDialog("Sorry, a problem occured when trying to load cylinder ID overlay.\n\n"
+                                             + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
 
                     StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
-                    logger.Log("Show CylinderID Overlay exception: " + ex.Message);
+                    logger.Log("MyCylIDError" + " " + ex.Message + " " + ex.StackTrace);
                 }
             }
         }
@@ -2995,9 +3089,6 @@ namespace WaveformOverlaysPlus
             {
                 colorKey.Visibility = Visibility.Visible;
             }
-
-            //var cylIDgrid = sender as PaintObjectTemplatedControl;
-            //cylIDgrid.Opacity = 0.6;
         }
 
         private void PaintObjectCylID_Unloaded(object sender, RoutedEventArgs e)
@@ -4606,7 +4697,40 @@ namespace WaveformOverlaysPlus
 
         private void HrulerGrips_PointerExited(object sender, PointerRoutedEventArgs e)
         {
-            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
+            var rulerGrip = sender as UIElement;
+
+            if (rulerGrip.PointerCaptures == null)
+            {
+                Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
+            }
+        }
+
+        private void HrulerGrips_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            (sender as UIElement).CapturePointer(e.Pointer);
+        }
+
+        private void HrulerGrips_PointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            var rulerGrip = sender as FrameworkElement;
+            var pointerPoint = e.GetCurrentPoint(rulerGrip);
+            var x = pointerPoint.Position.X;
+            var y = pointerPoint.Position.Y;
+
+            if (rulerGrip.Name.StartsWith("p")) // polygon shape is hard to determine if pointer is inside it, so just turn cursor back to arrow.
+            {
+                Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
+            }
+            else // rectangle shape
+            {
+                if (x < 0 || x > rulerGrip.ActualWidth || y < 0 || y > rulerGrip.ActualHeight) // pointer point is outside of the grip
+                {
+                    Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
+                }
+            }
+
+            rulerGrip.ReleasePointerCapture(e.Pointer);
+            rulerGrip.ClearValue(PointerCapturesProperty);
         }
 
         private void VrulerGrips_PointerEntered(object sender, PointerRoutedEventArgs e)
@@ -4616,7 +4740,40 @@ namespace WaveformOverlaysPlus
 
         private void VrulerGrips_PointerExited(object sender, PointerRoutedEventArgs e)
         {
-            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
+            var rulerGrip = sender as UIElement;
+
+            if (rulerGrip.PointerCaptures == null)
+            {
+                Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
+            }
+        }
+
+        private void VrulerGrips_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            (sender as UIElement).CapturePointer(e.Pointer);
+        }
+
+        private void VrulerGrips_PointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            var rulerGrip = sender as FrameworkElement;
+            var pointerPoint = e.GetCurrentPoint(rulerGrip);
+            var x = pointerPoint.Position.X;
+            var y = pointerPoint.Position.Y;
+
+            if (rulerGrip.Name.StartsWith("p")) // polygon shape is hard to determine if pointer is inside it, so just turn cursor back to arrow.
+            {
+                Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
+            }
+            else // rectangle shape
+            {
+                if (x < 0 || x > rulerGrip.ActualWidth || y < 0 || y > rulerGrip.ActualHeight) // pointer point is outside of the grip
+                {
+                    Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 0);
+                }
+            }
+
+            rulerGrip.ReleasePointerCapture(e.Pointer);
+            rulerGrip.ClearValue(PointerCapturesProperty);
         }
 
 #endregion
@@ -4689,60 +4846,72 @@ namespace WaveformOverlaysPlus
             spLabelChooser.Visibility = Visibility.Visible;
         }
 
-        private void labelChooserButtons_Click(object sender, RoutedEventArgs e)
+        private async void labelChooserButtons_Click(object sender, RoutedEventArgs e)
         {
-            var btn = sender as Button;
-            var numberOfLabels = Convert.ToInt32(btn.Content);
-
-            Grid labelGrid = new Grid();
-            labelGrid.Background = new SolidColorBrush(Colors.Transparent);
-
-            if (numberOfLabels == 1)
+            try
             {
-                TextBox textbox = new TextBox() { Style = App.Current.Resources["styleTextBoxDividers"] as Style };
-                labelGrid.Children.Add(textbox);
-            }
-            else
-            {
-                for (int i = 1; i < numberOfLabels; i++)
-                {
-                    ColumnDefinition def1 = new ColumnDefinition() { Width = GridLength.Auto };
-                    ColumnDefinition def2 = new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) };
+                var btn = sender as Button;
+                var numberOfLabels = Convert.ToInt32(btn.Content);
 
-                    labelGrid.ColumnDefinitions.Add(def1);
-                    labelGrid.ColumnDefinitions.Add(def2);
-                }
+                Grid labelGrid = new Grid();
+                labelGrid.Background = new SolidColorBrush(Colors.Transparent);
 
-                ColumnDefinition defFinal = new ColumnDefinition() { Width = GridLength.Auto };
-                labelGrid.ColumnDefinitions.Add(defFinal);
-
-                int columnPosition = 0;
-                for (int i = 0; i < numberOfLabels; i++)
+                if (numberOfLabels == 1)
                 {
                     TextBox textbox = new TextBox() { Style = App.Current.Resources["styleTextBoxDividers"] as Style };
                     labelGrid.Children.Add(textbox);
-                    Grid.SetColumn(textbox, columnPosition);
-
-                    columnPosition += 2;
                 }
+                else
+                {
+                    for (int i = 1; i < numberOfLabels; i++)
+                    {
+                        ColumnDefinition def1 = new ColumnDefinition() { Width = GridLength.Auto };
+                        ColumnDefinition def2 = new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) };
+
+                        labelGrid.ColumnDefinitions.Add(def1);
+                        labelGrid.ColumnDefinitions.Add(def2);
+                    }
+
+                    ColumnDefinition defFinal = new ColumnDefinition() { Width = GridLength.Auto };
+                    labelGrid.ColumnDefinitions.Add(defFinal);
+
+                    int columnPosition = 0;
+                    for (int i = 0; i < numberOfLabels; i++)
+                    {
+                        TextBox textbox = new TextBox() { Style = App.Current.Resources["styleTextBoxDividers"] as Style };
+                        labelGrid.Children.Add(textbox);
+                        Grid.SetColumn(textbox, columnPosition);
+
+                        columnPosition += 2;
+                    }
+                }
+
+                PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
+                paintObject.Content = labelGrid;
+                paintObject.Height = 60;
+                paintObject.Width = numberOfLabels * 50;
+                paintObject.Closing += GeneralPaintObject_Closing;
+                paintObject.ManipulationStarting += GeneralPaintObj_ManipStarting;
+                paintObject.ManipulationCompleted += GeneralPaintObj_ManipCompleted;
+                paintObject.Z_Order_Changed += GeneralPaintObject_Z_Order_Changed;
+
+                gridMain.Children.Add(paintObject);
+
+                spLabelChooser.Visibility = Visibility.Collapsed;
+                gridCover.Visibility = Visibility.Collapsed;
+
+                _UndoRedo.InsertInUnDoRedoForAddRemoveElement(true, paintObject, gridMain);
+                ManageUndoRedoButtons();
             }
+            catch (Exception ex)
+            {
+                await new MessageDialog("Sorry, a problem occured when trying to create labels.\n\n"
+                                         + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
 
-            PaintObjectTemplatedControl paintObject = new PaintObjectTemplatedControl();
-            paintObject.Content = labelGrid;
-            paintObject.Height = 60;
-            paintObject.Width = numberOfLabels * 50;
-            paintObject.Closing += GeneralPaintObject_Closing;
-            paintObject.ManipulationStarting += GeneralPaintObj_ManipStarting;
-            paintObject.ManipulationCompleted += GeneralPaintObj_ManipCompleted;
-            paintObject.Z_Order_Changed += GeneralPaintObject_Z_Order_Changed;
-
-            gridMain.Children.Add(paintObject);
-
-            spLabelChooser.Visibility = Visibility.Collapsed;
-            gridCover.Visibility = Visibility.Collapsed;
-
-            _UndoRedo.InsertInUnDoRedoForAddRemoveElement(true, paintObject, gridMain);
-            ManageUndoRedoButtons();
+                StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                logger.Log("MyLabelMakerError" + " " + ex.Message + " " + ex.StackTrace);
+            }
+            
         }
 
         private void btnLabelCancel_Click(object sender, RoutedEventArgs e)
@@ -4755,25 +4924,37 @@ namespace WaveformOverlaysPlus
 
 #region Drag and Drop
 
-        private void gridMain_DragOver(object sender, DragEventArgs e)
+        private void gridToContainOthers_DragOver(object sender, DragEventArgs e)
         {
             e.AcceptedOperation = DataPackageOperation.Copy;
             e.DragUIOverride.IsCaptionVisible = false;
             e.DragUIOverride.IsGlyphVisible = false;
         }
 
-        private async void gridMain_Drop(object sender, DragEventArgs e)
+        private async void gridToContainOthers_Drop(object sender, DragEventArgs e)
         {
-            DataPackageView dataView = e.DataView;
+            try
+            {
+                DataPackageView dataView = e.DataView;
 
-            if (dataView.Contains(StandardDataFormats.StorageItems))
-            {
-                ProcessDataPackageViewForImages(dataView);
+                if (dataView.Contains(StandardDataFormats.StorageItems))
+                {
+                    ProcessDataPackageViewForImages(dataView);
+                }
+                else
+                {
+                    await new MessageDialog("No items detected").ShowAsync();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                await new MessageDialog("No items detected").ShowAsync();
+                await new MessageDialog("Sorry, a problem occured when trying to drop item into app.\n\n"
+                                         + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
+
+                StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                logger.Log("MyDropError" + " " + ex.Message + " " + ex.StackTrace);
             }
+            
         }
 
         async void LoadDataPackageViewImage(StorageFile droppedFile, BitmapImage bitmapFromDroppedFile)
