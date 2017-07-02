@@ -8,6 +8,7 @@
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     xmlns:local1="using:WaveformOverlaysPlus.Controls"
     mc:Ignorable="d" Loaded="Page_Loaded">
+
     <Page.Transitions>
         <TransitionCollection>
             <NavigationThemeTransition/>
@@ -37,11 +38,12 @@
             <Button Name="btnFile" Content="File" Style="{StaticResource styleMenuButton}" Height="25" Padding="8,-2,8,0" >
                 <Button.Flyout>
                     <MenuFlyout MenuFlyoutPresenterStyle="{StaticResource styleMenuFlyout}">
-                        <MenuFlyoutItem Name="menuNew" Text="New                 Ctrl+ N" FontSize="{StaticResource myFontSize}" Click="menuNew_Click"/>
-                        <MenuFlyoutItem Name="menuOpen" Text="Open               Ctrl+ O" FontSize="{StaticResource myFontSize}" Click="menuOpen_Click"/>
-                        <MenuFlyoutItem Name="menuSave" Text="Save                 Ctrl+ S" FontSize="{StaticResource myFontSize}" Click="menuSave_Click"/>
+                        <MenuFlyoutItem Name="menuNew" Text="New                         Ctrl+ N" FontSize="{StaticResource myFontSize}" Click="menuNew_Click"/>
+                        <MenuFlyoutItem Name="menuOpen" Text="Open                        Ctrl+ O" FontSize="{StaticResource myFontSize}" Click="menuOpen_Click"/>
+                        <MenuFlyoutItem Name="menuSave" Text="Save                          Ctrl+ S" FontSize="{StaticResource myFontSize}" Click="menuSave_Click"/>
+                        <MenuFlyoutItem Name="menuSaveSelection" Text="Save Area" Style="{StaticResource styleMenuFlyoutItem}" FontSize="{StaticResource myFontSize}" Click="menuSaveSelection_Click"/>
                         <MenuFlyoutSeparator/>
-                        <MenuFlyoutItem Name="menuPrint" Text="Print                 Ctrl+ P" Click="PrintButtonClick" FontSize="{StaticResource myFontSize}"/>
+                        <MenuFlyoutItem Name="menuPrint" Text="Print                          Ctrl+ P" Click="PrintButtonClick" FontSize="{StaticResource myFontSize}"/>
                         <MenuFlyoutItem Name="menuShare" Text="Share" FontSize="{StaticResource myFontSize}" Click="menuShare_Click"/>
                         <MenuFlyoutSeparator/>
                         <MenuFlyoutItem Name="menuExit" Text="Exit" FontSize="{StaticResource myFontSize}" Click="menuExit_Click"/>
@@ -98,15 +100,7 @@
                             </FlyoutBase.AttachedFlyout>
 
                             <Grid Name="gridMain" Background="{Binding Background, ElementName=borderForPageColor}">
-
-                                <!--<StackPanel>
-                                    <TextBox Margin="10" Text="1" Style="{StaticResource styleTextBoxDividers}" HorizontalAlignment="Left" VerticalAlignment="Top" MinHeight="1" FontSize="14" Padding="2,1,2,0"/>
-                                    <TextBox Margin="10" Text="1" Style="{StaticResource styleTextBoxDividers}" HorizontalAlignment="Left" VerticalAlignment="Top" MinHeight="2" FontSize="18" Padding="3,1,3,0"/>
-                                    <TextBox Margin="10" Text="1" Style="{StaticResource styleTextBoxDividers}" HorizontalAlignment="Left" VerticalAlignment="Top" MinHeight="6" FontSize="24" Padding="4,1,5,0"/>
-                                    <TextBox Margin="10" Text="12" Style="{StaticResource styleTextBoxDividers}" HorizontalAlignment="Left" VerticalAlignment="Top" MinHeight="10" Padding="4,1,4,0"/>
-                                </StackPanel>-->
                                 
-
                                 <!--<TextBlock Name="tblock" Text="test"/>
                                 <Button Content="button" Click="Button_Click" Margin="-20,0,0,0"/>-->
 
@@ -663,9 +657,10 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Orientation="Horizontal" Margin="5,0,0,0">
-                    <Button Name="btnCrop" Content="Crop" Background="#6600FF00" Margin="5" FontSize="{StaticResource myFontSize}" Click="btnCrop_Click"/>
-                    <Button Name="btnBack" Content="Back" Background="#66E8FF00" Margin="5" FontSize="{StaticResource myFontSize}" IsEnabled="False" Click="btnBack_Click"/>
-                    <Button Name="btnClose" Content="Close" Background="#66FF0000" Margin="5" FontSize="{StaticResource myFontSize}" Click="btnClose_Click"/>
+                    <Button Name="btnSaveSelection" Style="{StaticResource styleBtn}" Visibility="Collapsed" Background="#6600FF00" Content="Save Selection" Margin="5" FontSize="{StaticResource myFontSize}" Click="btnSaveSelection_Click"/>
+                    <Button Name="btnCrop" Content="Crop" Style="{StaticResource styleBtn}" Background="#6600FF00" Margin="5" FontSize="{StaticResource myFontSize}" Click="btnCrop_Click"/>
+                    <Button Name="btnBack" Content="Back" Style="{StaticResource styleBtn}" Background="#66E8FF00" Margin="5" FontSize="{StaticResource myFontSize}" IsEnabled="False" Click="btnBack_Click"/>
+                    <Button Name="btnClose" Content="Close" Style="{StaticResource styleBtn}" Background="#66FF0000" Margin="5" FontSize="{StaticResource myFontSize}" Click="btnClose_Click"/>
                     <TextBlock Name="tblockFileName" Text="Please choose an image" FontSize="{StaticResource myFontSize}" VerticalAlignment="Center" Margin="10,0,0,0" HorizontalAlignment="Left"/>
 
                 </StackPanel>
@@ -947,7 +942,7 @@
                 <Button Content="11" Margin="5" Click="labelChooserButtons_Click"/>
                 <Button Content="12" Margin="5" Click="labelChooserButtons_Click"/>
             </StackPanel>
-            <Button Name="btnLabelCancel" Content="Cancel" HorizontalAlignment="Center" Margin="0,20,0,0" Background="#7FFF0000" Click="btnLabelCancel_Click"/>
+            <Button Name="btnLabelCancel" Style="{StaticResource styleBtn}" Content="Cancel" HorizontalAlignment="Center" Margin="0,20,0,0" Background="#7FFF0000" Click="btnLabelCancel_Click"/>
         </StackPanel>
 
         <StackPanel Name="spSaveBeforeNewDialog" Visibility="Collapsed" Grid.RowSpan="3" Background="#FFEFEFEF" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20" BorderBrush="Black" BorderThickness="1">
@@ -960,7 +955,11 @@
         </StackPanel>
 
         <Grid Name="gridForPrint" Visibility="Collapsed" Grid.RowSpan="3" Background="White" HorizontalAlignment="Center" Width="1055">
-            <Image Name="imageForPrint" Source="Assets/a.jpg" Margin="30"/>
+            <Image Name="imageForPrint" Margin="30"/>
+        </Grid>
+
+        <Grid Name="gridforSaveSelection" Visibility="Collapsed" Grid.RowSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="Black" BorderThickness="1" >
+            <Image Name="imageForSaveSelection" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Grid>
 
     </Grid>

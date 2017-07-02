@@ -1956,6 +1956,9 @@ namespace WaveformOverlaysPlus
 
                 StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
                 logger.Log("MyLoadImageIntoCropperError" + " " + ex.Message + " " + ex.StackTrace);
+
+                gridBranding.Visibility = Visibility.Collapsed;
+                CloseCropper();
             }
         }
 
@@ -2006,6 +2009,10 @@ namespace WaveformOverlaysPlus
         {
             btnCrop.IsEnabled = true;
             btnBack.IsEnabled = false;
+            btnBack.Visibility = Visibility.Visible;
+            btnCrop.Visibility = Visibility.Visible;
+            btnSaveSelection.Visibility = Visibility.Collapsed;
+
             tblockFileName.Text = "Please choose an image";
             if (gridImageContainer.Children.Count > 1)
             {
@@ -5140,5 +5147,144 @@ namespace WaveformOverlaysPlus
         {
             
         }
+
+#region Save Selection
+
+        private async void menuSaveSelection_Click(object sender, RoutedEventArgs e)
+        {
+            gridBranding.Visibility = Visibility.Visible;
+
+            StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("SaveSelectionImage.png", CreationCollisionOption.ReplaceExisting);
+            await ImageUtils.CaptureElementToFile(gridForOverall_0, file);
+
+            gridForCrop.Visibility = Visibility.Visible;
+            btnBack.Visibility = Visibility.Collapsed;
+            btnCrop.Visibility = Visibility.Collapsed;
+            btnSaveSelection.Visibility = Visibility.Visible;
+
+            string name = file.Name;
+            string path = "ms-appdata:///local/" + name;
+
+            LoadImageIntoCropper(path);
+        }
+
+        private async void btnSaveSelection_Click(object sender, RoutedEventArgs e)
+        {
+            gridBranding.Visibility = Visibility.Collapsed;
+
+            Image imageMain = null;
+            string fileName = tblockFileName.Text;
+
+            foreach (var child in gridImageContainer.Children)
+            {
+                if (child is Image)
+                {
+                    imageMain = child as Image;
+                }
+            }
+
+            // Get the top left point of the crop area
+            GeneralTransform gt = rectCropArea.TransformToVisual(imageMain);
+            Point cropPt = gt.TransformPoint(new Point(0, 0));
+
+            try
+            {
+                StorageFile cropFile = await ApplicationData.Current.LocalFolder.GetFileAsync(fileName);
+
+                using (IRandomAccessStream streamForFile = await cropFile.OpenReadAsync())
+                {
+                    BitmapDecoder bitmapDecoder = await BitmapDecoder.CreateAsync(streamForFile);
+
+                    // Figure out the current scale of the image compared to the saved image
+                    double scale = imageMain.ActualWidth / bitmapDecoder.PixelWidth;
+
+                    // Set the size and point of the crop area with the scale factored in
+                    double cropWidth = rectCropArea.ActualWidth / scale;
+                    double cropHeight = rectCropArea.ActualHeight / scale;
+                    double cropX = cropPt.X / scale;
+                    double cropY = cropPt.Y / scale;
+
+                    using (InMemoryRandomAccessStream streamForNewImage = new InMemoryRandomAccessStream())
+                    {
+                        BitmapEncoder bitmapEncoder = await BitmapEncoder.CreateForTranscodingAsync(streamForNewImage, bitmapDecoder);
+
+                        BitmapBounds bitmapBounds = new BitmapBounds();
+                        bitmapBounds.Height = (uint)cropHeight;
+                        bitmapBounds.Width = (uint)cropWidth;
+                        bitmapBounds.X = (uint)cropX;
+                        bitmapBounds.Y = (uint)cropY;
+                        bitmapEncoder.BitmapTransform.Bounds = bitmapBounds;
+
+                        try
+                        {
+                            await bitmapEncoder.FlushAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            var dialog = new MessageDialog("Encoder error." + ex.Message);
+                            await dialog.ShowAsync();
+                        }
+
+                        // Render the stream to the screen
+                        BitmapImage bitmapImage = new BitmapImage();
+                        bitmapImage.SetSource(streamForNewImage);
+                        CloseCropper();
+                        gridCover.Visibility = Visibility.Visible;
+                        gridforSaveSelection.Visibility = Visibility.Visible;
+                        imageForSaveSelection.Source = bitmapImage;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await new MessageDialog("Sorry, a problem occured when trying to get the selected area.\n\n"
+                                         + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
+
+                StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                logger.Log("MyGetSelectedAreaError" + " " + ex.Message + " " + ex.StackTrace);
+
+                CloseCropper();
+                gridCover.Visibility = Visibility.Collapsed;
+                gridforSaveSelection.Visibility = Visibility.Collapsed;
+            }
+
+            SaveSelection();
+        }
+
+        async void SaveSelection()
+        {
+            try
+            {
+                FileSavePicker savePicker = new FileSavePicker();
+                savePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+                savePicker.FileTypeChoices.Add(".png Portable Network Graphics", new List<string>() { ".png" });
+                savePicker.FileTypeChoices.Add(".bmp Bitmap", new List<string>() { ".bmp" });
+                savePicker.FileTypeChoices.Add(".jpg Joint Photographic Experts Group", new List<string>() { ".jpg" });
+                savePicker.FileTypeChoices.Add(".gif Graphical Interchange Format", new List<string>() { ".gif" });
+                StorageFile file = await savePicker.PickSaveFileAsync();
+
+                if (file != null)
+                {
+                    await ImageUtils.CaptureElementToFile(imageForSaveSelection, file);
+                    mightNeedToSave = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                await new MessageDialog("Sorry, a problem occured when trying to save the selection.\n\n"
+                                         + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
+
+                StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                logger.Log("MySaveSelectionError" + " " + ex.Message + " " + ex.StackTrace);
+            }
+            finally
+            {
+                gridCover.Visibility = Visibility.Collapsed;
+                gridforSaveSelection.Visibility = Visibility.Collapsed;
+            }
+        }
+
+#endregion
+
     }
 }
