@@ -752,10 +752,10 @@ namespace WaveformOverlaysPlus
             try
             {
                 // Get the file
-                StorageFile thumbnailFile = await ApplicationData.Current.LocalFolder.GetFileAsync("shareFile.png");
+                StorageFile thumbnailFile = await ApplicationData.Current.TemporaryFolder.GetFileAsync("thumbnail.png");
                 request.Data.Properties.Thumbnail = RandomAccessStreamReference.CreateFromFile(thumbnailFile);
 
-                StorageFile shareFile = await ApplicationData.Current.LocalFolder.GetFileAsync("shareFile.png");
+                StorageFile shareFile = await ApplicationData.Current.TemporaryFolder.GetFileAsync("shareFile.png");
                 request.Data.SetBitmap(RandomAccessStreamReference.CreateFromFile(shareFile));
             }
             catch (Exception ex)
@@ -791,9 +791,11 @@ namespace WaveformOverlaysPlus
                 {
                     await stream.WriteAsync(pixels, 0, pixels.Length);
                 }
+                
+                StorageFile shareFile = await ImageUtils.WriteableBitmapToTemporaryFile(wb, "shareFile.png");
 
-                //StorageFile thumbnailFile = await ImageUtils.WriteableBitmapToStorageFile(wb, "thumbnail.bmp");
-                StorageFile shareFile = await ImageUtils.WriteableBitmapToStorageFile(wb, "shareFile.png");
+                StorageFile thumbnailFile = await ApplicationData.Current.TemporaryFolder.CreateFileAsync("thumbnail.png", CreationCollisionOption.ReplaceExisting);
+                await ImageUtils.CreateThumbnailFromFile(shareFile, 160, thumbnailFile);
 
                 DataTransferManager.ShowShareUI();
             }
@@ -1595,6 +1597,21 @@ namespace WaveformOverlaysPlus
                         t.BorderBrush = t.BorderBrush;
                         t.MinHeight = t.MinHeight; //MinHeight property is used for BorderThickness Binding because the border in the custom textbox style is accomplished by a rectangle strokethickness which is a double not a Thickness
                         t.FontSize = t.FontSize;
+                    }
+
+                    if (content is Grid && child.OpacitySliderIsVisible == false) // content is the labels grid
+                    {
+                        var labelGrid = content as Grid;
+
+                        foreach(var textboxLabel in labelGrid.Children)
+                        {
+                            TextBox t = textboxLabel as TextBox;
+                            t.Background = t.Background;
+                            t.Foreground = t.Foreground;
+                            t.BorderBrush = t.BorderBrush;
+                            t.MinHeight = t.MinHeight; //MinHeight property is used for BorderThickness Binding because the border in the custom textbox style is accomplished by a rectangle strokethickness which is a double not a Thickness
+                            t.FontSize = t.FontSize;
+                        }
                     }
                 }
             }
@@ -4862,6 +4879,8 @@ namespace WaveformOverlaysPlus
         {
             try
             {
+                UnBindLast();
+
                 var btn = sender as Button;
                 var numberOfLabels = Convert.ToInt32(btn.Content);
 
@@ -4870,11 +4889,25 @@ namespace WaveformOverlaysPlus
 
                 if (numberOfLabels == 1)
                 {
+                    ColumnDefinition def1 = new ColumnDefinition() { Width = new GridLength(9) };
+                    ColumnDefinition def2 = new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) };
+                    ColumnDefinition def3 = new ColumnDefinition() { Width = new GridLength(9) };
+
+                    labelGrid.ColumnDefinitions.Add(def1);
+                    labelGrid.ColumnDefinitions.Add(def2);
+                    labelGrid.ColumnDefinitions.Add(def3);
+
                     TextBox textbox = new TextBox() { Style = App.Current.Resources["styleTextBoxDividers"] as Style };
+                    Bind(textbox);
+                    textbox.SizeChanged += LabelTextBox_SizeChanged;
                     labelGrid.Children.Add(textbox);
+                    Grid.SetColumn(textbox, 1);
                 }
                 else
                 {
+                    ColumnDefinition def0 = new ColumnDefinition() { Width = new GridLength(9) };
+                    labelGrid.ColumnDefinitions.Add(def0);
+
                     for (int i = 1; i < numberOfLabels; i++)
                     {
                         ColumnDefinition def1 = new ColumnDefinition() { Width = GridLength.Auto };
@@ -4884,13 +4917,18 @@ namespace WaveformOverlaysPlus
                         labelGrid.ColumnDefinitions.Add(def2);
                     }
 
-                    ColumnDefinition defFinal = new ColumnDefinition() { Width = GridLength.Auto };
-                    labelGrid.ColumnDefinitions.Add(defFinal);
+                    ColumnDefinition defFinal1 = new ColumnDefinition() { Width = GridLength.Auto };
+                    ColumnDefinition defFinal2 = new ColumnDefinition() { Width = new GridLength(9) };
 
-                    int columnPosition = 0;
+                    labelGrid.ColumnDefinitions.Add(defFinal1);
+                    labelGrid.ColumnDefinitions.Add(defFinal2);
+
+                    int columnPosition = 1;
                     for (int i = 0; i < numberOfLabels; i++)
                     {
                         TextBox textbox = new TextBox() { Style = App.Current.Resources["styleTextBoxDividers"] as Style };
+                        Bind(textbox);
+                        textbox.SizeChanged += LabelTextBox_SizeChanged;
                         labelGrid.Children.Add(textbox);
                         Grid.SetColumn(textbox, columnPosition);
 
@@ -4902,6 +4940,7 @@ namespace WaveformOverlaysPlus
                 paintObject.Content = labelGrid;
                 paintObject.Height = 60;
                 paintObject.Width = numberOfLabels * 50;
+                paintObject.MinWidth = 57;
                 paintObject.Closing += GeneralPaintObject_Closing;
                 paintObject.ManipulationStarting += GeneralPaintObj_ManipStarting;
                 paintObject.ManipulationCompleted += GeneralPaintObj_ManipCompleted;
@@ -4924,6 +4963,35 @@ namespace WaveformOverlaysPlus
                 logger.Log("MyLabelMakerError" + " " + ex.Message + " " + ex.StackTrace);
             }
             
+        }
+
+        private void LabelTextBox_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            TextBox tBox = sender as TextBox;
+
+            if (tBox.MinHeight == 1)
+            {
+                tBox.Padding = new Thickness(2, 1, 2, 0);
+                tBox.MinWidth = 18;
+            }
+
+            if (tBox.MinHeight == 2)
+            {
+                tBox.Padding = new Thickness(3, 1, 3, 0);
+                tBox.MinWidth = 22;
+            }
+
+            if (tBox.MinHeight == 6)
+            {
+                tBox.Padding = new Thickness(4, 1, 5, 0);
+                tBox.MinWidth = 29;
+            }
+
+            if (tBox.MinHeight == 10)
+            {
+                tBox.Padding = new Thickness(4, 1, 4, 0);
+                tBox.MinWidth = 35;
+            }
         }
 
         private void btnLabelCancel_Click(object sender, RoutedEventArgs e)

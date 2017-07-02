@@ -26,6 +26,7 @@ namespace WaveformOverlaysPlus.Helpers
                 Stream pixelStream = WB.PixelBuffer.AsStream();
                 byte[] pixels = new byte[pixelStream.Length];
                 await pixelStream.ReadAsync(pixels, 0, pixels.Length);
+                
                 encoder.SetPixelData(BitmapPixelFormat.Bgra8,
                                      BitmapAlphaMode.Straight,
                                      (uint)WB.PixelWidth,
@@ -33,6 +34,33 @@ namespace WaveformOverlaysPlus.Helpers
                                      dispInfo.LogicalDpi,
                                      dispInfo.LogicalDpi,
                                      pixels);
+                
+                await encoder.FlushAsync();
+            }
+            return file;
+        }
+
+        public static async Task<StorageFile> WriteableBitmapToTemporaryFile(WriteableBitmap WB, string fileName)
+        {
+            Guid endcoderID = GetBitmapEncoderId(fileName);
+            DisplayInformation dispInfo = DisplayInformation.GetForCurrentView();
+            StorageFile file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+
+            using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.ReadWrite))
+            {
+                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(endcoderID, stream);
+                Stream pixelStream = WB.PixelBuffer.AsStream();
+                byte[] pixels = new byte[pixelStream.Length];
+                await pixelStream.ReadAsync(pixels, 0, pixels.Length);
+
+                encoder.SetPixelData(BitmapPixelFormat.Bgra8,
+                                     BitmapAlphaMode.Straight,
+                                     (uint)WB.PixelWidth,
+                                     (uint)WB.PixelHeight,
+                                     dispInfo.LogicalDpi,
+                                     dispInfo.LogicalDpi,
+                                     pixels);
+
                 await encoder.FlushAsync();
             }
             return file;
@@ -61,6 +89,70 @@ namespace WaveformOverlaysPlus.Helpers
 
                 await encoder.FlushAsync();
             }
+        }
+
+
+
+        // <summary>
+        /// Resizes and crops source file image so that resized image width/height are not larger than <param name="requestedMinSide"></param>
+        /// </summary>
+        /// <param name="sourceFile">Source StorageFile</param>
+        /// <param name="requestedMinSide">Width/Height of the output image</param>
+        /// <param name="resizedImageFile">Target StorageFile</param>
+        /// <returns></returns>
+        public static async Task<StorageFile> CreateThumbnailFromFile(StorageFile sourceFile, int requestedMinSide, StorageFile resizedImageFile)
+        {
+            var imageStream = await sourceFile.OpenReadAsync();
+            var decoder = await BitmapDecoder.CreateAsync(imageStream);
+            var originalPixelWidth = decoder.PixelWidth;
+            var originalPixelHeight = decoder.PixelHeight;
+
+            using (imageStream)
+            {
+                //do resize only if needed
+                if (originalPixelHeight > requestedMinSide && originalPixelWidth > requestedMinSide)
+                {
+                    using (var resizedStream = await resizedImageFile.OpenAsync(FileAccessMode.ReadWrite))
+                    {
+                        //create encoder based on decoder of the source file
+                        var encoder = await BitmapEncoder.CreateForTranscodingAsync(resizedStream, decoder);
+                        double widthRatio = (double)requestedMinSide / originalPixelWidth;
+                        double heightRatio = (double)requestedMinSide / originalPixelHeight;
+                        uint aspectHeight = (uint)requestedMinSide;
+                        uint aspectWidth = (uint)requestedMinSide;
+                        uint cropX = 0, cropY = 0;
+                        var scaledSize = (uint)requestedMinSide;
+                        if (originalPixelWidth > originalPixelHeight)
+                        {
+                            aspectWidth = (uint)(heightRatio * originalPixelWidth);
+                            cropX = (aspectWidth - aspectHeight) / 2;
+                        }
+                        else
+                        {
+                            aspectHeight = (uint)(widthRatio * originalPixelHeight);
+                            cropY = (aspectHeight - aspectWidth) / 2;
+                        }
+                        //you can adjust interpolation and other options here, so far linear is fine for thumbnails
+                        encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.Linear;
+                        encoder.BitmapTransform.ScaledHeight = aspectHeight;
+                        encoder.BitmapTransform.ScaledWidth = aspectWidth;
+                        encoder.BitmapTransform.Bounds = new BitmapBounds()
+                        {
+                            Width = scaledSize,
+                            Height = scaledSize,
+                            X = cropX,
+                            Y = cropY,
+                        };
+                        await encoder.FlushAsync();
+                    }
+                }
+                else
+                {
+                    //otherwise just use source file as thumbnail
+                    await sourceFile.CopyAndReplaceAsync(resizedImageFile);
+                }
+            }
+            return resizedImageFile;
         }
 
         private static Guid GetBitmapEncoderId(string fileName)

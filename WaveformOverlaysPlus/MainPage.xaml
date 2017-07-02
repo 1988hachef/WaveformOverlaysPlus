@@ -99,9 +99,16 @@
 
                             <Grid Name="gridMain" Background="{Binding Background, ElementName=borderForPageColor}">
 
+                                <!--<StackPanel>
+                                    <TextBox Margin="10" Text="1" Style="{StaticResource styleTextBoxDividers}" HorizontalAlignment="Left" VerticalAlignment="Top" MinHeight="1" FontSize="14" Padding="2,1,2,0"/>
+                                    <TextBox Margin="10" Text="1" Style="{StaticResource styleTextBoxDividers}" HorizontalAlignment="Left" VerticalAlignment="Top" MinHeight="2" FontSize="18" Padding="3,1,3,0"/>
+                                    <TextBox Margin="10" Text="1" Style="{StaticResource styleTextBoxDividers}" HorizontalAlignment="Left" VerticalAlignment="Top" MinHeight="6" FontSize="24" Padding="4,1,5,0"/>
+                                    <TextBox Margin="10" Text="12" Style="{StaticResource styleTextBoxDividers}" HorizontalAlignment="Left" VerticalAlignment="Top" MinHeight="10" Padding="4,1,4,0"/>
+                                </StackPanel>-->
+                                
 
                                 <!--<TextBlock Name="tblock" Text="test"/>
-                            <Button Content="button" Click="Button_Click" Margin="-20,0,0,0"/>-->
+                                <Button Content="button" Click="Button_Click" Margin="-20,0,0,0"/>-->
 
                             </Grid>
 
@@ -535,7 +542,7 @@
                     <RadioButton Name="strokeColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" IsChecked="True" Checked="colorChanger_Checked">
                         <RadioButton.Content>
                             <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
-                                <Border Name="borderForStrokeColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Black" BorderThickness="1">
+                                <Border Name="borderForStrokeColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="#FFFA2732" BorderThickness="1">
                                     <TextBlock Name="strokeX" Visibility="Collapsed" FontFamily="Segoe MDL2 Assets" Text="&#xE8BB;" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
                                 </Border>
                                 <TextBlock Text="Stroke:" FontSize="{StaticResource myFontSize}" VerticalAlignment="Center"/>
@@ -557,7 +564,7 @@
                     <RadioButton Name="textColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" Checked="colorChanger_Checked">
                         <RadioButton.Content>
                             <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
-                                <Border Name="borderForTextColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Black" BorderThickness="1">
+                                <Border Name="borderForTextColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="#FFFA2732" BorderThickness="1">
                                     <TextBlock Name="textX" Visibility="Collapsed" FontFamily="Segoe MDL2 Assets" Text="&#xE8BB;" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
                                 </Border>
                                 <TextBlock Text="Text:" FontSize="{StaticResource myFontSize}" VerticalAlignment="Center"/>
