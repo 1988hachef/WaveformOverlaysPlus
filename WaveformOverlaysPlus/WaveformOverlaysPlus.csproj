@@ -118,6 +118,7 @@
     <None Include="WaveformOverlaysPlus_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\a.jpg" />
     <Content Include="Assets\IconCompDivs.bmp" />
     <Content Include="Assets\IconCylinderIDOverlay.bmp" />
     <Content Include="Assets\IconValveOverlap.bmp" />

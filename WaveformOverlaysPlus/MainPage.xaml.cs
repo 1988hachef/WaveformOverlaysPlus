@@ -563,7 +563,7 @@ namespace WaveformOverlaysPlus
 
                 if (file != null)
                 {
-                    await ImageUtils.CaptureElementToFile(gridForOverall, file);
+                    await ImageUtils.CaptureElementToFile(gridForOverall_0, file);
                     mightNeedToSave = false;
                 }
             }
@@ -606,7 +606,7 @@ namespace WaveformOverlaysPlus
             gridBranding.Visibility = Visibility.Visible;
 
             RenderTargetBitmap rtb = new RenderTargetBitmap();
-            await rtb.RenderAsync(gridForOverall);
+            await rtb.RenderAsync(gridForOverall_0);
             IBuffer pixelBuffer = await rtb.GetPixelsAsync();
             byte[] pixels = pixelBuffer.ToArray();
             WriteableBitmap wb = new WriteableBitmap(rtb.PixelWidth, rtb.PixelHeight);
@@ -616,7 +616,9 @@ namespace WaveformOverlaysPlus
             }
 
             imageForPrint.Source = wb;
+            gridCover.Visibility = Visibility.Visible;
             gridForPrint.Visibility = Visibility.Visible;
+
             if (gridForPrint.ActualWidth > 1055)
             {
                 gridForPrint.Width = 1055;
@@ -655,6 +657,7 @@ namespace WaveformOverlaysPlus
                 imageForPrint.ClearValue(Image.SourceProperty);
                 gridForPrint.Visibility = Visibility.Collapsed;
                 gridBranding.Visibility = Visibility.Collapsed;
+                gridCover.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -711,6 +714,7 @@ namespace WaveformOverlaysPlus
 
                     imageForPrint.ClearValue(Image.SourceProperty);
                     gridForPrint.Visibility = Visibility.Collapsed;
+                    gridCover.Visibility = Visibility.Collapsed;
                     gridBranding.Visibility = Visibility.Collapsed;
                     gridCover.Visibility = Visibility.Collapsed;
                 });
@@ -724,6 +728,7 @@ namespace WaveformOverlaysPlus
                 {
                     imageForPrint.ClearValue(Image.SourceProperty);
                     gridForPrint.Visibility = Visibility.Collapsed;
+                    gridCover.Visibility = Visibility.Collapsed;
                     gridBranding.Visibility = Visibility.Collapsed;
                     gridCover.Visibility = Visibility.Collapsed;
                 });
@@ -778,7 +783,7 @@ namespace WaveformOverlaysPlus
                 gridBranding.Visibility = Visibility.Visible;
 
                 RenderTargetBitmap rtb = new RenderTargetBitmap();
-                await rtb.RenderAsync(gridForOverall);
+                await rtb.RenderAsync(gridForOverall_0);
                 IBuffer pixelBuffer = await rtb.GetPixelsAsync();
                 byte[] pixels = pixelBuffer.ToArray();
                 WriteableBitmap wb = new WriteableBitmap(rtb.PixelWidth, rtb.PixelHeight);
@@ -818,8 +823,8 @@ namespace WaveformOverlaysPlus
                 gridCover.Visibility = Visibility.Visible;
                 gridBranding.Visibility = Visibility.Visible;
 
-                StorageFile file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync("TempImgFile", CreationCollisionOption.ReplaceExisting);
-                await ImageUtils.CaptureElementToFile(gridForOverall, file);
+                StorageFile file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync("TempImgFile.png", CreationCollisionOption.ReplaceExisting);
+                await ImageUtils.CaptureElementToFile(gridForOverall_0, file);
 
                 DataPackage dataPackage = new DataPackage();
                 dataPackage.RequestedOperation = DataPackageOperation.Copy;
@@ -913,7 +918,7 @@ namespace WaveformOverlaysPlus
                     image.Source = wb;
 
                     // Save to local storage
-                    string nameForFile = "_image";
+                    string nameForFile = "_image.png";
                     if (!(String.IsNullOrEmpty(dataView.Properties.Title) || String.IsNullOrWhiteSpace(dataView.Properties.Title)))
                     {
                         nameForFile = dataView.Properties.Title;
@@ -4773,7 +4778,17 @@ namespace WaveformOverlaysPlus
             rulerGrip.ClearValue(PointerCapturesProperty);
         }
 
-#endregion
+        private void ValveOverlapText_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Hand, 1);
+        }
+
+        private void ValveOverlapText_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
+        }
+
+        #endregion
 
 #region Shortcut Keys
 
@@ -5051,7 +5066,7 @@ namespace WaveformOverlaysPlus
             }
         }
 
-        #endregion
+#endregion
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
