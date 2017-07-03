@@ -89,7 +89,45 @@
 
                 <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
 
-                    <Grid Name="gridForOverall" Grid.Column="1" Background="#FFD7E0EE">
+                    <Grid Name="gridForOverall" Grid.Column="1" Background="#FFC5CFDF">
+
+                        <Grid Margin="55,20,15,35">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="10"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="10"/>
+                            </Grid.RowDefinitions>
+
+                            <Rectangle Grid.Row="1" Grid.Column="0">
+                                <Rectangle.Fill>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#7F000000" Offset="0"/>
+                                        <GradientStop Color="#FFC5CFDF" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle Grid.Row="0" Grid.Column="1">
+                                <Rectangle.Fill>
+                                    <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
+                                        <GradientStop Color="#7F000000" Offset="0"/>
+                                        <GradientStop Color="#FFC5CFDF" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle Grid.Row="1" Grid.Column="1">
+                                <Rectangle.Fill>
+                                    <LinearGradientBrush EndPoint="0.7,0.7" StartPoint="0,0">
+                                        <GradientStop Color="#7F000000" Offset="0"/>
+                                        <GradientStop Color="#FFC5CFDF" Offset="0.81"/>
+                                    </LinearGradientBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
+
+                        </Grid>
 
                         <Grid Name="gridToContainOthers" Margin="50,15,20,40" RightTapped="General_RightTapped" DragOver="gridToContainOthers_DragOver" Drop="gridToContainOthers_Drop" AllowDrop="True">
                             <FlyoutBase.AttachedFlyout>
@@ -100,7 +138,7 @@
                             </FlyoutBase.AttachedFlyout>
 
                             <Grid Name="gridMain" Background="{Binding Background, ElementName=borderForPageColor}">
-                                
+
                                 <!--<TextBlock Name="tblock" Text="test"/>
                                 <Button Content="button" Click="Button_Click" Margin="-20,0,0,0"/>-->
 
@@ -267,7 +305,7 @@
                                 <Grid.RenderTransform>
                                     <CompositeTransform x:Name="transformExh"/>
                                 </Grid.RenderTransform>
-                                
+
                                 <Rectangle Name="rectEVO" Fill="Red" HorizontalAlignment="Left" Width="1" />
                                 <Rectangle Name="rectEVC" Fill="Red" HorizontalAlignment="Right" Width="1" />
 
@@ -626,7 +664,7 @@
 
                 </StackPanel>
             </ScrollViewer>
-            
+
         </Grid>
 
         <!--<StackPanel Grid.Row="2" Height="45">
