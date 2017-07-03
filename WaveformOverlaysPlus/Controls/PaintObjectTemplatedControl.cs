@@ -364,13 +364,7 @@ namespace WaveformOverlaysPlus.Controls
         {
             if (_closeButton.Visibility == Visibility.Visible)
             {
-                _myWindow.BorderBrush = new SolidColorBrush(Colors.Transparent);
-                _closeButton.Visibility = Visibility.Collapsed;
-            }
-
-            if (_spanelOpacity.Visibility == Visibility.Visible)
-            {
-                _spanelOpacity.Visibility = Visibility.Collapsed;
+                VisualStateManager.GoToState(this, "Normal", false);
             }
         }
 
@@ -378,7 +372,7 @@ namespace WaveformOverlaysPlus.Controls
         {
             if (IsForCropper == false)
             {
-                _myWindow.BorderBrush = GetColorFromHex("#B2007ACC");
+                VisualStateManager.GoToState(this, "PointerOver", false);
                 _closeButton.Visibility = Visibility.Visible;
             }
             if (OpacitySliderIsVisible == true)
