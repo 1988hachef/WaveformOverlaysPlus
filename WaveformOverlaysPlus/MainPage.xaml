@@ -168,7 +168,7 @@
                                             <CompositeTransform Rotation="180"/>
                                         </Polygon.RenderTransform>
                                     </Polygon>
-                                    <TextBox Name="tboxHpos" Text="100" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource styleTextBoxRulers}" TextChanged="tbox_TextChanged" />
+                                    <TextBox Name="tboxHpos" Text="100" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource styleTextBoxRulers}" TextChanged="tbox_TextChanged" MinWidth="25" TextAlignment="Center" />
                                 </StackPanel>
                             </Grid>
                             <Grid Name="gridHrulerZero" VerticalAlignment="Bottom" Margin="-48,0,0,-10" ManipulationMode="TranslateY">
@@ -182,7 +182,7 @@
                                             <CompositeTransform Rotation="180"/>
                                         </Polygon.RenderTransform>
                                     </Polygon>
-                                    <TextBox TextChanged="tbox_TextChanged" Name="tboxHzero" Text="0" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource styleTextBoxRulers}" />
+                                    <TextBox TextChanged="tbox_TextChanged" Name="tboxHzero" Text="0" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource styleTextBoxRulers}" MinWidth="25" TextAlignment="Center" />
                                 </StackPanel>
                             </Grid>
                             <Grid Name="gridVrulerZero" HorizontalAlignment="Left" Margin="-15,0,0,-35" Width="32" ManipulationMode="TranslateX">
@@ -196,7 +196,7 @@
                                             <CompositeTransform Rotation="-90"/>
                                         </Polygon.RenderTransform>
                                     </Polygon>
-                                    <TextBox TextChanged="tbox_TextChanged" Name="tboxVzero" Text="0" HorizontalAlignment="Center" Style="{StaticResource styleTextBoxRulers}" Margin="0,-2,0,0" />
+                                    <TextBox TextChanged="tbox_TextChanged" Name="tboxVzero" Text="0" HorizontalAlignment="Center" Style="{StaticResource styleTextBoxRulers}" Margin="0,-2,0,0" MinWidth="25" TextAlignment="Center" />
                                 </StackPanel>
                             </Grid>
                             <Grid Name="gridVruler720" HorizontalAlignment="Right" Margin="0,0,-15,-35" Width="32" ManipulationMode="TranslateX" >
@@ -210,7 +210,7 @@
                                             <CompositeTransform Rotation="-90"/>
                                         </Polygon.RenderTransform>
                                     </Polygon>
-                                    <TextBox TextChanged="tbox_TextChanged" Name="tboxVpos" Text="720" HorizontalAlignment="Center" Style="{StaticResource styleTextBoxRulers}" Margin="0,-2,0,0" />
+                                    <TextBox TextChanged="tbox_TextChanged" Name="tboxVpos" Text="720" HorizontalAlignment="Center" Style="{StaticResource styleTextBoxRulers}" Margin="0,-2,0,0" Padding="1,1,2,0" MinWidth="25" TextAlignment="Center" />
                                 </StackPanel>
                             </Grid>
 
@@ -584,7 +584,7 @@
 
                     <Rectangle Name="rectSeparator" Fill="Gray" Height="1" Margin="8,5,10,5"/>
 
-                    <RadioButton Name="strokeColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" IsChecked="True" Checked="colorChanger_Checked">
+                    <RadioButton Name="strokeColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,21,0" Width="65" Height="25" IsChecked="True" Checked="colorChanger_Checked">
                         <RadioButton.Content>
                             <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
                                 <Border Name="borderForStrokeColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="#FFFA2732" BorderThickness="1">
@@ -595,7 +595,7 @@
                         </RadioButton.Content>
                     </RadioButton>
 
-                    <RadioButton Name="fillColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" Checked="colorChanger_Checked">
+                    <RadioButton Name="fillColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="25" Checked="colorChanger_Checked">
                         <RadioButton.Content>
                             <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
                                 <Border Name="borderForFillColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Transparent" BorderThickness="1">
@@ -606,7 +606,7 @@
                         </RadioButton.Content>
                     </RadioButton>
 
-                    <RadioButton Name="textColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" Checked="colorChanger_Checked">
+                    <RadioButton Name="textColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="25" Checked="colorChanger_Checked">
                         <RadioButton.Content>
                             <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
                                 <Border Name="borderForTextColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="#FFFA2732" BorderThickness="1">
@@ -617,7 +617,7 @@
                         </RadioButton.Content>
                     </RadioButton>
 
-                    <RadioButton Name="pageColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" Checked="colorChanger_Checked">
+                    <RadioButton Name="pageColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="25" Checked="colorChanger_Checked">
                         <RadioButton.Content>
                             <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
                                 <Border Name="borderForPageColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="White" BorderThickness="1"/>
@@ -626,7 +626,7 @@
                         </RadioButton.Content>
                     </RadioButton>
 
-                    <RadioButton Name="compLinesColorRB" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="24" Checked="colorChanger_Checked" Visibility="Collapsed">
+                    <RadioButton Name="compLinesColorRB" Visibility="Collapsed" Style="{StaticResource styleToolRadioButton}" HorizontalAlignment="Right" Margin="0,0,20,0" Width="65" Height="25" Checked="colorChanger_Checked">
                         <RadioButton.Content>
                             <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft">
                                 <Border Name="borderForCompLinesColor" Width="20" Height="20" Margin="0,0,5,0" BorderBrush="DimGray" Background="Gray" BorderThickness="1"/>

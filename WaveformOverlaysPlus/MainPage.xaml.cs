@@ -521,7 +521,7 @@ namespace WaveformOverlaysPlus
             catch (Exception ex)
             {
                 await new MessageDialog("Sorry, a problem occured when trying to open the file.\n\n"
-                                         + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
+                                         + ex.Message + "\n\n" + ex.StackTrace).ShowAsync();
 
                 StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
                 logger.Log("MyOpenError" + " " + ex.Message + " " + ex.StackTrace);
@@ -560,7 +560,7 @@ namespace WaveformOverlaysPlus
             catch (Exception ex)
             {
                 await new MessageDialog("Sorry, a problem occured when trying to save the file.\n\n"
-                                         + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
+                                         + ex.Message + "\n\n" + ex.StackTrace).ShowAsync();
 
                 StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
                 logger.Log("MySaveError" + " " + ex.Message + " " + ex.StackTrace);
@@ -584,7 +584,7 @@ namespace WaveformOverlaysPlus
             catch (Exception ex)
             {
                 await new MessageDialog("Sorry, a problem occured when trying to print the file.\n\n"
-                                                         + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
+                                                         + ex.Message + "\n\n" + ex.StackTrace).ShowAsync();
 
                 StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
                 logger.Log("MyPrintError" + " " + ex.Message + " " + ex.StackTrace);
@@ -751,7 +751,7 @@ namespace WaveformOverlaysPlus
             catch (Exception ex)
             {
                 await new MessageDialog("Sorry, a problem occured when trying to get the file for sharing.\n\n"
-                                         + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
+                                         + ex.Message + "\n\n" + ex.StackTrace).ShowAsync();
 
                 StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
                 logger.Log("MyGetFileForShareError" + " " + ex.Message + " " + ex.StackTrace);
@@ -792,7 +792,7 @@ namespace WaveformOverlaysPlus
             catch (Exception ex)
             {
                 await new MessageDialog("Sorry, a problem occured when preparing to share.\n\n"
-                                         + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
+                                         + ex.Message + "\n\n" + ex.StackTrace).ShowAsync();
 
                 StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
                 logger.Log("MyPrepareToShareError" + " " + ex.Message + " " + ex.StackTrace);
@@ -830,7 +830,7 @@ namespace WaveformOverlaysPlus
             catch (Exception ex)
             {
                 await new MessageDialog("Sorry, a problem occured when trying to copy.\n\n"
-                                         + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
+                                         + ex.Message + "\n\n" + ex.StackTrace).ShowAsync();
 
                 StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
                 logger.Log("MyCopyError" + " " + ex.Message + " " + ex.StackTrace);
@@ -868,7 +868,7 @@ namespace WaveformOverlaysPlus
             catch (Exception ex)
             {
                 await new MessageDialog("Sorry, a problem occured when trying to paste.\n\n"
-                                         + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
+                                         + ex.Message + "\n\n" + ex.StackTrace).ShowAsync();
 
                 StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
                 logger.Log("MyPasteError" + " " + ex.Message + " " + ex.StackTrace);
@@ -1796,7 +1796,7 @@ namespace WaveformOverlaysPlus
                         }
                         catch (Exception ex)
                         {
-                            var dialog = new MessageDialog("Encoder error." + ex.Message);
+                            var dialog = new MessageDialog("BitmapEncoder error." + ex.Message);
                             await dialog.ShowAsync();
                         }
 
@@ -1842,7 +1842,7 @@ namespace WaveformOverlaysPlus
             catch (Exception ex)
             {
                 await new MessageDialog("Sorry, a problem occured when trying to crop the image.\n\n"
-                                         + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
+                                         + ex.Message + "\n\n" + ex.StackTrace).ShowAsync();
 
                 StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
                 logger.Log("MyCropError" + " " + ex.Message + " " + ex.StackTrace);
@@ -1868,159 +1868,89 @@ namespace WaveformOverlaysPlus
 
         async void LoadImageIntoCropper(string filePath)
         {
-            string fileName = filePath.Substring(20);
-            double height = 0;
-            double width = 0;
-
-            StorageFile imgFile = await ApplicationData.Current.LocalFolder.GetFileAsync(fileName);
-
-            Image img = new Image();
-            using (IRandomAccessStream IRASstream = await imgFile.OpenAsync(FileAccessMode.Read))
+            try
             {
-                BitmapImage bitmapImage = new BitmapImage();
-                await bitmapImage.SetSourceAsync(IRASstream);
-                height = bitmapImage.PixelHeight;
-                width = bitmapImage.PixelWidth;
-                img.Source = bitmapImage;
-            }
+                string fileName = filePath.Substring(20);
+                double height = 0;
+                double width = 0;
 
-            if (width < 42 || height < 42)
-            {
-                MessageDialog tooSmallMessage = new MessageDialog("Image too small. Please choose a larger image.");
-                await tooSmallMessage.ShowAsync();
+                StorageFile imgFile = await ApplicationData.Current.LocalFolder.GetFileAsync(fileName);
 
-                if (imageCollection.Count < 2)
+                Image img = new Image();
+                using (IRandomAccessStream IRASstream = await imgFile.OpenAsync(FileAccessMode.Read))
                 {
-                    gridForCrop.Visibility = Visibility.Collapsed;
-                }
-                else
-                {
-                    BackToImagesGridView();
-                }
-            }
-            else
-            {
-                tblockFileName.Text = fileName;
-
-                if (width > gridCropping.ActualWidth || height > gridCropping.ActualHeight)
-                {
-                    double scale = Math.Min(gridCropping.ActualWidth / width, gridCropping.ActualHeight / height);
-                    width = (width * scale) - 1;
-                    height = (height * scale) - 1;
+                    BitmapImage bitmapImage = new BitmapImage();
+                    await bitmapImage.SetSourceAsync(IRASstream);
+                    height = bitmapImage.PixelHeight;
+                    width = bitmapImage.PixelWidth;
+                    img.Source = bitmapImage;
                 }
 
-                img.Width = width;
-                img.Height = height;
-
-                if (width < 82 || height < 82)
+                if (width < 42 || height < 42)
                 {
-                    controlCropOutline.Width = 41;
-                    controlCropOutline.Height = 41;
-                }
-                else
-                {
-                    controlCropOutline.Width = width / 2;
-                    controlCropOutline.Height = height / 2;
-                }
+                    MessageDialog tooSmallMessage = new MessageDialog("Image too small. Please choose a larger image.");
+                    await tooSmallMessage.ShowAsync();
 
-                gridImageContainer.Children.Add(img);
-                gridImageContainer.Width = width;
-                gridImageContainer.Height = height;
-                controlCropOutline.transform_myControl.TranslateX = 0;
-                controlCropOutline.transform_myControl.TranslateY = 0;
-
-                foreach (Rectangle r in gridCrop.Children)
-                {
-                    if (r.Visibility == Visibility.Collapsed)
+                    if (imageCollection.Count < 2)
                     {
-                        r.Visibility = Visibility.Visible;
+                        gridForCrop.Visibility = Visibility.Collapsed;
+                    }
+                    else
+                    {
+                        BackToImagesGridView();
+                    }
+                }
+                else
+                {
+                    tblockFileName.Text = fileName;
+
+                    if (width > gridCropping.ActualWidth || height > gridCropping.ActualHeight)
+                    {
+                        double scale = Math.Min(gridCropping.ActualWidth / width, gridCropping.ActualHeight / height);
+                        width = (width * scale) - 1;
+                        height = (height * scale) - 1;
+                    }
+
+                    img.Width = width;
+                    img.Height = height;
+
+                    if (width < 82 || height < 82)
+                    {
+                        controlCropOutline.Width = 41;
+                        controlCropOutline.Height = 41;
+                    }
+                    else
+                    {
+                        controlCropOutline.Width = width / 2;
+                        controlCropOutline.Height = height / 2;
+                    }
+
+                    gridImageContainer.Children.Add(img);
+                    gridImageContainer.Width = width;
+                    gridImageContainer.Height = height;
+                    controlCropOutline.transform_myControl.TranslateX = 0;
+                    controlCropOutline.transform_myControl.TranslateY = 0;
+
+                    foreach (Rectangle r in gridCrop.Children)
+                    {
+                        if (r.Visibility == Visibility.Collapsed)
+                        {
+                            r.Visibility = Visibility.Visible;
+                        }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                await new MessageDialog("Sorry, a problem occured when trying to load image into cropper.\n\n"
+                                         + ex.Message + "\n\n" + ex.StackTrace).ShowAsync();
 
-            //try
-            //{
-            //    string fileName = filePath.Substring(20);
-            //    double height = 0;
-            //    double width = 0;
+                StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                logger.Log("MyLoadImageIntoCropperError" + " " + ex.Message + " " + ex.StackTrace);
 
-            //    StorageFile imgFile = await ApplicationData.Current.LocalFolder.GetFileAsync(fileName);
-
-            //    Image img = new Image();
-            //    using (IRandomAccessStream IRASstream = await imgFile.OpenAsync(FileAccessMode.Read))
-            //    {
-            //        BitmapImage bitmapImage = new BitmapImage();
-            //        await bitmapImage.SetSourceAsync(IRASstream);
-            //        height = bitmapImage.PixelHeight;
-            //        width = bitmapImage.PixelWidth;
-            //        img.Source = bitmapImage;
-            //    }
-
-            //    if (width < 42 || height < 42)
-            //    {
-            //        MessageDialog tooSmallMessage = new MessageDialog("Image too small. Please choose a larger image.");
-            //        await tooSmallMessage.ShowAsync();
-
-            //        if (imageCollection.Count < 2)
-            //        {
-            //            gridForCrop.Visibility = Visibility.Collapsed;
-            //        }
-            //        else
-            //        {
-            //            BackToImagesGridView();
-            //        }
-            //    }
-            //    else
-            //    {
-            //        tblockFileName.Text = fileName;
-
-            //        if (width > gridCropping.ActualWidth || height > gridCropping.ActualHeight)
-            //        {
-            //            double scale = Math.Min(gridCropping.ActualWidth / width, gridCropping.ActualHeight / height);
-            //            width = (width * scale) - 1;
-            //            height = (height * scale) - 1;
-            //        }
-
-            //        img.Width = width;
-            //        img.Height = height;
-
-            //        if (width < 82 || height < 82)
-            //        {
-            //            controlCropOutline.Width = 41;
-            //            controlCropOutline.Height = 41;
-            //        }
-            //        else
-            //        {
-            //            controlCropOutline.Width = width / 2;
-            //            controlCropOutline.Height = height / 2;
-            //        }
-
-            //        gridImageContainer.Children.Add(img);
-            //        gridImageContainer.Width = width;
-            //        gridImageContainer.Height = height;
-            //        controlCropOutline.transform_myControl.TranslateX = 0;
-            //        controlCropOutline.transform_myControl.TranslateY = 0;
-
-            //        foreach (Rectangle r in gridCrop.Children)
-            //        {
-            //            if (r.Visibility == Visibility.Collapsed)
-            //            {
-            //                r.Visibility = Visibility.Visible;
-            //            }
-            //        }
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    await new MessageDialog("Sorry, a problem occured when trying to load image into cropper.\n\n"
-            //                             + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
-
-            //    StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
-            //    logger.Log("MyLoadImageIntoCropperError" + " " + ex.Message + " " + ex.StackTrace);
-
-            //    gridBranding.Visibility = Visibility.Collapsed;
-            //    CloseCropper();
-            //}
+                gridBranding.Visibility = Visibility.Collapsed;
+                CloseCropper();
+            }
         }
 
         private void PaintObject_Unloaded(object sender, RoutedEventArgs e)
@@ -2081,8 +2011,10 @@ namespace WaveformOverlaysPlus
             {
                 gridImageContainer.Children.RemoveAt(1);
             }
+            gridBranding.Visibility = Visibility.Collapsed;
             gridviewImages.Visibility = Visibility.Collapsed;
             gridCover.Visibility = Visibility.Collapsed;
+
         }
 
         void RemoveImageFromCollection(PaintObjectTemplatedControl paintObj)
@@ -3164,7 +3096,7 @@ namespace WaveformOverlaysPlus
                 catch (Exception ex)
                 {
                     await new MessageDialog("Sorry, a problem occured when trying to load cylinder ID overlay.\n\n"
-                                             + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
+                                             + ex.Message + "\n\n" + ex.StackTrace).ShowAsync();
 
                     StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
                     logger.Log("MyCylIDError" + " " + ex.Message + " " + ex.StackTrace);
@@ -5098,7 +5030,7 @@ namespace WaveformOverlaysPlus
             catch (Exception ex)
             {
                 await new MessageDialog("Sorry, a problem occured when trying to create labels.\n\n"
-                                         + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
+                                         + ex.Message + "\n\n" + ex.StackTrace).ShowAsync();
 
                 StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
                 logger.Log("MyLabelMakerError" + " " + ex.Message + " " + ex.StackTrace);
@@ -5170,7 +5102,7 @@ namespace WaveformOverlaysPlus
             catch (Exception ex)
             {
                 await new MessageDialog("Sorry, a problem occured when trying to drop item into app.\n\n"
-                                         + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
+                                         + ex.Message + "\n\n" + ex.StackTrace).ShowAsync();
 
                 StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
                 logger.Log("MyDropError" + " " + ex.Message + " " + ex.StackTrace);
@@ -5368,7 +5300,7 @@ namespace WaveformOverlaysPlus
             catch (Exception ex)
             {
                 await new MessageDialog("Sorry, a problem occured when trying to get the selected area.\n\n"
-                                         + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
+                                         + ex.Message + "\n\n" + ex.StackTrace).ShowAsync();
 
                 StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
                 logger.Log("MyGetSelectedAreaError" + " " + ex.Message + " " + ex.StackTrace);
@@ -5402,7 +5334,7 @@ namespace WaveformOverlaysPlus
             catch (Exception ex)
             {
                 await new MessageDialog("Sorry, a problem occured when trying to save the selection.\n\n"
-                                         + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
+                                         + ex.Message + "\n\n" + ex.StackTrace).ShowAsync();
 
                 StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
                 logger.Log("MySaveSelectionError" + " " + ex.Message + " " + ex.StackTrace);
