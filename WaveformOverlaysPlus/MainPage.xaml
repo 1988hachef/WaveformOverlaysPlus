@@ -2,12 +2,30 @@
     x:Class="WaveformOverlaysPlus.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:WaveformOverlaysPlus"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     xmlns:local1="using:WaveformOverlaysPlus.Controls"
     mc:Ignorable="d" Loaded="Page_Loaded">
+    <Page.Resources>
+
+        <Storyboard x:Name="CropEnterStory">
+            <DoubleAnimation x:Name="doubleAnimation" Duration="0:0:0.7" From="90" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.Rotation)" Storyboard.TargetName="gridForCrop">
+                <DoubleAnimation.EasingFunction>
+                    <BackEase EasingMode="EaseOut" Amplitude="0.3"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+
+        <Storyboard x:Name="CropExitStory">
+            <DoubleAnimation x:Name="doubleAnimation2" Duration="0:0:0.7" From="0" To="90" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.Rotation)" Storyboard.TargetName="gridForCrop">
+                <DoubleAnimation.EasingFunction>
+                    <BackEase EasingMode="EaseIn" Amplitude="0.3"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+
+    </Page.Resources>
 
     <Page.Transitions>
         <TransitionCollection>
@@ -15,9 +33,7 @@
         </TransitionCollection>
     </Page.Transitions>
 
-    <!--<Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
-    </Grid>-->
+    <!--<Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"></Grid>-->
 
     <Grid Background="White">
         <Grid.RowDefinitions>
@@ -138,9 +154,6 @@
                             </FlyoutBase.AttachedFlyout>
 
                             <Grid Name="gridMain" Background="{Binding Background, ElementName=borderForPageColor}">
-
-                                <!--<TextBlock Name="tblock" Text="test"/>
-                                <Button Content="button" Click="Button_Click" Margin="-20,0,0,0"/>-->
 
                             </Grid>
 
@@ -667,16 +680,6 @@
 
         </Grid>
 
-        <!--<StackPanel Grid.Row="2" Height="45">
-            <StackPanel.Background>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#FFF0F0F0" Offset="1"/>
-                    <GradientStop Color="#FFA8A4A4"/>
-                    <GradientStop Color="#FFF0F0F0" Offset="0.108"/>
-                </LinearGradientBrush>
-            </StackPanel.Background>
-        </StackPanel>-->
-
         <Grid Name="gridCover" Visibility="Collapsed" Grid.RowSpan="3" Background="{StaticResource DialogBackgroundCover}">
             <Grid Name="gridDialog" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" Margin="30" BorderBrush="Black" BorderThickness="1">
                 <StackPanel>
@@ -687,7 +690,14 @@
             </Grid>
         </Grid>
 
-        <Grid Name="gridForCrop" Grid.RowSpan="3" Background="{StaticResource DialogBackgroundCover}" Visibility="Collapsed">
+        <Grid Name="gridforSaveSelection" Visibility="Collapsed" Grid.RowSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="Black" BorderThickness="1" >
+            <Image Name="imageForSaveSelection" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Grid>
+
+        <Grid Name="gridForCrop" Grid.RowSpan="3" RenderTransformOrigin="0,0">
+            <Grid.RenderTransform>
+                <CompositeTransform Rotation="90"/>
+            </Grid.RenderTransform>
             <Grid Margin="30,15" Background="LightGray" BorderBrush="Black" BorderThickness="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -994,10 +1004,6 @@
 
         <Grid Name="gridForPrint" Visibility="Collapsed" Grid.RowSpan="3" Background="White" HorizontalAlignment="Center" Width="1055">
             <Image Name="imageForPrint" Margin="30"/>
-        </Grid>
-
-        <Grid Name="gridforSaveSelection" Visibility="Collapsed" Grid.RowSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="Black" BorderThickness="1" >
-            <Image Name="imageForSaveSelection" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Grid>
 
     </Grid>

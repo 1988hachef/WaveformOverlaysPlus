@@ -5,7 +5,6 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
-using Windows.UI.Popups;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace WaveformOverlaysPlus.Helpers

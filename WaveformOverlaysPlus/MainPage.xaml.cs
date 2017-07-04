@@ -5,10 +5,8 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Graphics.Printing;
 using Windows.Storage;
-using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using Windows.UI.Core;
@@ -23,15 +21,12 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Printing;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.ApplicationModel;
 using WaveformOverlaysPlus.Helpers;
-using Windows.Storage.FileProperties;
 using WaveformOverlaysPlus.Controls;
 using Windows.UI;
 using Windows.Graphics.Display;
 using Windows.Graphics.Imaging;
 using Microsoft.Services.Store.Engagement;
-using Windows.UI.Xaml.Documents;
 using Windows.UI.Text;
 using Windows.UI.Xaml.Shapes;
 using Windows.UI.Input.Inking;
@@ -41,14 +36,9 @@ using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Effects;
 using System.Numerics;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using Windows.UI.Xaml.Markup;
 using WaveformOverlaysPlus.UndoRedoCommands;
-using System.Windows.Input;
-using Windows.UI.Input.Inking.Core;
 using Windows.System;
-using WaveformOverlaysPlus.Converters;
-using Windows.UI.Xaml.Media.Animation;
 
 namespace WaveformOverlaysPlus
 {
@@ -277,7 +267,6 @@ namespace WaveformOverlaysPlus
                 }
             }
 
-
             // Set some initial values
             gridForOverall.Width = gridForOverall.ActualWidth;
             gridForOverall.Height = gridForOverall.ActualHeight;
@@ -399,6 +388,7 @@ namespace WaveformOverlaysPlus
             Window.Current.CoreWindow.KeyDown -= CoreWindow_KeyDown;
             Window.Current.CoreWindow.KeyUp -= CoreWindow_KeyUp;
         }
+
 #endregion
 
 #region New and Exit
@@ -1718,19 +1708,20 @@ namespace WaveformOverlaysPlus
 
         private async void crop_Click(object sender, RoutedEventArgs e)
         {
+            gridCover.Visibility = Visibility.Visible;
+            CropEnterStory.Begin();
+
             if (imageCollection.Count == 0)
             {
                 var dialog = await new MessageDialog("Please open an image first.").ShowAsync();
             }
             else if (imageCollection.Count == 1)
             {
-                gridForCrop.Visibility = Visibility.Visible;
                 var path = imageCollection[0].FilePath;
                 LoadImageIntoCropper(path);
             }
             else if (imageCollection.Count > 1)
             {
-                gridForCrop.Visibility = Visibility.Visible;
                 gridviewImages.ItemsSource = imageCollection;
                 gridviewImages.Visibility = Visibility.Visible;
                 btnCrop.IsEnabled = false;
@@ -1877,89 +1868,159 @@ namespace WaveformOverlaysPlus
 
         async void LoadImageIntoCropper(string filePath)
         {
-            try
+            string fileName = filePath.Substring(20);
+            double height = 0;
+            double width = 0;
+
+            StorageFile imgFile = await ApplicationData.Current.LocalFolder.GetFileAsync(fileName);
+
+            Image img = new Image();
+            using (IRandomAccessStream IRASstream = await imgFile.OpenAsync(FileAccessMode.Read))
             {
-                string fileName = filePath.Substring(20);
-                double height = 0;
-                double width = 0;
+                BitmapImage bitmapImage = new BitmapImage();
+                await bitmapImage.SetSourceAsync(IRASstream);
+                height = bitmapImage.PixelHeight;
+                width = bitmapImage.PixelWidth;
+                img.Source = bitmapImage;
+            }
 
-                StorageFile imgFile = await ApplicationData.Current.LocalFolder.GetFileAsync(fileName);
+            if (width < 42 || height < 42)
+            {
+                MessageDialog tooSmallMessage = new MessageDialog("Image too small. Please choose a larger image.");
+                await tooSmallMessage.ShowAsync();
 
-                Image img = new Image();
-                using (IRandomAccessStream IRASstream = await imgFile.OpenAsync(FileAccessMode.Read))
+                if (imageCollection.Count < 2)
                 {
-                    BitmapImage bitmapImage = new BitmapImage();
-                    await bitmapImage.SetSourceAsync(IRASstream);
-                    height = bitmapImage.PixelHeight;
-                    width = bitmapImage.PixelWidth;
-                    img.Source = bitmapImage;
-                }
-
-                if (width < 42 || height < 42)
-                {
-                    MessageDialog tooSmallMessage = new MessageDialog("Image too small. Please choose a larger image.");
-                    await tooSmallMessage.ShowAsync();
-
-                    if (imageCollection.Count < 2)
-                    {
-                        gridForCrop.Visibility = Visibility.Collapsed;
-                    }
-                    else
-                    {
-                        BackToImagesGridView();
-                    }
+                    gridForCrop.Visibility = Visibility.Collapsed;
                 }
                 else
                 {
-                    tblockFileName.Text = fileName;
+                    BackToImagesGridView();
+                }
+            }
+            else
+            {
+                tblockFileName.Text = fileName;
 
-                    if (width > gridCropping.ActualWidth || height > gridCropping.ActualHeight)
+                if (width > gridCropping.ActualWidth || height > gridCropping.ActualHeight)
+                {
+                    double scale = Math.Min(gridCropping.ActualWidth / width, gridCropping.ActualHeight / height);
+                    width = (width * scale) - 1;
+                    height = (height * scale) - 1;
+                }
+
+                img.Width = width;
+                img.Height = height;
+
+                if (width < 82 || height < 82)
+                {
+                    controlCropOutline.Width = 41;
+                    controlCropOutline.Height = 41;
+                }
+                else
+                {
+                    controlCropOutline.Width = width / 2;
+                    controlCropOutline.Height = height / 2;
+                }
+
+                gridImageContainer.Children.Add(img);
+                gridImageContainer.Width = width;
+                gridImageContainer.Height = height;
+                controlCropOutline.transform_myControl.TranslateX = 0;
+                controlCropOutline.transform_myControl.TranslateY = 0;
+
+                foreach (Rectangle r in gridCrop.Children)
+                {
+                    if (r.Visibility == Visibility.Collapsed)
                     {
-                        double scale = Math.Min(gridCropping.ActualWidth / width, gridCropping.ActualHeight / height);
-                        width = (width * scale) - 1;
-                        height = (height * scale) - 1;
-                    }
-
-                    img.Width = width;
-                    img.Height = height;
-
-                    if (width < 82 || height < 82)
-                    {
-                        controlCropOutline.Width = 41;
-                        controlCropOutline.Height = 41;
-                    }
-                    else
-                    {
-                        controlCropOutline.Width = width / 2;
-                        controlCropOutline.Height = height / 2;
-                    }
-
-                    gridImageContainer.Children.Add(img);
-                    gridImageContainer.Width = width;
-                    gridImageContainer.Height = height;
-                    controlCropOutline.transform_myControl.TranslateX = 0;
-                    controlCropOutline.transform_myControl.TranslateY = 0;
-
-                    foreach (Rectangle r in gridCrop.Children)
-                    {
-                        if (r.Visibility == Visibility.Collapsed)
-                        {
-                            r.Visibility = Visibility.Visible;
-                        }
+                        r.Visibility = Visibility.Visible;
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                await new MessageDialog("Sorry, a problem occured when trying to load image into cropper.\n\n"
-                                         + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
 
-                StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
-                logger.Log("MyLoadImageIntoCropperError" + " " + ex.Message + " " + ex.StackTrace);
+            //try
+            //{
+            //    string fileName = filePath.Substring(20);
+            //    double height = 0;
+            //    double width = 0;
 
-                gridBranding.Visibility = Visibility.Collapsed;
-                CloseCropper();
-            }
+            //    StorageFile imgFile = await ApplicationData.Current.LocalFolder.GetFileAsync(fileName);
+
+            //    Image img = new Image();
+            //    using (IRandomAccessStream IRASstream = await imgFile.OpenAsync(FileAccessMode.Read))
+            //    {
+            //        BitmapImage bitmapImage = new BitmapImage();
+            //        await bitmapImage.SetSourceAsync(IRASstream);
+            //        height = bitmapImage.PixelHeight;
+            //        width = bitmapImage.PixelWidth;
+            //        img.Source = bitmapImage;
+            //    }
+
+            //    if (width < 42 || height < 42)
+            //    {
+            //        MessageDialog tooSmallMessage = new MessageDialog("Image too small. Please choose a larger image.");
+            //        await tooSmallMessage.ShowAsync();
+
+            //        if (imageCollection.Count < 2)
+            //        {
+            //            gridForCrop.Visibility = Visibility.Collapsed;
+            //        }
+            //        else
+            //        {
+            //            BackToImagesGridView();
+            //        }
+            //    }
+            //    else
+            //    {
+            //        tblockFileName.Text = fileName;
+
+            //        if (width > gridCropping.ActualWidth || height > gridCropping.ActualHeight)
+            //        {
+            //            double scale = Math.Min(gridCropping.ActualWidth / width, gridCropping.ActualHeight / height);
+            //            width = (width * scale) - 1;
+            //            height = (height * scale) - 1;
+            //        }
+
+            //        img.Width = width;
+            //        img.Height = height;
+
+            //        if (width < 82 || height < 82)
+            //        {
+            //            controlCropOutline.Width = 41;
+            //            controlCropOutline.Height = 41;
+            //        }
+            //        else
+            //        {
+            //            controlCropOutline.Width = width / 2;
+            //            controlCropOutline.Height = height / 2;
+            //        }
+
+            //        gridImageContainer.Children.Add(img);
+            //        gridImageContainer.Width = width;
+            //        gridImageContainer.Height = height;
+            //        controlCropOutline.transform_myControl.TranslateX = 0;
+            //        controlCropOutline.transform_myControl.TranslateY = 0;
+
+            //        foreach (Rectangle r in gridCrop.Children)
+            //        {
+            //            if (r.Visibility == Visibility.Collapsed)
+            //            {
+            //                r.Visibility = Visibility.Visible;
+            //            }
+            //        }
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    await new MessageDialog("Sorry, a problem occured when trying to load image into cropper.\n\n"
+            //                             + ex.Message + "\n\n" + ex.StackTrace, "Doh!").ShowAsync();
+
+            //    StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+            //    logger.Log("MyLoadImageIntoCropperError" + " " + ex.Message + " " + ex.StackTrace);
+
+            //    gridBranding.Visibility = Visibility.Collapsed;
+            //    CloseCropper();
+            //}
         }
 
         private void PaintObject_Unloaded(object sender, RoutedEventArgs e)
@@ -2007,6 +2068,8 @@ namespace WaveformOverlaysPlus
 
         void CloseCropper()
         {
+            CropExitStory.Begin();
+
             btnCrop.IsEnabled = true;
             btnBack.IsEnabled = false;
             btnBack.Visibility = Visibility.Visible;
@@ -2019,7 +2082,7 @@ namespace WaveformOverlaysPlus
                 gridImageContainer.Children.RemoveAt(1);
             }
             gridviewImages.Visibility = Visibility.Collapsed;
-            gridForCrop.Visibility = Visibility.Collapsed;
+            gridCover.Visibility = Visibility.Collapsed;
         }
 
         void RemoveImageFromCollection(PaintObjectTemplatedControl paintObj)
@@ -4512,6 +4575,23 @@ namespace WaveformOverlaysPlus
                 var moveCommand = topUndo as UndoRedoManager.MoveOrResizeCommand;
                 var element = moveCommand._UiElement;
                 SetStuffOnMoveCommand(element);
+
+                // Below is for PaintOject with TextBox because the textbox resizes when typing near the edge and that screws up the Translate X and Y stuff.
+                if (element.Parent == gridMain)
+                {
+                    try
+                    {
+                        var el = element as PaintObjectTemplatedControl;
+                        if (el.Content is TextBox)
+                        {
+                            KeepPaintObjectInBounds(el);
+                        }
+                    }
+                    catch
+                    {
+                        
+                    }
+                }
             }
             else if (_topUndo.EndsWith("AddRemoveElementCommand"))
             {
@@ -4539,6 +4619,23 @@ namespace WaveformOverlaysPlus
                 var moveCommand = topRedo as UndoRedoManager.MoveOrResizeCommand;
                 var element = moveCommand._UiElement;
                 SetStuffOnMoveCommand(element);
+
+                // Below is for PaintOject with TextBox because the textbox resizes when typing near the edge and that screws up the Translate X and Y stuff.
+                if (element.Parent == gridMain)
+                {
+                    try
+                    {
+                        var el = element as PaintObjectTemplatedControl;
+                        if (el.Content is TextBox)
+                        {
+                            KeepPaintObjectInBounds(el);
+                        }
+                    }
+                    catch
+                    {
+
+                    }
+                }
             }
             else if (_topRedo.EndsWith("AddRemoveElementCommand"))
             {
@@ -4693,6 +4790,43 @@ namespace WaveformOverlaysPlus
                 }
 
                 SetSomeStuffOnRulerManipulationCompleted();
+            }
+        }
+
+        void KeepPaintObjectInBounds(PaintObjectTemplatedControl paintOject)
+        {
+            var jail = gridMain;
+            var prisoner = paintOject;
+
+            //Get top left point of prisoner in relation to jail
+            GeneralTransform gt = prisoner.TransformToVisual(jail);
+            Point TopLeftPoint = gt.TransformPoint(new Point(0, 0));
+
+            // Set these variables to represent the edges of prisoner
+            double left = TopLeftPoint.X;
+            double top = TopLeftPoint.Y;
+            double right = left + prisoner.ActualWidth;
+            double bottom = top + prisoner.ActualHeight;
+
+            // Reposition to keep inside panel
+            if (left < 0)
+            {
+                prisoner.RenderTransform.SetValue(CompositeTransform.TranslateXProperty, 0);
+            }
+            else if ((right > jail.ActualWidth) && (left > 0))
+            {
+                double positionX_ToKeepInBounds = jail.ActualWidth - prisoner.ActualWidth;
+                prisoner.RenderTransform.SetValue(CompositeTransform.TranslateXProperty, (positionX_ToKeepInBounds - prisoner.BorderThickness.Right));
+            }
+
+            if (top < 0)
+            {
+                prisoner.RenderTransform.SetValue(CompositeTransform.TranslateYProperty, 0);
+            }
+            else if ((bottom > jail.ActualHeight) && (top > 0))
+            {
+                double positionY_ToKeepInBounds = jail.ActualHeight - prisoner.ActualHeight;
+                prisoner.RenderTransform.SetValue(CompositeTransform.TranslateYProperty, (positionY_ToKeepInBounds - prisoner.BorderThickness.Bottom));
             }
         }
 
@@ -5143,11 +5277,6 @@ namespace WaveformOverlaysPlus
 
 #endregion
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
 #region Save Selection
 
         private async void menuSaveSelection_Click(object sender, RoutedEventArgs e)
@@ -5157,7 +5286,8 @@ namespace WaveformOverlaysPlus
             StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("SaveSelectionImage.png", CreationCollisionOption.ReplaceExisting);
             await ImageUtils.CaptureElementToFile(gridForOverall_0, file);
 
-            gridForCrop.Visibility = Visibility.Visible;
+            gridCover.Visibility = Visibility.Visible;
+            CropEnterStory.Begin();
             btnBack.Visibility = Visibility.Collapsed;
             btnCrop.Visibility = Visibility.Collapsed;
             btnSaveSelection.Visibility = Visibility.Visible;

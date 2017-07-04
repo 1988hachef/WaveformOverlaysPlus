@@ -91,8 +91,6 @@ namespace WaveformOverlaysPlus.Helpers
             }
         }
 
-
-
         // <summary>
         /// Resizes and crops source file image so that resized image width/height are not larger than <param name="requestedMinSide"></param>
         /// </summary>
