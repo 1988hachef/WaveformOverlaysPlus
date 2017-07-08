@@ -39,6 +39,7 @@ using System.Collections.ObjectModel;
 using Windows.UI.Xaml.Markup;
 using WaveformOverlaysPlus.UndoRedoCommands;
 using Windows.System;
+using Windows.ApplicationModel;
 
 namespace WaveformOverlaysPlus
 {
@@ -988,7 +989,7 @@ namespace WaveformOverlaysPlus
             title.FontWeight = FontWeights.Bold;
 
             TextBlock body = new TextBlock();
-            body.Text = "Version 1.0 \n" +
+            body.Text = "Version " + GetAppVersion() + "\n" +
                         "Copyright \u00A9 2017 Steven McGrew \n" +
                         "All rights reserved";
 
@@ -1003,6 +1004,23 @@ namespace WaveformOverlaysPlus
             btnDialogOK.Visibility = Visibility.Collapsed;
 
             spanelText.Children.Clear();
+        }
+
+        string GetAppVersion()
+        {
+            Package package = Package.Current;
+            PackageId packageId = package.Id;
+            PackageVersion version = packageId.Version;
+
+            ushort[] versionProperties =
+            {
+                version.Major,
+                version.Minor,
+                version.Build,
+                version.Revision
+            };
+
+            return String.Join(".", versionProperties);
         }
 
 #endregion

@@ -10,7 +10,7 @@
     <Page.Resources>
 
         <Storyboard x:Name="CropEnterStory">
-            <DoubleAnimation x:Name="doubleAnimation" Duration="0:0:0.7" From="90" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.Rotation)" Storyboard.TargetName="gridForCrop">
+            <DoubleAnimation x:Name="doubleAnimation" Duration="0:0:1" From="90" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.Rotation)" Storyboard.TargetName="gridForCrop">
                 <DoubleAnimation.EasingFunction>
                     <BackEase EasingMode="EaseOut" Amplitude="0.3"/>
                 </DoubleAnimation.EasingFunction>
@@ -18,7 +18,7 @@
         </Storyboard>
 
         <Storyboard x:Name="CropExitStory">
-            <DoubleAnimation x:Name="doubleAnimation2" Duration="0:0:0.7" From="0" To="90" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.Rotation)" Storyboard.TargetName="gridForCrop">
+            <DoubleAnimation x:Name="doubleAnimation2" Duration="0:0:1" From="0" To="90" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.Rotation)" Storyboard.TargetName="gridForCrop">
                 <DoubleAnimation.EasingFunction>
                     <BackEase EasingMode="EaseIn" Amplitude="0.3"/>
                 </DoubleAnimation.EasingFunction>
@@ -79,7 +79,7 @@
             <Button Content="Help" Style="{StaticResource styleMenuButton}" Height="25" Padding="8,-2,8,0">
                 <Button.Flyout>
                     <MenuFlyout MenuFlyoutPresenterStyle="{StaticResource styleMenuFlyout}">
-                        <MenuFlyoutItem Name="menuHelp" Text="Help" FontSize="{StaticResource myFontSize}"/>
+                        <MenuFlyoutItem Name="menuHelp" Text="Help" FontSize="{StaticResource myFontSize}" IsEnabled="False"/>
                         <MenuFlyoutItem Name="menuFeedback" Text="Feedback" FontSize="{StaticResource myFontSize}" Visibility="Collapsed" Click="menuFeedback_Click"/>
                         <MenuFlyoutItem Name="menuPrivacyPolicy" Text="Privacy policy" FontSize="{StaticResource myFontSize}" Click="menuPrivacyPolicy_Click"/>
                         <MenuFlyoutSeparator/>
