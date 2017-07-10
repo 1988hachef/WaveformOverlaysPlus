@@ -75,7 +75,7 @@ namespace WaveformOverlaysPlus.Helpers
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 // Your exception handling here..
                 throw;
