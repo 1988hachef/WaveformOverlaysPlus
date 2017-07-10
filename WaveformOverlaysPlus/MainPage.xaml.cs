@@ -957,9 +957,20 @@ namespace WaveformOverlaysPlus
             }
         }
 
-#endregion
+        #endregion
 
 #region Help menu items
+
+        private async void menuHelp_Click(object sender, RoutedEventArgs e)
+        {
+            Uri uri = new Uri(@"https://youtu.be/YF63-zWaduc");
+            bool success = await Launcher.LaunchUriAsync(uri);
+
+            if (success == false)
+            {
+                var dialog = await new MessageDialog("Webpage failed to open. If this continues to happen, please use the Feedback button to report the problem.").ShowAsync();
+            }
+        }
 
         private async void menuFeedback_Click(object sender, RoutedEventArgs e)
         {
@@ -5364,7 +5375,8 @@ namespace WaveformOverlaysPlus
             }
         }
 
-#endregion
+        #endregion
 
+        
     }
 }

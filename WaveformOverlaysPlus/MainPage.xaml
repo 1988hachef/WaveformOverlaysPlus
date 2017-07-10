@@ -79,7 +79,7 @@
             <Button Content="Help" Style="{StaticResource styleMenuButton}" Height="25" Padding="8,-2,8,0">
                 <Button.Flyout>
                     <MenuFlyout MenuFlyoutPresenterStyle="{StaticResource styleMenuFlyout}">
-                        <MenuFlyoutItem Name="menuHelp" Text="Help" FontSize="{StaticResource myFontSize}" IsEnabled="False"/>
+                        <MenuFlyoutItem Name="menuHelp" Text="Help" FontSize="{StaticResource myFontSize}" Click="menuHelp_Click" />
                         <MenuFlyoutItem Name="menuFeedback" Text="Feedback" FontSize="{StaticResource myFontSize}" Visibility="Collapsed" Click="menuFeedback_Click"/>
                         <MenuFlyoutItem Name="menuPrivacyPolicy" Text="Privacy policy" FontSize="{StaticResource myFontSize}" Click="menuPrivacyPolicy_Click"/>
                         <MenuFlyoutSeparator/>
