@@ -52,7 +52,8 @@ namespace WaveformOverlaysPlus
     public sealed partial class MainPage : Page
     {
         ObservableCollection<StoredImage> imageCollection;
-
+        
+        Point workAreaStartPoint;
         bool mightNeedToSave = false;
         string ColorChangerBox;
         string currentToolChosen;
@@ -279,11 +280,23 @@ namespace WaveformOverlaysPlus
             gridImageContainer.Height = gridMain.ActualHeight;
             SetAmountBetween(tboxHpos);
             SetAmountBetween(tboxVpos);
+            lineHrulerPres.X2 = gridMain.ActualWidth;
+            lineHrulerZero.X2 = gridMain.ActualWidth;
+            lineVrulerZero.Y2 = gridMain.ActualHeight;
+            lineVruler720.Y2 = gridMain.ActualHeight;
+            lineV2.Y2 = gridMain.ActualHeight;
+            lineV1.Y2 = gridMain.ActualHeight;
+            lineH2.X2 = gridMain.ActualWidth;
+            lineH1.X2 = gridMain.ActualWidth;
 
             transformExh.TranslateX = 140 / Convert.ToDouble(UnitsPerX);
             gridExhOverlap.Width = 230 / Convert.ToDouble(UnitsPerX);
             transformInt.TranslateX = 350 / Convert.ToDouble(UnitsPerX);
             gridIntOverlap.Width = 235 / Convert.ToDouble(UnitsPerX);
+
+            GeneralTransform gt = gridForOverall.TransformToVisual(gridForOverall_0);
+            Point pt = gt.TransformPoint(new Point(0, 0));
+            workAreaStartPoint = pt;
         }
 
         private void tool_Checked(object sender, RoutedEventArgs e)
@@ -5375,8 +5388,61 @@ namespace WaveformOverlaysPlus
             }
         }
 
+
+
         #endregion
 
-        
+#region SizeChanged events
+
+        private void gridForOverall_0_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            GeneralTransform gt = gridForOverall.TransformToVisual(gridForOverall_0);
+            Point newP = gt.TransformPoint(new Point(0, 0));
+
+            var oldP = workAreaStartPoint;
+
+            if (newP.X > oldP.X || newP.Y > oldP.Y)
+            {
+                gridForOverall.Width = gridForOverall_0.ActualWidth;
+                gridForOverall.Height = gridForOverall_0.ActualHeight;
+            }
+            
+        }
+
+        private void gridMain_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            gridCompressionOverlay.Height = gridMain.ActualHeight;
+            gridExhOverlap.Height = gridMain.ActualHeight * 0.6;
+            gridIntOverlap.Height = (gridMain.ActualHeight * 0.6) - 46;
+
+            lineHrulerPres.X2 = gridMain.ActualWidth;
+            lineHrulerZero.X2 = gridMain.ActualWidth;
+            lineVrulerZero.Y2 = gridMain.ActualHeight;
+            lineVruler720.Y2 = gridMain.ActualHeight;
+            lineV2.Y2 = gridMain.ActualHeight;
+            lineV1.Y2 = gridMain.ActualHeight;
+            lineH2.X2 = gridMain.ActualWidth;
+            lineH1.X2 = gridMain.ActualWidth;
+
+            GeneralTransform gt = lineVruler720.TransformToVisual(gridToContainOthers);
+            Point point720 = gt.TransformPoint(new Point(0, 0));
+
+            GeneralTransform gt1 = gridCompressionOverlay.TransformToVisual(gridToContainOthers);
+            Point point0 = gt1.TransformPoint(new Point(0, 0));
+
+            gridCompressionOverlay.Width = point720.X - point0.X + 1;
+        }
+
+        private void gridCropping_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (!(String.IsNullOrEmpty(tblockFileName.Text)) && tblockFileName.Text != "Please choose an image") // then there is an image in the gridImageContainer
+            {
+                string path = "ms-appdata:///local/" + tblockFileName.Text;
+                LoadImageIntoCropper(path);
+            }
+
+        }
+#endregion
+
     }
 }
