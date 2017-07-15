@@ -40,6 +40,7 @@ using Windows.UI.Xaml.Markup;
 using WaveformOverlaysPlus.UndoRedoCommands;
 using Windows.System;
 using Windows.ApplicationModel;
+using WaveformOverlaysPlus.Converters;
 
 namespace WaveformOverlaysPlus
 {
@@ -71,6 +72,19 @@ namespace WaveformOverlaysPlus
         TextBlock label9;
         TextBlock label10;
         TextBlock label11;
+
+#region For Settings
+
+        ApplicationDataContainer localSettings = null;
+        const string lastStrokeColor = "lastStrokeColor";
+        const string lastFillColor = "lastFillColor";
+        const string lastTextColor = "lastTextColor";
+        const string lastPageColor = "lastPageColor";
+        const string lastCompLinesColor = "lastCompLinesColor";
+        const string lastSizeSelected = "lastSizeSelected";
+        const string lastColorBox = "lastColorBox";
+
+#endregion
 
 #region For Shortcut keys
 
@@ -199,50 +213,17 @@ namespace WaveformOverlaysPlus
             // Initialize imageCollection
             imageCollection = new ObservableCollection<StoredImage>();
 
-            //Initialize UndoRedo
+            // Initialize UndoRedo
             _UndoRedo = new UndoRedoManager.UnDoRedo();
+
+            // Initialize Settings storage
+            localSettings = ApplicationData.Current.LocalSettings;
         }
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            // Set initial ink stroke attributes.
-            InkDrawingAttributes drawingAttributes = new InkDrawingAttributes();
-            drawingAttributes.DrawAsHighlighter = false;
-            drawingAttributes.PenTip = PenTipShape.Circle;
-
-            SolidColorBrush initialBrush = new SolidColorBrush(Colors.Blue);
-            if (borderForStrokeColor != null)
-            {
-                initialBrush = borderForStrokeColor.Background as SolidColorBrush;
-            }
-            drawingAttributes.Color = initialBrush.Color;
-
-            if (rbSize10 != null)
-            {
-                drawingAttributes.Size = new Size(currentSizeSelected, currentSizeSelected);
-            }
-
-            drawingAttributes.IgnorePressure = false;
-            drawingAttributes.FitToCurve = true;
-            inkCanvas.InkPresenter.UpdateDefaultDrawingAttributes(drawingAttributes);
-
             var display = DisplayInformation.GetForCurrentView();
-
-            // 1. Activate custom drawing 
-            _inkSynchronizer = _inkPresenter.ActivateCustomDrying();
-
-            // 2. add use custom drawing when strokes are collected
-            _inkPresenter.StrokesCollected += InkPresenter_StrokesCollected;
-
-            _inkPresenter.InputProcessingConfiguration.RightDragAction = InkInputRightDragAction.LeaveUnprocessed;
-
-            var unprocessedInput = _inkPresenter.UnprocessedInput;
-            unprocessedInput.PointerPressed += UnprocessedInput_PointerPressed;
-            unprocessedInput.PointerMoved += UnprocessedInput_PointerMoved;
-            unprocessedInput.PointerReleased += UnprocessedInput_PointerReleased;
-            unprocessedInput.PointerExited += UnprocessedInput_PointerExited;
-            unprocessedInput.PointerLost += UnprocessedInput_PointerLost;
-
+            
             // Delete old files from LocalFolder
             var files = await ApplicationData.Current.LocalFolder.GetFilesAsync();
 
@@ -297,6 +278,45 @@ namespace WaveformOverlaysPlus
             GeneralTransform gt = gridForOverall.TransformToVisual(gridForOverall_0);
             Point pt = gt.TransformPoint(new Point(0, 0));
             workAreaStartPoint = pt;
+
+            // Set user's previous settings
+            RestoreUserSettings();
+
+            // Set initial ink stroke attributes.
+            InkDrawingAttributes drawingAttributes = new InkDrawingAttributes();
+            drawingAttributes.DrawAsHighlighter = false;
+            drawingAttributes.PenTip = PenTipShape.Circle;
+
+            SolidColorBrush initialBrush = new SolidColorBrush(Colors.Blue);
+            if (borderForStrokeColor != null)
+            {
+                initialBrush = borderForStrokeColor.Background as SolidColorBrush;
+            }
+            drawingAttributes.Color = initialBrush.Color;
+
+            if (rbSize10 != null)
+            {
+                drawingAttributes.Size = new Size(currentSizeSelected, currentSizeSelected);
+            }
+
+            drawingAttributes.IgnorePressure = false;
+            drawingAttributes.FitToCurve = true;
+            inkCanvas.InkPresenter.UpdateDefaultDrawingAttributes(drawingAttributes);
+
+            // 1. Activate custom drawing 
+            _inkSynchronizer = _inkPresenter.ActivateCustomDrying();
+
+            // 2. add use custom drawing when strokes are collected
+            _inkPresenter.StrokesCollected += InkPresenter_StrokesCollected;
+
+            _inkPresenter.InputProcessingConfiguration.RightDragAction = InkInputRightDragAction.LeaveUnprocessed;
+
+            var unprocessedInput = _inkPresenter.UnprocessedInput;
+            unprocessedInput.PointerPressed += UnprocessedInput_PointerPressed;
+            unprocessedInput.PointerMoved += UnprocessedInput_PointerMoved;
+            unprocessedInput.PointerReleased += UnprocessedInput_PointerReleased;
+            unprocessedInput.PointerExited += UnprocessedInput_PointerExited;
+            unprocessedInput.PointerLost += UnprocessedInput_PointerLost;
         }
 
         private void tool_Checked(object sender, RoutedEventArgs e)
@@ -1667,6 +1687,12 @@ namespace WaveformOverlaysPlus
                 drawingAttributes.Size = new Size(size, size);
                 inkCanvas.InkPresenter.UpdateDefaultDrawingAttributes(drawingAttributes);
             }
+
+            // Store the setting
+            if (localSettings != null)
+            {
+                localSettings.Values[lastSizeSelected] = size;
+            }
         }
 
         private void sizes_Clicked(object sender, RoutedEventArgs e)
@@ -1692,20 +1718,27 @@ namespace WaveformOverlaysPlus
                             strokeX.Visibility = Visibility.Visible;
                             borderForStrokeColor.Background = chosenColor;
                             drawingAttributes.Color = chosenColor.Color;
+                            localSettings.Values[lastStrokeColor] = chosenColor.Color.ToString();
                             break;
                         case "fillColorRB":
                             fillX.Visibility = Visibility.Visible;
                             borderForFillColor.Background = chosenColor;
+                            localSettings.Values[lastFillColor] = chosenColor.Color.ToString();
                             break;
                         case "textColorRB":
                             textX.Visibility = Visibility.Visible;
                             borderForTextColor.Background = chosenColor;
+                            localSettings.Values[lastTextColor] = chosenColor.Color.ToString();
                             break;
                         case "pageColorRB":
-                            borderForPageColor.Background = new SolidColorBrush(Colors.White);
+                            var whiteBrush = new SolidColorBrush(Colors.White);
+                            borderForPageColor.Background = whiteBrush;
+                            localSettings.Values[lastPageColor] = whiteBrush.Color.ToString();
                             break;
                         case "compLinesColorRB":
-                            borderForCompLinesColor.Background = new SolidColorBrush(Colors.Gray);
+                            var grayBrush = new SolidColorBrush(Colors.Gray);
+                            borderForCompLinesColor.Background = grayBrush;
+                            localSettings.Values[lastCompLinesColor] = grayBrush.Color.ToString();
                             break;
                     }
                 }
@@ -1717,20 +1750,25 @@ namespace WaveformOverlaysPlus
                             strokeX.Visibility = Visibility.Collapsed;
                             borderForStrokeColor.Background = chosenColor;
                             drawingAttributes.Color = chosenColor.Color;
+                            localSettings.Values[lastStrokeColor] = chosenColor.Color.ToString();
                             break;
                         case "fillColorRB":
                             fillX.Visibility = Visibility.Collapsed;
                             borderForFillColor.Background = chosenColor;
+                            localSettings.Values[lastFillColor] = chosenColor.Color.ToString();
                             break;
                         case "textColorRB":
                             textX.Visibility = Visibility.Collapsed;
                             borderForTextColor.Background = chosenColor;
+                            localSettings.Values[lastTextColor] = chosenColor.Color.ToString();
                             break;
                         case "pageColorRB":
                             borderForPageColor.Background = chosenColor;
+                            localSettings.Values[lastPageColor] = chosenColor.Color.ToString();
                             break;
                         case "compLinesColorRB":
                             borderForCompLinesColor.Background = chosenColor;
+                            localSettings.Values[lastCompLinesColor] = chosenColor.Color.ToString();
                             break;
                     }
                 }
@@ -1742,6 +1780,11 @@ namespace WaveformOverlaysPlus
         {
             var colorChangerBoxButton = sender as RadioButton;
             ColorChangerBox = colorChangerBoxButton.Name;
+
+            if (localSettings != null)
+            {
+                localSettings.Values[lastColorBox] = ColorChangerBox;
+            }
         }
 
 #endregion
@@ -5445,6 +5488,166 @@ namespace WaveformOverlaysPlus
             }
 
         }
+        #endregion
+
+#region User Settings
+
+        void RestoreUserSettings()
+        {
+            RestoreColorSelections();
+            RestoreSizeSelection();
+            RestoreColorBoxSelection();
+        }
+
+        void RestoreColorBoxSelection()
+        {
+            Object _lastColorBox = localSettings.Values[lastColorBox];
+
+            if (_lastColorBox != null)
+            {
+                var colorBoxName = _lastColorBox.ToString();
+
+                switch (colorBoxName)
+                {
+                    //case "strokeColorRB":
+                    //    strokeColorRB.IsChecked = true;
+                    //    break;
+                    case "fillColorRB":
+                        fillColorRB.IsChecked = true;
+                        break;
+                    case "textColorRB":
+                        textColorRB.IsChecked = true;
+                        break;
+                    case "pageColorRB":
+                        pageColorRB.IsChecked = true;
+                        break;
+                    //case "compLinesColorRB":
+                    //    strokeColorRB.IsChecked = true;
+                    //    break;
+                }
+            }
+        }
+
+        void RestoreSizeSelection()
+        {
+            Object _lastSizeSelected = localSettings.Values[lastSizeSelected];
+
+            if (_lastSizeSelected != null)
+            {
+                var size = (double)_lastSizeSelected;
+
+                switch (size)
+                {
+                    case 1:
+                        rbSize1.IsChecked = true;
+                        break;
+                    case 2:
+                        rbSize2.IsChecked = true;
+                        break;
+                    case 6:
+                        rbSize6.IsChecked = true;
+                        break;
+                    case 10:
+                        rbSize10.IsChecked = true;
+                        break;
+                }
+            }
+        }
+
+        void RestoreColorSelections()
+        {
+            var strokeBrush = GetBrushFromSettings(localSettings.Values[lastStrokeColor]);
+            var fillBrush = GetBrushFromSettings(localSettings.Values[lastFillColor]);
+            var textBrush = GetBrushFromSettings(localSettings.Values[lastTextColor]);
+            var pageBrush = GetBrushFromSettings(localSettings.Values[lastPageColor]);
+            var compBrush = GetBrushFromSettings(localSettings.Values[lastCompLinesColor]);
+
+            var transparentBrush = new SolidColorBrush(Colors.Transparent);
+
+            // Set stroke color
+            if (strokeBrush != null)
+            {
+                InkDrawingAttributes drawingAttributes = inkCanvas.InkPresenter.CopyDefaultDrawingAttributes();
+                drawingAttributes.Color = strokeBrush.Color;
+                inkCanvas.InkPresenter.UpdateDefaultDrawingAttributes(drawingAttributes);
+                borderForStrokeColor.Background = strokeBrush;
+                if (strokeBrush.Color == transparentBrush.Color)
+                {
+                    strokeX.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    strokeX.Visibility = Visibility.Collapsed;
+                }
+            }
+
+            // Set fill color
+            if (fillBrush != null)
+            {
+                borderForFillColor.Background = fillBrush;
+                if (fillBrush.Color == transparentBrush.Color)
+                {
+                    fillX.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    fillX.Visibility = Visibility.Collapsed;
+                }
+            }
+
+            // Set text color
+            if (textBrush != null)
+            {
+                borderForTextColor.Background = textBrush;
+                if (textBrush.Color == transparentBrush.Color)
+                {
+                    textX.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    textX.Visibility = Visibility.Collapsed;
+                }
+            }
+
+            // Set page color
+            if (pageBrush != null)
+            {
+                if (pageBrush.Color == transparentBrush.Color)
+                {
+                    borderForPageColor.Background = new SolidColorBrush(Colors.White);
+                }
+                else
+                {
+                    borderForPageColor.Background = pageBrush;
+                }
+            }
+
+            // Set compLines color
+            if (compBrush != null)
+            {
+                if (compBrush.Color == transparentBrush.Color)
+                {
+                    borderForCompLinesColor.Background = new SolidColorBrush(Colors.Gray);
+                }
+                else
+                {
+                    borderForCompLinesColor.Background = compBrush;
+                }
+            }
+        }
+
+        SolidColorBrush GetBrushFromSettings(Object settingsHexColor)
+        {
+            if (settingsHexColor != null)
+            {
+                return ColorConverters.GetColorFromHex(settingsHexColor.ToString());
+            }
+            else
+            {
+                return null;
+            }
+        }
+
 #endregion
 
     }
