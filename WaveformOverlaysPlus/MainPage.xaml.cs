@@ -5401,12 +5401,15 @@ namespace WaveformOverlaysPlus
 
             var oldP = workAreaStartPoint;
 
-            if (newP.X > oldP.X || newP.Y > oldP.Y)
+            if (newP.X > oldP.X)
             {
                 gridForOverall.Width = gridForOverall_0.ActualWidth;
+            }
+
+            if (newP.Y > oldP.Y)
+            {
                 gridForOverall.Height = gridForOverall_0.ActualHeight;
             }
-            
         }
 
         private void gridMain_SizeChanged(object sender, SizeChangedEventArgs e)
