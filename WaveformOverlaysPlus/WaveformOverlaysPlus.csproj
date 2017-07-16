@@ -184,6 +184,7 @@
     <Content Include="MyXamlTextFiles\ThreeGridXamlText.txt" />
     <Content Include="MyXamlTextFiles\TwelveGridXamlText.txt" />
     <Content Include="MyXamlTextFiles\TwoGridXamlText.txt" />
+    <Content Include="Screenshots\screenshot.PNG" />
     <None Include="Package.StoreAssociation.xml" />
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
