@@ -41,7 +41,6 @@ using WaveformOverlaysPlus.UndoRedoCommands;
 using Windows.System;
 using Windows.ApplicationModel;
 using WaveformOverlaysPlus.Converters;
-using System.Threading.Tasks;
 
 namespace WaveformOverlaysPlus
 {
@@ -60,6 +59,9 @@ namespace WaveformOverlaysPlus
         string ColorChangerBox;
         string currentToolChosen;
         string nameOfFile;
+
+#region For Cyl ID overlay
+
         Grid gridCylinderIdOverlay;
         TextBlock label;
         TextBlock label1;
@@ -73,6 +75,8 @@ namespace WaveformOverlaysPlus
         TextBlock label9;
         TextBlock label10;
         TextBlock label11;
+
+#endregion
 
 #region For Settings
 
@@ -232,24 +236,29 @@ namespace WaveformOverlaysPlus
 
             if (files.Count > 0)
             {
-                var fileCount = files.Count;
+                int initialFileCount = files.Count;
+                int runningFileCount = files.Count;
 
                 try
                 {
                     foreach (var file in files)
                     {
-                        await file.DeleteAsync(StorageDeleteOption.Default);
-                        fileCount = files.Count;
+                        await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
+
+                        var runningFileCheck = await ApplicationData.Current.LocalFolder.GetFilesAsync();
+                        runningFileCount = runningFileCheck.Count;
                     }
                 }
                 catch (Exception ex)
                 {
-                    var numberOfFilesRemaining = fileCount.ToString();
-
                     StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
                     logger.Log("MyDeleteLocalFilesError" + " "
-                               + "Number of files remaining:" + " " + numberOfFilesRemaining + " "
-                               + ex.Message + " " + ex.StackTrace);
+                               + initialFileCount.ToString() + " " 
+                               + "files initially" + " "
+                               + runningFileCount.ToString() + " "
+                               + "files left" + " "
+                               + ex.Message + " " 
+                               + ex.StackTrace);
                 }
             }
 
@@ -494,6 +503,8 @@ namespace WaveformOverlaysPlus
 
                 if (imgFile != null)
                 {
+                    UnBindLast();
+
                     spanelBusy.Visibility = Visibility.Visible;
                     tblockBusy.Text = "Opening...";
                     pRing.IsActive = true;
@@ -913,7 +924,7 @@ namespace WaveformOverlaysPlus
 
                 if (!(dataView.Contains(StandardDataFormats.StorageItems)) && !(dataView.Contains(StandardDataFormats.Bitmap)))
                 {
-                    await new MessageDialog("Sorry, could not Paste the item(s). Another option is to use File -> Open to open the image(s).").ShowAsync();
+                    await new MessageDialog("Sorry, could not Paste the items. Only images can be pasted.").ShowAsync();
                 }
                 else
                 {
@@ -956,6 +967,8 @@ namespace WaveformOverlaysPlus
 
             if (imageStreamReference != null)
             {
+                UnBindLast();
+
                 spanelBusy.Visibility = Visibility.Visible;
                 tblockBusy.Text = "Loading...";
                 pRing.IsActive = true;
@@ -1829,20 +1842,24 @@ namespace WaveformOverlaysPlus
 
         private async void crop_Click(object sender, RoutedEventArgs e)
         {
-            gridCover.Visibility = Visibility.Visible;
-            CropEnterStory.Begin();
-
             if (imageCollection.Count == 0)
             {
                 var dialog = await new MessageDialog("Please open an image first.").ShowAsync();
             }
             else if (imageCollection.Count == 1)
             {
+                gridCover.Visibility = Visibility.Visible;
+                CropEnterStory.Begin();
+
                 var path = imageCollection[0].FilePath;
                 LoadImageIntoCropper(path);
+                btnCrop.IsEnabled = true;
             }
             else if (imageCollection.Count > 1)
             {
+                gridCover.Visibility = Visibility.Visible;
+                CropEnterStory.Begin();
+
                 gridviewImages.ItemsSource = imageCollection;
                 gridviewImages.Visibility = Visibility.Visible;
                 btnCrop.IsEnabled = false;
@@ -1868,6 +1885,8 @@ namespace WaveformOverlaysPlus
 
         private async void btnCrop_Click(object sender, RoutedEventArgs e)
         {
+            btnCrop.IsEnabled = false;
+
             Image imageMain = null;
             string fileName = tblockFileName.Text;
 
@@ -2121,7 +2140,7 @@ namespace WaveformOverlaysPlus
         {
             CropExitStory.Begin();
 
-            btnCrop.IsEnabled = true;
+            btnCrop.IsEnabled = false;
             btnBack.IsEnabled = false;
             btnBack.Visibility = Visibility.Visible;
             btnCrop.Visibility = Visibility.Visible;
@@ -2135,7 +2154,6 @@ namespace WaveformOverlaysPlus
             gridBranding.Visibility = Visibility.Collapsed;
             gridviewImages.Visibility = Visibility.Collapsed;
             gridCover.Visibility = Visibility.Collapsed;
-
         }
 
         void RemoveImageFromCollection(PaintObjectTemplatedControl paintObj)
@@ -3169,6 +3187,8 @@ namespace WaveformOverlaysPlus
             {
                 try
                 {
+                    UnBindLast();
+
                     gridCylinderIDSelections.Visibility = Visibility.Collapsed;
 
                     // Get your file
@@ -5317,6 +5337,8 @@ namespace WaveformOverlaysPlus
 
                 try
                 {
+                    UnBindLast();
+
                     spanelBusy.Visibility = Visibility.Visible;
                     tblockBusy.Text = "Loading...";
                     pRing.IsActive = true;
