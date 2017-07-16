@@ -170,7 +170,7 @@
                                         <FlyoutBase.AttachedFlyout>
                                             <MenuFlyout x:Name="flyoutShowHide" Opening="flyoutShowHide_Opening">
                                                 <MenuFlyoutItem Name="menuShow" Text="Show Line" Click="ShowLine_Click" IsEnabled="False"/>
-                                                <MenuFlyoutItem Name="menuHide" Text="Hide LIne" Click="HideLine_Click" IsEnabled="False"/>
+                                                <MenuFlyoutItem Name="menuHide" Text="Hide Line" Click="HideLine_Click" IsEnabled="False"/>
                                             </MenuFlyout>
                                         </FlyoutBase.AttachedFlyout>
                                     </Polygon>
@@ -690,6 +690,7 @@
         </Grid>
 
         <Grid Name="gridCover" Visibility="Collapsed" Grid.RowSpan="3" Background="{StaticResource DialogBackgroundCover}">
+
             <Grid Name="gridDialog" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" Margin="30" BorderBrush="Black" BorderThickness="1">
                 <StackPanel>
                     <StackPanel Name="spanelText" Margin="20"/>
@@ -698,6 +699,7 @@
                     <Button Name="btnDialogCancel" Visibility="Collapsed" Content="Cancel" Margin="20,0,20,20"/>
                 </StackPanel>
             </Grid>
+            
         </Grid>
 
         <Grid Name="gridforSaveSelection" Visibility="Collapsed" Grid.RowSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="Black" BorderThickness="1" >
@@ -715,7 +717,7 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Orientation="Horizontal" Margin="5,0,0,0">
-                    <Button Name="btnSaveSelection" Style="{StaticResource styleBtn}" Visibility="Collapsed" Background="#6600FF00" Content="Save Selection" Margin="5" FontSize="{StaticResource myFontSize}" Click="btnSaveSelection_Click"/>
+                    <Button Name="btnSaveSelection" Style="{StaticResource styleBtn}" Visibility="Collapsed" Background="#6600FF00" Content="Save Area" Margin="5" FontSize="{StaticResource myFontSize}" Click="btnSaveSelection_Click"/>
                     <Button Name="btnCrop" Content="Crop" Style="{StaticResource styleBtn}" Background="#6600FF00" Margin="5" FontSize="{StaticResource myFontSize}" Click="btnCrop_Click"/>
                     <Button Name="btnBack" Content="Back" Style="{StaticResource styleBtn}" Background="#66E8FF00" Margin="5" FontSize="{StaticResource myFontSize}" IsEnabled="False" Click="btnBack_Click"/>
                     <Button Name="btnClose" Content="Close" Style="{StaticResource styleBtn}" Background="#66FF0000" Margin="5" FontSize="{StaticResource myFontSize}" Click="btnClose_Click"/>
@@ -1010,6 +1012,11 @@
                 <Button Name="btnDontSaveBeforeNew" FontSize="12" Margin="10" Content="Don't Save" Click="btnDontSaveBeforeNew_Click" />
                 <Button Name="btnCancelSaveBeforeNew" FontSize="12" Margin="10" Content="Cancel" Width="56" Click="btnCancelSaveBeforeNew_Click"/>
             </StackPanel>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Name="spanelBusy" Visibility="Collapsed" Grid.RowSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#B2000000" Padding="50,30">
+            <ProgressRing Name="pRing" Foreground="White" Width="30" Height="30"/>
+            <TextBlock Name="tblockBusy" Text="Opening..." Foreground="White" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </StackPanel>
 
         <Grid Name="gridForPrint" Visibility="Collapsed" Grid.RowSpan="3" Background="White" HorizontalAlignment="Center" Width="1055">

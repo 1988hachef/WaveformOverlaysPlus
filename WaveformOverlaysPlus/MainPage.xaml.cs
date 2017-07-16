@@ -41,6 +41,7 @@ using WaveformOverlaysPlus.UndoRedoCommands;
 using Windows.System;
 using Windows.ApplicationModel;
 using WaveformOverlaysPlus.Converters;
+using System.Threading.Tasks;
 
 namespace WaveformOverlaysPlus
 {
@@ -493,6 +494,10 @@ namespace WaveformOverlaysPlus
 
                 if (imgFile != null)
                 {
+                    spanelBusy.Visibility = Visibility.Visible;
+                    tblockBusy.Text = "Opening...";
+                    pRing.IsActive = true;
+
                     double _height = 0;
                     double _width = 0;
 
@@ -562,6 +567,12 @@ namespace WaveformOverlaysPlus
                 StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
                 logger.Log("MyOpenError" + " " + ex.Message + " " + ex.StackTrace);
             }
+            finally
+            {
+                pRing.IsActive = false;
+                tblockBusy.Text = "";
+                spanelBusy.Visibility = Visibility.Collapsed;
+            }
         }
 
 #endregion
@@ -589,6 +600,10 @@ namespace WaveformOverlaysPlus
 
                 if (file != null)
                 {
+                    spanelBusy.Visibility = Visibility.Visible;
+                    tblockBusy.Text = "Saving...";
+                    pRing.IsActive = true;
+
                     await ImageUtils.CaptureElementToFile(gridForOverall_0, file);
                     mightNeedToSave = false;
                 }
@@ -604,6 +619,10 @@ namespace WaveformOverlaysPlus
             finally
             {
                 gridBranding.Visibility = Visibility.Collapsed;
+
+                pRing.IsActive = false;
+                tblockBusy.Text = "";
+                spanelBusy.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -848,7 +867,10 @@ namespace WaveformOverlaysPlus
         {
             try
             {
-                gridCover.Visibility = Visibility.Visible;
+                spanelBusy.Visibility = Visibility.Visible;
+                tblockBusy.Text = "Copying...";
+                pRing.IsActive = true;
+
                 gridBranding.Visibility = Visibility.Visible;
 
                 StorageFile file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync("TempImgFile.png", CreationCollisionOption.ReplaceExisting);
@@ -861,7 +883,6 @@ namespace WaveformOverlaysPlus
                 Clipboard.SetContent(dataPackage);
 
                 gridBranding.Visibility = Visibility.Collapsed;
-                gridCover.Visibility = Visibility.Collapsed;
             }
             catch (Exception ex)
             {
@@ -870,6 +891,12 @@ namespace WaveformOverlaysPlus
 
                 StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
                 logger.Log("MyCopyError" + " " + ex.Message + " " + ex.StackTrace);
+            }
+            finally
+            {
+                pRing.IsActive = false;
+                tblockBusy.Text = "";
+                spanelBusy.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -909,7 +936,6 @@ namespace WaveformOverlaysPlus
                 StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
                 logger.Log("MyPasteError" + " " + ex.Message + " " + ex.StackTrace);
             }
-            
         }
 
         async void PasteBitmapFromDataPackageView(DataPackageView dataView)
@@ -930,6 +956,10 @@ namespace WaveformOverlaysPlus
 
             if (imageStreamReference != null)
             {
+                spanelBusy.Visibility = Visibility.Visible;
+                tblockBusy.Text = "Loading...";
+                pRing.IsActive = true;
+
                 double _height = 0;
                 double _width = 0;
 
@@ -989,6 +1019,10 @@ namespace WaveformOverlaysPlus
                 ManageUndoRedoButtons();
 
                 imageCollection.Add(new StoredImage { FileName = newName, FilePath = newPath });
+
+                pRing.IsActive = false;
+                tblockBusy.Text = "";
+                spanelBusy.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -5226,7 +5260,6 @@ namespace WaveformOverlaysPlus
                 StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
                 logger.Log("MyDropError" + " " + ex.Message + " " + ex.StackTrace);
             }
-            
         }
 
         async void LoadDataPackageViewImage(StorageFile droppedFile, BitmapImage bitmapFromDroppedFile)
@@ -5284,6 +5317,10 @@ namespace WaveformOverlaysPlus
 
                 try
                 {
+                    spanelBusy.Visibility = Visibility.Visible;
+                    tblockBusy.Text = "Loading...";
+                    pRing.IsActive = true;
+
                     foreach (StorageFile file in items)
                     {
                         try
@@ -5312,6 +5349,12 @@ namespace WaveformOverlaysPlus
                 {
                     failCount++;
                     failString = failString + " The item is not supported in this app;";
+                }
+                finally
+                {
+                    pRing.IsActive = false;
+                    tblockBusy.Text = "";
+                    spanelBusy.Visibility = Visibility.Collapsed;
                 }
 
 
@@ -5446,6 +5489,10 @@ namespace WaveformOverlaysPlus
 
                 if (file != null)
                 {
+                    spanelBusy.Visibility = Visibility.Visible;
+                    tblockBusy.Text = "Saving...";
+                    pRing.IsActive = true;
+
                     await ImageUtils.CaptureElementToFile(imageForSaveSelection, file);
                     mightNeedToSave = false;
                 }
@@ -5462,10 +5509,12 @@ namespace WaveformOverlaysPlus
             {
                 gridCover.Visibility = Visibility.Collapsed;
                 gridforSaveSelection.Visibility = Visibility.Collapsed;
+
+                pRing.IsActive = false;
+                tblockBusy.Text = "";
+                spanelBusy.Visibility = Visibility.Collapsed;
             }
         }
-
-
 
         #endregion
 
