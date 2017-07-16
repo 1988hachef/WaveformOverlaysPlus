@@ -147,10 +147,12 @@ namespace WaveformOverlaysPlus
         double firstY;
         double firstX;
 
-#endregion
+        #endregion
 
 #region For Rulers
 
+        bool IsMouseDeviceRightClick = false;
+        Line polyRulerLine;
         Grid rulerContainer;
         string gripName;
         Line rulerLine;
@@ -2400,28 +2402,36 @@ namespace WaveformOverlaysPlus
 
         private void rulers_ManipulationStarting(object sender, ManipulationStartingRoutedEventArgs e)
         {
-            gripShape = sender as Shape;
-            gripName = gripShape.Name;
-
-            if (gripName.StartsWith("r")) // it is one of the colored ruler
+            if (IsMouseDeviceRightClick)
             {
-                rulerContainer = gripShape.Parent as Grid;
-                rulerLine = rulerContainer.Children[0] as Line;
-                gridDelta.Visibility = Visibility.Visible;
-                rulerLine.Visibility = Visibility.Visible;
+                e.Handled = true;
+                return;
             }
-            else // it is one of the other rulers
+            else
             {
-                var parent = gripShape.Parent as StackPanel;
-                rulerContainer = parent.Parent as Grid;
-                rulerLine = rulerContainer.Children[0] as Line;
-                rulerLine.Stroke = new SolidColorBrush(Colors.Gray);
-            }
-            rulerTransform = rulerContainer.RenderTransform as CompositeTransform;
+                gripShape = sender as Shape;
+                gripName = gripShape.Name;
 
-            GeneralTransform gt = rulerContainer.TransformToVisual(gridToContainOthers);
-            Point p = gt.TransformPoint(new Point(0, 0));
-            pointStartOfManipulation = p;
+                if (gripName.StartsWith("r")) // it is one of the colored ruler
+                {
+                    rulerContainer = gripShape.Parent as Grid;
+                    rulerLine = rulerContainer.Children[0] as Line;
+                    gridDelta.Visibility = Visibility.Visible;
+                    rulerLine.Visibility = Visibility.Visible;
+                }
+                else // it is one of the other rulers
+                {
+                    var parent = gripShape.Parent as StackPanel;
+                    rulerContainer = parent.Parent as Grid;
+                    rulerLine = rulerContainer.Children[0] as Line;
+                    rulerLine.Stroke = new SolidColorBrush(Colors.Gray);
+                }
+                rulerTransform = rulerContainer.RenderTransform as CompositeTransform;
+
+                GeneralTransform gt = rulerContainer.TransformToVisual(gridToContainOthers);
+                Point p = gt.TransformPoint(new Point(0, 0));
+                pointStartOfManipulation = p;
+            }
         }
 
         private void rulers_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
@@ -2499,10 +2509,6 @@ namespace WaveformOverlaysPlus
                     (p.X < 2 && p.Y < 2))
                 {
                     rulerLine.Stroke = new SolidColorBrush(Colors.Transparent);
-                }
-                else
-                {
-                    if (rulerLine.Stroke == new SolidColorBrush(Colors.Transparent)) { rulerLine.Stroke = new SolidColorBrush(Colors.Gray); }
                 }
             }
         }
@@ -4884,6 +4890,20 @@ namespace WaveformOverlaysPlus
 
         private void HrulerGrips_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
+            // Check for input device and set IsMouseDeviceRightClick value
+            if (e.Pointer.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse)
+            {
+                var properties = e.GetCurrentPoint(this).Properties;
+                if (properties.IsLeftButtonPressed)
+                {
+                    IsMouseDeviceRightClick = false;
+                }
+                else if (properties.IsRightButtonPressed)
+                {
+                    IsMouseDeviceRightClick = true;
+                }
+            }
+
             (sender as UIElement).CapturePointer(e.Pointer);
         }
 
@@ -4927,6 +4947,20 @@ namespace WaveformOverlaysPlus
 
         private void VrulerGrips_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
+            // Check for input device and set IsMouseDeviceRightClick value
+            if (e.Pointer.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse)
+            {
+                var properties = e.GetCurrentPoint(this).Properties;
+                if (properties.IsLeftButtonPressed)
+                {
+                    IsMouseDeviceRightClick = false;
+                }
+                else if (properties.IsRightButtonPressed)
+                {
+                    IsMouseDeviceRightClick = true;
+                }
+            }
+
             (sender as UIElement).CapturePointer(e.Pointer);
         }
 
@@ -5648,7 +5682,51 @@ namespace WaveformOverlaysPlus
             }
         }
 
-#endregion
+        #endregion
 
+#region Show/Hide ruler lines
+
+        private void PolyRuler_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            var fwElement = sender as FrameworkElement;
+            var name = fwElement.Name;
+
+            polyRulerLine =
+                  name == "polygonHpres" ? lineHrulerPres
+                : name == "polygonHzero" ? lineHrulerZero
+                : name == "polygonVzero" ? lineVrulerZero
+                : name == "polygonV720" ? lineVruler720
+                : null;
+
+            var lineBrush = polyRulerLine.Stroke as SolidColorBrush;
+            var grayBrush = new SolidColorBrush(Colors.Gray);
+
+            bool lineIsVisible = lineBrush.Color == grayBrush.Color ? true : false ;
+            menuShow.IsEnabled = !(lineIsVisible);
+            menuHide.IsEnabled = lineIsVisible;
+
+            FlyoutBase flyout = FlyoutBase.GetAttachedFlyout(polygonHpres);
+            flyout.Placement = FlyoutPlacementMode.Right;
+            flyout.ShowAt(fwElement);
+
+            e.Handled = true;
+        }
+
+        private void ShowLine_Click(object sender, RoutedEventArgs e)
+        {
+            polyRulerLine.Stroke = new SolidColorBrush(Colors.Gray);
+        }
+
+        private void HideLine_Click(object sender, RoutedEventArgs e)
+        {
+            polyRulerLine.Stroke = new SolidColorBrush(Colors.Transparent);
+        }
+
+        private void flyoutShowHide_Opening(object sender, object e)
+        {
+            IsMouseDeviceRightClick = false;
+        }
+
+#endregion
     }
 }

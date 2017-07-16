@@ -163,21 +163,28 @@
                                 </Grid.RenderTransform>
                                 <Line IsHitTestVisible="False" Name="lineHrulerPres" VerticalAlignment="Center" Stroke="Transparent" StrokeThickness="2" StrokeDashArray="10,5" Margin="40,0,0,0" X2="1" />
                                 <StackPanel Orientation="Horizontal" Width="47" HorizontalAlignment="Left" VerticalAlignment="Center" FlowDirection="RightToLeft">
-                                    <Polygon Name="polygonHpres" Points="0,0 14,10, 0,20" Fill="Black" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Margin="0,0,1,0" ManipulationMode="TranslateY" ManipulationDelta="horizontal_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted" PointerEntered="HrulerGrips_PointerEntered" PointerExited="HrulerGrips_PointerExited" PointerPressed="HrulerGrips_PointerPressed" PointerReleased="HrulerGrips_PointerReleased">
+                                    <Polygon Name="polygonHpres" Points="0,0 14,10, 0,20" Fill="Black" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Margin="0,0,1,0" ManipulationMode="TranslateY" ManipulationDelta="horizontal_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted" PointerEntered="HrulerGrips_PointerEntered" PointerExited="HrulerGrips_PointerExited" PointerPressed="HrulerGrips_PointerPressed" PointerReleased="HrulerGrips_PointerReleased" RightTapped="PolyRuler_RightTapped">
                                         <Polygon.RenderTransform>
                                             <CompositeTransform Rotation="180"/>
                                         </Polygon.RenderTransform>
+                                        <FlyoutBase.AttachedFlyout>
+                                            <MenuFlyout x:Name="flyoutShowHide" Opening="flyoutShowHide_Opening">
+                                                <MenuFlyoutItem Name="menuShow" Text="Show Line" Click="ShowLine_Click" IsEnabled="False"/>
+                                                <MenuFlyoutItem Name="menuHide" Text="Hide LIne" Click="HideLine_Click" IsEnabled="False"/>
+                                            </MenuFlyout>
+                                        </FlyoutBase.AttachedFlyout>
                                     </Polygon>
                                     <TextBox Name="tboxHpos" Text="100" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource styleTextBoxRulers}" TextChanged="tbox_TextChanged" MinWidth="25" TextAlignment="Center" />
                                 </StackPanel>
                             </Grid>
+                            
                             <Grid Name="gridHrulerZero" VerticalAlignment="Bottom" Margin="-48,0,0,-10" ManipulationMode="TranslateY">
                                 <Grid.RenderTransform>
                                     <CompositeTransform x:Name="transformHzero"/>
                                 </Grid.RenderTransform>
                                 <Line IsHitTestVisible="False" Name="lineHrulerZero" VerticalAlignment="Center" Stroke="Transparent" StrokeThickness="2" StrokeDashArray="10,5" Margin="40,0,0,0" X2="1"/>
                                 <StackPanel Orientation="Horizontal" Width="47" HorizontalAlignment="Left" VerticalAlignment="Center" FlowDirection="RightToLeft">
-                                    <Polygon Name="polygonHzero" Points="0,0 14,10, 0,20" Fill="Black" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Margin="0,0,1,0" ManipulationMode="TranslateY" ManipulationDelta="horizontal_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted" PointerEntered="HrulerGrips_PointerEntered" PointerExited="HrulerGrips_PointerExited" PointerPressed="HrulerGrips_PointerPressed" PointerReleased="HrulerGrips_PointerReleased">
+                                    <Polygon Name="polygonHzero" Points="0,0 14,10, 0,20" Fill="Black" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Margin="0,0,1,0" ManipulationMode="TranslateY" ManipulationDelta="horizontal_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted" PointerEntered="HrulerGrips_PointerEntered" PointerExited="HrulerGrips_PointerExited" PointerPressed="HrulerGrips_PointerPressed" PointerReleased="HrulerGrips_PointerReleased" RightTapped="PolyRuler_RightTapped">
                                         <Polygon.RenderTransform>
                                             <CompositeTransform Rotation="180"/>
                                         </Polygon.RenderTransform>
@@ -185,13 +192,14 @@
                                     <TextBox TextChanged="tbox_TextChanged" Name="tboxHzero" Text="0" HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource styleTextBoxRulers}" MinWidth="25" TextAlignment="Center" />
                                 </StackPanel>
                             </Grid>
+                            
                             <Grid Name="gridVrulerZero" HorizontalAlignment="Left" Margin="-15,0,0,-35" Width="32" ManipulationMode="TranslateX">
                                 <Grid.RenderTransform>
                                     <CompositeTransform x:Name="transformVzero"/>
                                 </Grid.RenderTransform>
                                 <Line IsHitTestVisible="False" Name="lineVrulerZero" Stroke="Transparent" StrokeThickness="2" StrokeDashArray="10,5" HorizontalAlignment="Center" Y2="1"/>
                                 <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center">
-                                    <Polygon Name="polygonVzero" Points="0,0 14,10, 0,20" Fill="Black" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" Margin="0" ManipulationMode="TranslateX" ManipulationDelta="vertical_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted" PointerEntered="VrulerGrips_PointerEntered" PointerExited="VrulerGrips_PointerExited" PointerPressed="VrulerGrips_PointerPressed" PointerReleased="VrulerGrips_PointerReleased">
+                                    <Polygon Name="polygonVzero" Points="0,0 14,10, 0,20" Fill="Black" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" Margin="0" ManipulationMode="TranslateX" ManipulationDelta="vertical_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted" PointerEntered="VrulerGrips_PointerEntered" PointerExited="VrulerGrips_PointerExited" PointerPressed="VrulerGrips_PointerPressed" PointerReleased="VrulerGrips_PointerReleased" RightTapped="PolyRuler_RightTapped">
                                         <Polygon.RenderTransform>
                                             <CompositeTransform Rotation="-90"/>
                                         </Polygon.RenderTransform>
@@ -199,13 +207,14 @@
                                     <TextBox TextChanged="tbox_TextChanged" Name="tboxVzero" Text="0" HorizontalAlignment="Center" Style="{StaticResource styleTextBoxRulers}" Margin="0,-2,0,0" MinWidth="25" TextAlignment="Center" />
                                 </StackPanel>
                             </Grid>
+                            
                             <Grid Name="gridVruler720" HorizontalAlignment="Right" Margin="0,0,-15,-35" Width="32" ManipulationMode="TranslateX" >
                                 <Grid.RenderTransform>
                                     <CompositeTransform x:Name="transformV720"/>
                                 </Grid.RenderTransform>
                                 <Line IsHitTestVisible="False" Name="lineVruler720" Stroke="Transparent" StrokeThickness="2" StrokeDashArray="10,5" HorizontalAlignment="Center" Y2="1"/>
                                 <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center">
-                                    <Polygon Name="polygonV720" Points="0,0 14,10, 0,20" Fill="Black" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" Margin="0" ManipulationMode="TranslateX" ManipulationDelta="vertical_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted" PointerEntered="VrulerGrips_PointerEntered" PointerExited="VrulerGrips_PointerExited" PointerPressed="VrulerGrips_PointerPressed" PointerReleased="VrulerGrips_PointerReleased">
+                                    <Polygon Name="polygonV720" Points="0,0 14,10, 0,20" Fill="Black" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" Margin="0" ManipulationMode="TranslateX" ManipulationDelta="vertical_ManipulationDelta" ManipulationStarting="rulers_ManipulationStarting" ManipulationCompleted="rulers_ManipulationCompleted" PointerEntered="VrulerGrips_PointerEntered" PointerExited="VrulerGrips_PointerExited" PointerPressed="VrulerGrips_PointerPressed" PointerReleased="VrulerGrips_PointerReleased" RightTapped="PolyRuler_RightTapped">
                                         <Polygon.RenderTransform>
                                             <CompositeTransform Rotation="-90"/>
                                         </Polygon.RenderTransform>
