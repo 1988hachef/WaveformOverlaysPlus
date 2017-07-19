@@ -421,7 +421,6 @@ namespace WaveformOverlaysPlus
 
             // For shortcut keys
             Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
-            Window.Current.CoreWindow.KeyUp += CoreWindow_KeyUp;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -432,7 +431,6 @@ namespace WaveformOverlaysPlus
             printDoc.GetPreviewPage -= GetPreviewPage;
             printDoc.AddPages -= AddPages;
             Window.Current.CoreWindow.KeyDown -= CoreWindow_KeyDown;
-            Window.Current.CoreWindow.KeyUp -= CoreWindow_KeyUp;
         }
 
 #endregion
@@ -5057,8 +5055,9 @@ namespace WaveformOverlaysPlus
 
         private void CoreWindow_KeyDown(CoreWindow sender, KeyEventArgs args)
         {
-            if (args.VirtualKey == VirtualKey.Control) isCtrlKeyPressed = true;
-            else if (isCtrlKeyPressed)
+            var currentStateOfCtrlKey = sender.GetAsyncKeyState(VirtualKey.Control);
+
+            if (currentStateOfCtrlKey == CoreVirtualKeyStates.Down)
             {
                 switch (args.VirtualKey)
                 {
@@ -5072,11 +5071,6 @@ namespace WaveformOverlaysPlus
                     case VirtualKey.P: Print(); break;
                 }
             }
-        }
-
-        private void CoreWindow_KeyUp(CoreWindow sender, KeyEventArgs args)
-        {
-            if (args.VirtualKey == VirtualKey.Control) isCtrlKeyPressed = false;
         }
 
 #endregion
