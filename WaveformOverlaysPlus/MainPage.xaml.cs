@@ -2313,17 +2313,47 @@ namespace WaveformOverlaysPlus
                 {
                     decimal low = Convert.ToDecimal(tboxVzero.Text);
                     decimal high = Convert.ToDecimal(tboxVpos.Text);
+
                     amountBetweenVs = high - low;
                     VstartValue = low;
+
+                    SetUnitsPerX();
+                    SetTextofPink(false);
+
+                    if (gridExhOverlap.Visibility == Visibility.Visible) // If overlap overlays are visible
+                    {
+                        var low2 = (int)Math.Round(low);
+                        var high2 = (int)Math.Round(high);
+
+                        if (low2 != 0 || high2 != 720)
+                        {
+                            tblockExhOpen.Text = "--";
+                            tblockExhClose.Text = "--";
+                            tblockIntOpen.Text = "--";
+                            tblockIntClose.Text = "--";
+                        }
+                        else
+                        {
+                            SetEVOText();
+                            SetEVCText();
+                            SetIVOText();
+                            SetIVCText();
+                        }
+                    }
                 }
                 catch
                 {
                     amountBetweenVs = 0;
                     VstartValue = 0;
-                }
 
-                SetUnitsPerX();
-                SetTextofPink(false);
+                    SetUnitsPerX();
+                    SetTextofPink(false);
+
+                    tblockExhOpen.Text = "--";
+                    tblockExhClose.Text = "--";
+                    tblockIntOpen.Text = "--";
+                    tblockIntClose.Text = "--";
+                }
             }
             else if (textbox.Name.StartsWith("tboxH"))
             {
@@ -2393,10 +2423,35 @@ namespace WaveformOverlaysPlus
             {
                 SetUnitsPerX();
                 SetTextofPink(false);
-                SetEVOText();
-                SetEVCText();
-                SetIVOText();
-                SetIVCText();
+
+                try
+                {
+                    var low1 = Convert.ToDecimal(tboxVzero.Text);
+                    var high1 = Convert.ToDecimal(tboxVpos.Text);
+
+                    var low2 = (int)Math.Round(low1);
+                    var high2 = (int)Math.Round(high1);
+
+                    if (low2 != 0 || high2 != 720)
+                    {
+                        tblockExhOpen.Text = "--";
+                        tblockExhClose.Text = "--";
+                        tblockIntOpen.Text = "--";
+                        tblockIntClose.Text = "--";
+                    }
+                    else
+                    {
+                        SetEVOText();
+                        SetEVCText();
+                        SetIVOText();
+                        SetIVCText();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                    logger.Log("MySetTextWhenMoveSideToSideError" + " " + ex.Message + " " + ex.StackTrace);
+                }
             }
         }
 
@@ -2589,28 +2644,57 @@ namespace WaveformOverlaysPlus
             }
         }
 
-        private void btnOverlap_Click(object sender, RoutedEventArgs e)
+        private async void btnOverlap_Click(object sender, RoutedEventArgs e)
         {
             if (gridIntOverlap.Visibility == Visibility.Collapsed)
             {
-                // Make visible
-                gridIntOverlap.Visibility = Visibility.Visible;
-                gridExhOverlap.Visibility = Visibility.Visible;
-                tblockExh.Foreground = new SolidColorBrush(Colors.Red);
-                tblockInt.Foreground = new SolidColorBrush(Colors.Blue);
+                try
+                {
+                    var low1 = Convert.ToDecimal(tboxVzero.Text);
+                    var high1 = Convert.ToDecimal(tboxVpos.Text);
 
-                // Get position of zero point of compression overlay for next step
-                GeneralTransform gt = rectZeroDegrees.TransformToVisual(gridToContainOthers);
-                Point zeroPoint = gt.TransformPoint(new Point(0, 0));
+                    var low2 = (int)Math.Round(low1);
+                    var high2 = (int)Math.Round(high1);
 
-                // Move to standard position in relation to compression overlay
-                transformExh.TranslateX = zeroPoint.X + (140 / Convert.ToDouble(UnitsPerX));
-                gridExhOverlap.Width = 230 / Convert.ToDouble(UnitsPerX);
-                transformInt.TranslateX = zeroPoint.X + (350 / Convert.ToDouble(UnitsPerX));
-                gridIntOverlap.Width = 235 / Convert.ToDouble(UnitsPerX);
+                    if (low2 != 0 || high2 != 720)
+                    {
+                        await new MessageDialog("The degree rulers along the bottom must be set to 0 and 720").ShowAsync();
+                    }
+                    else
+                    {
+                        // Make visible
+                        gridIntOverlap.Visibility = Visibility.Visible;
+                        gridExhOverlap.Visibility = Visibility.Visible;
+                        tblockExh.Foreground = new SolidColorBrush(Colors.Red);
+                        tblockInt.Foreground = new SolidColorBrush(Colors.Blue);
 
-                _UndoRedo.InsertInUnDoRedoForShowHideOverlap(true, gridExhOverlap, gridIntOverlap, tblockExh, tblockInt);
-                ManageUndoRedoButtons();
+                        // Get position of zero point of compression overlay for next step
+                        GeneralTransform gt = rectZeroDegrees.TransformToVisual(gridToContainOthers);
+                        Point zeroPoint = gt.TransformPoint(new Point(0, 0));
+
+                        // Move to standard position in relation to compression overlay
+                        transformExh.TranslateX = zeroPoint.X + (140 / Convert.ToDouble(UnitsPerX));
+                        gridExhOverlap.Width = 230 / Convert.ToDouble(UnitsPerX);
+                        transformInt.TranslateX = zeroPoint.X + (350 / Convert.ToDouble(UnitsPerX));
+                        gridIntOverlap.Width = 235 / Convert.ToDouble(UnitsPerX);
+
+                        _UndoRedo.InsertInUnDoRedoForShowHideOverlap(true, gridExhOverlap, gridIntOverlap, tblockExh, tblockInt);
+                        ManageUndoRedoButtons();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await new MessageDialog("Sorry, a problem occured when trying to show the valve overlap overlay.\n\n"
+                                         + ex.Message + "\n\n" + ex.StackTrace).ShowAsync();
+
+                    StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                    logger.Log("MyValveOverlapError" + " " + ex.Message + " " + ex.StackTrace);
+
+                    gridIntOverlap.Visibility = Visibility.Collapsed;
+                    gridExhOverlap.Visibility = Visibility.Collapsed;
+                    tblockExh.Foreground = new SolidColorBrush(Colors.Black);
+                    tblockInt.Foreground = new SolidColorBrush(Colors.Black);
+                }
             }
             else
             {
@@ -2787,14 +2871,62 @@ namespace WaveformOverlaysPlus
 
         private void gridExhOverlap_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            SetEVOText();
-            SetEVCText();
+            try
+            {
+                var low1 = Convert.ToDecimal(tboxVzero.Text);
+                var high1 = Convert.ToDecimal(tboxVpos.Text);
+
+                var low2 = (int)Math.Round(low1);
+                var high2 = (int)Math.Round(high1);
+
+                if (low2 != 0 || high2 != 720)
+                {
+                    tblockExhOpen.Text = "--";
+                    tblockExhClose.Text = "--";
+                    tblockIntOpen.Text = "--";
+                    tblockIntClose.Text = "--";
+                }
+                else
+                {
+                    SetEVOText();
+                    SetEVCText();
+                }
+            }
+            catch (Exception ex)
+            {
+                StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                logger.Log("MyExhGridSizeChangedError" + " " + ex.Message + " " + ex.StackTrace);
+            }
         }
 
         private void gridIntOverlap_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            SetIVOText();
-            SetIVCText();
+            try
+            {
+                var low1 = Convert.ToDecimal(tboxVzero.Text);
+                var high1 = Convert.ToDecimal(tboxVpos.Text);
+
+                var low2 = (int)Math.Round(low1);
+                var high2 = (int)Math.Round(high1);
+
+                if (low2 != 0 || high2 != 720)
+                {
+                    tblockExhOpen.Text = "--";
+                    tblockExhClose.Text = "--";
+                    tblockIntOpen.Text = "--";
+                    tblockIntClose.Text = "--";
+                }
+                else
+                {
+                    SetIVOText();
+                    SetIVCText();
+                }
+            }
+            catch (Exception ex)
+            {
+                StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                logger.Log("MyIntGridSizeChangedError" + " " + ex.Message + " " + ex.StackTrace);
+            }
         }
 
         void SetEVOText()
@@ -4805,10 +4937,35 @@ namespace WaveformOverlaysPlus
 
                     SetUnitsPerX();
                     SetTextofPink(false);
-                    SetEVOText();
-                    SetEVCText();
-                    SetIVOText();
-                    SetIVCText();
+
+                    try
+                    {
+                        var low1 = Convert.ToDecimal(tboxVzero.Text);
+                        var high1 = Convert.ToDecimal(tboxVpos.Text);
+
+                        var low2 = (int)Math.Round(low1);
+                        var high2 = (int)Math.Round(high1);
+
+                        if (low2 != 0 || high2 != 720)
+                        {
+                            tblockExhOpen.Text = "--";
+                            tblockExhClose.Text = "--";
+                            tblockIntOpen.Text = "--";
+                            tblockIntClose.Text = "--";
+                        }
+                        else
+                        {
+                            SetEVOText();
+                            SetEVCText();
+                            SetIVOText();
+                            SetIVCText();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                        logger.Log("MySetValveTextOnMoveCommandError" + " " + ex.Message + " " + ex.StackTrace);
+                    }
                 }
                 else if (name == "gridVruler720")
                 {
@@ -4826,10 +4983,35 @@ namespace WaveformOverlaysPlus
 
                     SetUnitsPerX();
                     SetTextofPink(false);
-                    SetEVOText();
-                    SetEVCText();
-                    SetIVOText();
-                    SetIVCText();
+
+                    try
+                    {
+                        var low1 = Convert.ToDecimal(tboxVzero.Text);
+                        var high1 = Convert.ToDecimal(tboxVpos.Text);
+
+                        var low2 = (int)Math.Round(low1);
+                        var high2 = (int)Math.Round(high1);
+
+                        if (low2 != 0 || high2 != 720)
+                        {
+                            tblockExhOpen.Text = "--";
+                            tblockExhClose.Text = "--";
+                            tblockIntOpen.Text = "--";
+                            tblockIntClose.Text = "--";
+                        }
+                        else
+                        {
+                            SetEVOText();
+                            SetEVCText();
+                            SetIVOText();
+                            SetIVCText();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                        logger.Log("MySetValveTextOnMoveCommandError" + " " + ex.Message + " " + ex.StackTrace);
+                    }
                 }
                 else if (name == "gridVline2")
                 {
@@ -5055,20 +5237,41 @@ namespace WaveformOverlaysPlus
 
         private void CoreWindow_KeyDown(CoreWindow sender, KeyEventArgs args)
         {
-            var currentStateOfCtrlKey = sender.GetAsyncKeyState(VirtualKey.Control);
-
-            if (currentStateOfCtrlKey == CoreVirtualKeyStates.Down)
+            var focusedElement = FocusManager.GetFocusedElement();
+            
+            if (focusedElement is TextBox) // Only allow some shortcut keys to be handled by the CoreWindow, because a TextBox has some of the same shortcut keys and only one thing should handle the shortcut action.
             {
-                switch (args.VirtualKey)
+                var currentStateOfCtrlKey = sender.GetAsyncKeyState(VirtualKey.Control);
+
+                if (currentStateOfCtrlKey == CoreVirtualKeyStates.Down)
                 {
-                    case VirtualKey.V: Paste(); break;
-                    case VirtualKey.Z: Undo(); break;
-                    case VirtualKey.Y: Redo(); break;
-                    case VirtualKey.S: Save(); break;
-                    case VirtualKey.N: New(); break;
-                    case VirtualKey.O: Open(); break;
-                    case VirtualKey.C: Copy(); break;
-                    case VirtualKey.P: Print(); break;
+                    switch (args.VirtualKey)
+                    {
+                        case VirtualKey.Y: Redo(); break;
+                        case VirtualKey.S: Save(); break;
+                        case VirtualKey.N: New(); break;
+                        case VirtualKey.O: Open(); break;
+                        case VirtualKey.P: Print(); break;
+                    }
+                }
+            }
+            else // Allow all global shortcut keys
+            {
+                var currentStateOfCtrlKey = sender.GetAsyncKeyState(VirtualKey.Control);
+
+                if (currentStateOfCtrlKey == CoreVirtualKeyStates.Down)
+                {
+                    switch (args.VirtualKey)
+                    {
+                        case VirtualKey.V: Paste(); break;
+                        case VirtualKey.Z: Undo(); break;
+                        case VirtualKey.Y: Redo(); break;
+                        case VirtualKey.S: Save(); break;
+                        case VirtualKey.N: New(); break;
+                        case VirtualKey.O: Open(); break;
+                        case VirtualKey.C: Copy(); break;
+                        case VirtualKey.P: Print(); break;
+                    }
                 }
             }
         }
@@ -5792,6 +5995,8 @@ namespace WaveformOverlaysPlus
             IsMouseDeviceRightClick = false;
         }
 
-#endregion
+        #endregion
+
+        
     }
 }
