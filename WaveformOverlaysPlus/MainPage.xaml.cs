@@ -2615,6 +2615,12 @@ namespace WaveformOverlaysPlus
                 {
                     rulerLine.Stroke = new SolidColorBrush(Colors.Transparent);
                 }
+                else
+                {
+                    var gray = new SolidColorBrush(Colors.Gray);
+                    var stroke = rulerLine.Stroke as SolidColorBrush;
+                    if (stroke.Color != gray.Color) { rulerLine.Stroke = gray; }
+                }
             }
         }
 
