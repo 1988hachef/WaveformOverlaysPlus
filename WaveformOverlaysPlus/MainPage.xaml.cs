@@ -24,7 +24,6 @@ using Windows.ApplicationModel.DataTransfer;
 using WaveformOverlaysPlus.Helpers;
 using WaveformOverlaysPlus.Controls;
 using Windows.UI;
-using Windows.Graphics.Display;
 using Windows.Graphics.Imaging;
 using Microsoft.Services.Store.Engagement;
 using Windows.UI.Text;
@@ -88,12 +87,6 @@ namespace WaveformOverlaysPlus
         const string lastCompLinesColor = "lastCompLinesColor";
         const string lastSizeSelected = "lastSizeSelected";
         const string lastColorBox = "lastColorBox";
-
-#endregion
-
-#region For Shortcut keys
-
-        bool isCtrlKeyPressed;
 
 #endregion
 
@@ -229,8 +222,6 @@ namespace WaveformOverlaysPlus
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            var display = DisplayInformation.GetForCurrentView();
-            
             // Delete old files from LocalFolder
             var files = await ApplicationData.Current.LocalFolder.GetFilesAsync();
 
@@ -400,6 +391,19 @@ namespace WaveformOverlaysPlus
             }
         }
 
+        //private async void menuMiniApp_Click(object sender, RoutedEventArgs e)
+        //{
+        //    try
+        //    {
+        //        await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageDialog dialog = new MessageDialog(ex.Message);
+        //        await dialog.ShowAsync();
+        //    }
+        //}
+
 #region OnNavigated
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -467,9 +471,24 @@ namespace WaveformOverlaysPlus
             gridCover.Visibility = Visibility.Collapsed;
         }
 
-        void New()
+        async void New()
         {
-            Frame.Navigate(typeof(ResetPage));
+            try
+            {
+                Frame.Navigate(typeof(ResetPage));
+
+                //var _Frame = Window.Current.Content as Frame;
+                //_Frame.Navigate(_Frame.Content.GetType());
+                //_Frame.GoBack(); // remove from BackStack
+            }
+            catch (Exception ex)
+            {
+                await new MessageDialog("Sorry, a problem occured when trying to create a new page.\n\n"
+                                         + ex.Message + "\n\n" + ex.StackTrace).ShowAsync();
+
+                StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                logger.Log("MyNewError" + " " + ex.Message + " " + ex.StackTrace);
+            }
         }
 
         private void menuExit_Click(object sender, RoutedEventArgs e)
@@ -5785,6 +5804,15 @@ namespace WaveformOverlaysPlus
             Point point0 = gt1.TransformPoint(new Point(0, 0));
 
             gridCompressionOverlay.Width = point720.X - point0.X + 1;
+
+            SetUnitsPerX();
+            SetUnitsPerY();
+
+            if (gridDelta.Visibility == Visibility.Visible)
+            {
+                SetTextofPink(false);
+                SetTextofPurple(false);
+            }
         }
 
         private void gridCropping_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -6001,8 +6029,7 @@ namespace WaveformOverlaysPlus
             IsMouseDeviceRightClick = false;
         }
 
-        #endregion
 
-        
+        #endregion
     }
 }

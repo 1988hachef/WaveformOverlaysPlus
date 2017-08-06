@@ -7,6 +7,6 @@
     mc:Ignorable="d" Loaded="Page_Loaded">
 
     <Grid Background="White">
-        <TextBlock Text="Please wait..." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="72" Foreground="Black"/>
+        <TextBlock Text="Please wait..." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="48" Foreground="Black"/>
     </Grid>
 </Page>

@@ -1,0 +1,243 @@
+﻿<Window x:Class="OverlaysMiniApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OverlaysMiniApp"
+        mc:Ignorable="d"
+        Title="Pressure Waveform Overlays" Height="108" Width="465" ResizeMode="CanMinimize" WindowStartupLocation="Manual" Left="0" Top="0">
+    <Window.Background>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FFD4D5D6" Offset="0"/>
+            <GradientStop Color="#FF9B9999" Offset="0.904"/>
+            <GradientStop Color="#FF5C5C5D" Offset="1"/>
+            <GradientStop Color="#FF9B9999" Offset="0.103"/>
+        </LinearGradientBrush>
+    </Window.Background>
+    <StackPanel Orientation="Horizontal">
+
+        <StackPanel>
+            <TextBox x:Name="textBox" TextWrapping="Wrap" Text="Line chart:" Background="{x:Null}" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+            <Button x:Name="button" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Bottom" Click="button_Click" Width="35" Height="35">
+                <StackPanel>
+                    <Image Source="Resources\template.bmp" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Stretch="UniformToFill" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+        <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Margin="8"/>
+
+        <StackPanel>
+            <TextBox x:Name="textBox9" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Cylinder ID:" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" Margin="0,5,0,0"/>
+            <Button x:Name="button1" Click="buttonGo_Click" Width="35" Height="35" VerticalAlignment="Bottom">
+                <StackPanel>
+                    <Image Source="Resources\template2.bmp" Margin="0" Stretch="UniformToFill" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+        <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Margin="8" Foreground="{x:Null}" Background="{x:Null}"/>
+
+        <Grid Width="564">
+            <Label x:Name="label" Content="Fire order:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,36,0,0"/>
+            <ComboBox x:Name="comboBox1" HorizontalAlignment="Left" Margin="73,38,0,0" VerticalAlignment="Top" Width="40" Visibility="Hidden">
+                <ComboBoxItem Content="1"/>
+                <ComboBoxItem Content="2"/>
+                <ComboBoxItem Content="3"/>
+                <ComboBoxItem Content="4"/>
+                <ComboBoxItem Content="5"/>
+                <ComboBoxItem Content="6"/>
+                <ComboBoxItem Content="7"/>
+                <ComboBoxItem Content="8"/>
+                <ComboBoxItem Content="9"/>
+                <ComboBoxItem Content="10"/>
+                <ComboBoxItem Content="11"/>
+                <ComboBoxItem Content="12"/>
+            </ComboBox>
+            <ComboBox x:Name="comboBoxSync" HorizontalAlignment="Left" Margin="230,8,0,0" VerticalAlignment="Top" Width="40" Foreground="Red" DropDownClosed="comboBoxSync_DropDownClosed">
+            </ComboBox>
+            <ComboBox x:Name="comboBox12" HorizontalAlignment="Left" Margin="513,38,-69,0" VerticalAlignment="Top" Width="40" Visibility="Hidden">
+                <ComboBoxItem Content="1"/>
+                <ComboBoxItem Content="2"/>
+                <ComboBoxItem Content="3"/>
+                <ComboBoxItem Content="4"/>
+                <ComboBoxItem Content="5"/>
+                <ComboBoxItem Content="6"/>
+                <ComboBoxItem Content="7"/>
+                <ComboBoxItem Content="8"/>
+                <ComboBoxItem Content="9"/>
+                <ComboBoxItem Content="10"/>
+                <ComboBoxItem Content="11"/>
+                <ComboBoxItem Content="12"/>
+            </ComboBox>
+            <ComboBox x:Name="comboBox11" HorizontalAlignment="Left" Margin="473,38,-29,0" VerticalAlignment="Top" Width="40" Visibility="Hidden">
+                <ComboBoxItem Content="1"/>
+                <ComboBoxItem Content="2"/>
+                <ComboBoxItem Content="3"/>
+                <ComboBoxItem Content="4"/>
+                <ComboBoxItem Content="5"/>
+                <ComboBoxItem Content="6"/>
+                <ComboBoxItem Content="7"/>
+                <ComboBoxItem Content="8"/>
+                <ComboBoxItem Content="9"/>
+                <ComboBoxItem Content="10"/>
+                <ComboBoxItem Content="11"/>
+                <ComboBoxItem Content="12"/>
+            </ComboBox>
+            <ComboBox x:Name="comboBox10" HorizontalAlignment="Left" Margin="433,38,0,0" VerticalAlignment="Top" Width="40" Visibility="Hidden">
+                <ComboBoxItem Content="1"/>
+                <ComboBoxItem Content="2"/>
+                <ComboBoxItem Content="3"/>
+                <ComboBoxItem Content="4"/>
+                <ComboBoxItem Content="5"/>
+                <ComboBoxItem Content="6"/>
+                <ComboBoxItem Content="7"/>
+                <ComboBoxItem Content="8"/>
+                <ComboBoxItem Content="9"/>
+                <ComboBoxItem Content="10"/>
+                <ComboBoxItem Content="11"/>
+                <ComboBoxItem Content="12"/>
+            </ComboBox>
+            <ComboBox x:Name="comboBox9" HorizontalAlignment="Left" Margin="393,38,0,0" VerticalAlignment="Top" Width="40" Visibility="Hidden">
+                <ComboBoxItem Content="1"/>
+                <ComboBoxItem Content="2"/>
+                <ComboBoxItem Content="3"/>
+                <ComboBoxItem Content="4"/>
+                <ComboBoxItem Content="5"/>
+                <ComboBoxItem Content="6"/>
+                <ComboBoxItem Content="7"/>
+                <ComboBoxItem Content="8"/>
+                <ComboBoxItem Content="9"/>
+                <ComboBoxItem Content="10"/>
+                <ComboBoxItem Content="11"/>
+                <ComboBoxItem Content="12"/>
+            </ComboBox>
+            <ComboBox x:Name="comboBox8" HorizontalAlignment="Left" Margin="353,38,0,0" VerticalAlignment="Top" Width="40" Visibility="Hidden">
+                <ComboBoxItem Content="1"/>
+                <ComboBoxItem Content="2"/>
+                <ComboBoxItem Content="3"/>
+                <ComboBoxItem Content="4"/>
+                <ComboBoxItem Content="5"/>
+                <ComboBoxItem Content="6"/>
+                <ComboBoxItem Content="7"/>
+                <ComboBoxItem Content="8"/>
+                <ComboBoxItem Content="9"/>
+                <ComboBoxItem Content="10"/>
+                <ComboBoxItem Content="11"/>
+                <ComboBoxItem Content="12"/>
+            </ComboBox>
+            <ComboBox x:Name="comboBox7" HorizontalAlignment="Left" Margin="313,38,0,0" VerticalAlignment="Top" Width="40" Visibility="Hidden">
+                <ComboBoxItem Content="1"/>
+                <ComboBoxItem Content="2"/>
+                <ComboBoxItem Content="3"/>
+                <ComboBoxItem Content="4"/>
+                <ComboBoxItem Content="5"/>
+                <ComboBoxItem Content="6"/>
+                <ComboBoxItem Content="7"/>
+                <ComboBoxItem Content="8"/>
+                <ComboBoxItem Content="9"/>
+                <ComboBoxItem Content="10"/>
+                <ComboBoxItem Content="11"/>
+                <ComboBoxItem Content="12"/>
+            </ComboBox>
+            <ComboBox x:Name="comboBox6" HorizontalAlignment="Left" Margin="273,38,0,0" VerticalAlignment="Top" Width="40" Visibility="Hidden">
+                <ComboBoxItem Content="1"/>
+                <ComboBoxItem Content="2"/>
+                <ComboBoxItem Content="3"/>
+                <ComboBoxItem Content="4"/>
+                <ComboBoxItem Content="5"/>
+                <ComboBoxItem Content="6"/>
+                <ComboBoxItem Content="7"/>
+                <ComboBoxItem Content="8"/>
+                <ComboBoxItem Content="9"/>
+                <ComboBoxItem Content="10"/>
+                <ComboBoxItem Content="11"/>
+                <ComboBoxItem Content="12"/>
+            </ComboBox>
+            <ComboBox x:Name="comboBox5" HorizontalAlignment="Left" Margin="233,38,0,0" VerticalAlignment="Top" Width="40" Visibility="Hidden">
+                <ComboBoxItem Content="1"/>
+                <ComboBoxItem Content="2"/>
+                <ComboBoxItem Content="3"/>
+                <ComboBoxItem Content="4"/>
+                <ComboBoxItem Content="5"/>
+                <ComboBoxItem Content="6"/>
+                <ComboBoxItem Content="7"/>
+                <ComboBoxItem Content="8"/>
+                <ComboBoxItem Content="9"/>
+                <ComboBoxItem Content="10"/>
+                <ComboBoxItem Content="11"/>
+                <ComboBoxItem Content="12"/>
+            </ComboBox>
+            <ComboBox x:Name="comboBox4" HorizontalAlignment="Left" Margin="193,38,0,0" VerticalAlignment="Top" Width="40" Visibility="Hidden">
+                <ComboBoxItem Content="1"/>
+                <ComboBoxItem Content="2"/>
+                <ComboBoxItem Content="3"/>
+                <ComboBoxItem Content="4"/>
+                <ComboBoxItem Content="5"/>
+                <ComboBoxItem Content="6"/>
+                <ComboBoxItem Content="7"/>
+                <ComboBoxItem Content="8"/>
+                <ComboBoxItem Content="9"/>
+                <ComboBoxItem Content="10"/>
+                <ComboBoxItem Content="11"/>
+                <ComboBoxItem Content="12"/>
+            </ComboBox>
+            <ComboBox x:Name="comboBox3" HorizontalAlignment="Left" Margin="153,38,0,0" VerticalAlignment="Top" Width="40" Visibility="Hidden">
+                <ComboBoxItem Content="1"/>
+                <ComboBoxItem Content="2"/>
+                <ComboBoxItem Content="3"/>
+                <ComboBoxItem Content="4"/>
+                <ComboBoxItem Content="5"/>
+                <ComboBoxItem Content="6"/>
+                <ComboBoxItem Content="7"/>
+                <ComboBoxItem Content="8"/>
+                <ComboBoxItem Content="9"/>
+                <ComboBoxItem Content="10"/>
+                <ComboBoxItem Content="11"/>
+                <ComboBoxItem Content="12"/>
+            </ComboBox>
+            <ComboBox x:Name="comboBox2" HorizontalAlignment="Left" Margin="113,38,0,0" VerticalAlignment="Top" Width="40" Visibility="Hidden">
+                <ComboBoxItem Content="1"/>
+                <ComboBoxItem Content="2"/>
+                <ComboBoxItem Content="3"/>
+                <ComboBoxItem Content="4"/>
+                <ComboBoxItem Content="5"/>
+                <ComboBoxItem Content="6"/>
+                <ComboBoxItem Content="7"/>
+                <ComboBoxItem Content="8"/>
+                <ComboBoxItem Content="9"/>
+                <ComboBoxItem Content="10"/>
+                <ComboBoxItem Content="11"/>
+                <ComboBoxItem Content="12"/>
+            </ComboBox>
+            <Label x:Name="label1" Content="Sync:" HorizontalAlignment="Left" Margin="193,5,0,0" VerticalAlignment="Top"/>
+
+            <Label x:Name="label2" Content="Number of cylinders:" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top"/>
+            <ComboBox x:Name="comboBoxCylinders" HorizontalAlignment="Left" Margin="130,8,0,0" VerticalAlignment="Top" Width="40" DropDownClosed="comboBoxCylinders_DropDownClosed">
+                <ComboBoxItem Content="1"/>
+                <ComboBoxItem Content="2"/>
+                <ComboBoxItem Content="3"/>
+                <ComboBoxItem Content="4"/>
+                <ComboBoxItem Content="5"/>
+                <ComboBoxItem Content="6"/>
+                <ComboBoxItem Content="7"/>
+                <ComboBoxItem Content="8"/>
+                <ComboBoxItem Content="9"/>
+                <ComboBoxItem Content="10"/>
+                <ComboBoxItem Content="11"/>
+                <ComboBoxItem Content="12"/>
+            </ComboBox>
+
+            <TextBox x:Name="textBox1" HorizontalAlignment="Left" Height="23" Margin="74,37,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="19" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MaxLength="1" MaxLines="1" KeyUp="textBox1_KeyUp" KeyDown="textBox1_KeyDown" Visibility="Hidden"/>
+            <TextBox x:Name="textBox2" HorizontalAlignment="Left" Height="23" Margin="98,37,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="19" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MaxLength="1" MaxLines="1" KeyUp="textBox2_KeyUp" KeyDown="textBox2_KeyDown" Visibility="Hidden"/>
+            <TextBox x:Name="textBox3" HorizontalAlignment="Left" Height="23" Margin="122,37,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="19" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MaxLength="1" MaxLines="1" KeyUp="textBox3_KeyUp" KeyDown="textBox3_KeyDown" Visibility="Hidden"/>
+            <TextBox x:Name="textBox4" HorizontalAlignment="Left" Height="23" Margin="146,37,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="19" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MaxLength="1" MaxLines="1" KeyUp="textBox4_KeyUp" KeyDown="textBox4_KeyDown" Visibility="Hidden" />
+            <TextBox x:Name="textBox5" HorizontalAlignment="Left" Height="23" Margin="170,37,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="19" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MaxLength="1" MaxLines="1" KeyUp="textBox5_KeyUp" KeyDown="textBox5_KeyDown" Visibility="Hidden"/>
+            <TextBox x:Name="textBox6" HorizontalAlignment="Left" Height="23" Margin="194,37,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="19" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MaxLength="1" MaxLines="1" KeyUp="textBox6_KeyUp" KeyDown="textBox6_KeyDown" Visibility="Hidden"/>
+            <TextBox x:Name="textBox7" HorizontalAlignment="Left" Height="23" Margin="218,37,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="19" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MaxLength="1" MaxLines="1" KeyUp="textBox7_KeyUp" KeyDown="textBox7_KeyDown" Visibility="Hidden"/>
+            <TextBox x:Name="textBox8" HorizontalAlignment="Left" Height="23" Margin="242,37,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="19" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MaxLength="1" MaxLines="1" KeyUp="textBox8_KeyUp" KeyDown="textBox8_KeyDown" Visibility="Hidden"/>
+
+        </Grid>
+
+    </StackPanel>
+</Window>

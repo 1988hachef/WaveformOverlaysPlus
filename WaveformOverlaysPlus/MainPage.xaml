@@ -61,6 +61,7 @@
                         <MenuFlyoutSeparator/>
                         <MenuFlyoutItem Name="menuPrint" Text="Print                          Ctrl+ P" Click="PrintButtonClick" FontSize="{StaticResource myFontSize}"/>
                         <MenuFlyoutItem Name="menuShare" Text="Share" FontSize="{StaticResource myFontSize}" Click="menuShare_Click"/>
+                        
                         <MenuFlyoutSeparator/>
                         <MenuFlyoutItem Name="menuExit" Text="Exit" FontSize="{StaticResource myFontSize}" Click="menuExit_Click"/>
                     </MenuFlyout>
@@ -154,7 +155,7 @@
                             </FlyoutBase.AttachedFlyout>
 
                             <Grid Name="gridMain" Background="{Binding Background, ElementName=borderForPageColor}" SizeChanged="gridMain_SizeChanged">
-
+                                
                             </Grid>
 
                             <Grid Name="gridHrulerPres" VerticalAlignment="Top" Margin="-48,-10,0,0" ManipulationMode="TranslateY">
@@ -223,7 +224,7 @@
                                 </StackPanel>
                             </Grid>
 
-                            <Grid Name="gridCompressionOverlay" ManipulationMode="TranslateX" HorizontalAlignment="Left" VerticalAlignment="Top" Opacity="0.001" IsHitTestVisible="False" Width="722" UseLayoutRounding="False">
+                            <Grid Name="gridCompressionOverlay" ManipulationMode="TranslateX" HorizontalAlignment="Left" VerticalAlignment="Top" Opacity="0.001" IsHitTestVisible="False" Width="188" UseLayoutRounding="False">
                                 <Grid.RenderTransform>
                                     <CompositeTransform x:Name="transformComp"/>
                                 </Grid.RenderTransform>
