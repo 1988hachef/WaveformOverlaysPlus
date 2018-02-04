@@ -303,7 +303,7 @@ namespace WaveformOverlaysPlus
             }
 
             drawingAttributes.IgnorePressure = false;
-            drawingAttributes.FitToCurve = true;
+            drawingAttributes.FitToCurve = false;
             inkCanvas.InkPresenter.UpdateDefaultDrawingAttributes(drawingAttributes);
 
             // 1. Activate custom drawing 
@@ -1757,7 +1757,8 @@ namespace WaveformOverlaysPlus
             // Store the setting
             if (localSettings != null)
             {
-                localSettings.Values[lastSizeSelected] = size;
+                var sizeToSave = Convert.ToInt32(size);
+                localSettings.Values[lastSizeSelected] = sizeToSave;
             }
         }
 
@@ -5870,7 +5871,7 @@ namespace WaveformOverlaysPlus
 
             if (_lastSizeSelected != null)
             {
-                var size = (double)_lastSizeSelected;
+                var size = (int)_lastSizeSelected;
 
                 switch (size)
                 {
