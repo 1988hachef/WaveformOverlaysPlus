@@ -5838,138 +5838,172 @@ namespace WaveformOverlaysPlus
 
         void RestoreColorBoxSelection()
         {
-            Object _lastColorBox = localSettings.Values[lastColorBox];
-
-            if (_lastColorBox != null)
+            try
             {
-                var colorBoxName = _lastColorBox.ToString();
+                Object _lastColorBox = localSettings.Values[lastColorBox];
 
-                switch (colorBoxName)
+                if (_lastColorBox != null)
                 {
-                    //case "strokeColorRB":
-                    //    strokeColorRB.IsChecked = true;
-                    //    break;
-                    case "fillColorRB":
-                        fillColorRB.IsChecked = true;
-                        break;
-                    case "textColorRB":
-                        textColorRB.IsChecked = true;
-                        break;
-                    case "pageColorRB":
-                        pageColorRB.IsChecked = true;
-                        break;
-                    //case "compLinesColorRB":
-                    //    strokeColorRB.IsChecked = true;
-                    //    break;
+                    var colorBoxName = _lastColorBox.ToString();
+
+                    switch (colorBoxName)
+                    {
+                        //case "strokeColorRB":
+                        //    strokeColorRB.IsChecked = true;
+                        //    break;
+                        case "fillColorRB":
+                            fillColorRB.IsChecked = true;
+                            break;
+                        case "textColorRB":
+                            textColorRB.IsChecked = true;
+                            break;
+                        case "pageColorRB":
+                            pageColorRB.IsChecked = true;
+                            break;
+                        //case "compLinesColorRB":
+                        //    strokeColorRB.IsChecked = true;
+                        //    break;
+                        default:
+                            strokeColorRB.IsChecked = true;
+                            break;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                strokeColorRB.IsChecked = true;
+
+                StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                logger.Log("RestoreColorBoxSelectionError" + " " + ex.Message + " " + ex.StackTrace);
             }
         }
 
         void RestoreSizeSelection()
         {
-            Object _lastSizeSelected = localSettings.Values[lastSizeSelected];
-
-            if (_lastSizeSelected != null)
+            try
             {
-                var size = (int)_lastSizeSelected;
+                Object _lastSizeSelected = localSettings.Values[lastSizeSelected];
 
-                switch (size)
+                if (_lastSizeSelected != null)
                 {
-                    case 1:
-                        rbSize1.IsChecked = true;
-                        break;
-                    case 2:
-                        rbSize2.IsChecked = true;
-                        break;
-                    case 6:
-                        rbSize6.IsChecked = true;
-                        break;
-                    case 10:
-                        rbSize10.IsChecked = true;
-                        break;
+                    var size = (int)_lastSizeSelected;
+
+                    switch (size)
+                    {
+                        case 1:
+                            rbSize1.IsChecked = true;
+                            break;
+                        case 2:
+                            rbSize2.IsChecked = true;
+                            break;
+                        case 6:
+                            rbSize6.IsChecked = true;
+                            break;
+                        case 10:
+                            rbSize10.IsChecked = true;
+                            break;
+                        default:
+                            rbSize2.IsChecked = true;
+                            break;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                rbSize2.IsChecked = true;
+
+                StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                logger.Log("RestoreSizeSelectionError" + " " + ex.Message + " " + ex.StackTrace);
             }
         }
 
         void RestoreColorSelections()
         {
-            var strokeBrush = GetBrushFromSettings(localSettings.Values[lastStrokeColor]);
-            var fillBrush = GetBrushFromSettings(localSettings.Values[lastFillColor]);
-            var textBrush = GetBrushFromSettings(localSettings.Values[lastTextColor]);
-            var pageBrush = GetBrushFromSettings(localSettings.Values[lastPageColor]);
-            var compBrush = GetBrushFromSettings(localSettings.Values[lastCompLinesColor]);
-
-            var transparentBrush = new SolidColorBrush(Colors.Transparent);
-
-            // Set stroke color
-            if (strokeBrush != null)
+            try
             {
-                InkDrawingAttributes drawingAttributes = inkCanvas.InkPresenter.CopyDefaultDrawingAttributes();
-                drawingAttributes.Color = strokeBrush.Color;
-                inkCanvas.InkPresenter.UpdateDefaultDrawingAttributes(drawingAttributes);
-                borderForStrokeColor.Background = strokeBrush;
-                if (strokeBrush.Color == transparentBrush.Color)
+                var strokeBrush = GetBrushFromSettings(localSettings.Values[lastStrokeColor]);
+                var fillBrush = GetBrushFromSettings(localSettings.Values[lastFillColor]);
+                var textBrush = GetBrushFromSettings(localSettings.Values[lastTextColor]);
+                var pageBrush = GetBrushFromSettings(localSettings.Values[lastPageColor]);
+                var compBrush = GetBrushFromSettings(localSettings.Values[lastCompLinesColor]);
+
+                var transparentBrush = new SolidColorBrush(Colors.Transparent);
+
+                // Set stroke color
+                if (strokeBrush != null)
                 {
-                    strokeX.Visibility = Visibility.Visible;
+                    InkDrawingAttributes drawingAttributes = inkCanvas.InkPresenter.CopyDefaultDrawingAttributes();
+                    drawingAttributes.Color = strokeBrush.Color;
+                    inkCanvas.InkPresenter.UpdateDefaultDrawingAttributes(drawingAttributes);
+                    borderForStrokeColor.Background = strokeBrush;
+                    if (strokeBrush.Color == transparentBrush.Color)
+                    {
+                        strokeX.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        strokeX.Visibility = Visibility.Collapsed;
+                    }
                 }
-                else
+
+                // Set fill color
+                if (fillBrush != null)
                 {
-                    strokeX.Visibility = Visibility.Collapsed;
+                    borderForFillColor.Background = fillBrush;
+                    if (fillBrush.Color == transparentBrush.Color)
+                    {
+                        fillX.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        fillX.Visibility = Visibility.Collapsed;
+                    }
+                }
+
+                // Set text color
+                if (textBrush != null)
+                {
+                    borderForTextColor.Background = textBrush;
+                    if (textBrush.Color == transparentBrush.Color)
+                    {
+                        textX.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        textX.Visibility = Visibility.Collapsed;
+                    }
+                }
+
+                // Set page color
+                if (pageBrush != null)
+                {
+                    if (pageBrush.Color == transparentBrush.Color)
+                    {
+                        borderForPageColor.Background = new SolidColorBrush(Colors.White);
+                    }
+                    else
+                    {
+                        borderForPageColor.Background = pageBrush;
+                    }
+                }
+
+                // Set compLines color
+                if (compBrush != null)
+                {
+                    if (compBrush.Color == transparentBrush.Color)
+                    {
+                        borderForCompLinesColor.Background = new SolidColorBrush(Colors.Gray);
+                    }
+                    else
+                    {
+                        borderForCompLinesColor.Background = compBrush;
+                    }
                 }
             }
-
-            // Set fill color
-            if (fillBrush != null)
+            catch (Exception ex)
             {
-                borderForFillColor.Background = fillBrush;
-                if (fillBrush.Color == transparentBrush.Color)
-                {
-                    fillX.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    fillX.Visibility = Visibility.Collapsed;
-                }
-            }
-
-            // Set text color
-            if (textBrush != null)
-            {
-                borderForTextColor.Background = textBrush;
-                if (textBrush.Color == transparentBrush.Color)
-                {
-                    textX.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    textX.Visibility = Visibility.Collapsed;
-                }
-            }
-
-            // Set page color
-            if (pageBrush != null)
-            {
-                if (pageBrush.Color == transparentBrush.Color)
-                {
-                    borderForPageColor.Background = new SolidColorBrush(Colors.White);
-                }
-                else
-                {
-                    borderForPageColor.Background = pageBrush;
-                }
-            }
-
-            // Set compLines color
-            if (compBrush != null)
-            {
-                if (compBrush.Color == transparentBrush.Color)
-                {
-                    borderForCompLinesColor.Background = new SolidColorBrush(Colors.Gray);
-                }
-                else
-                {
-                    borderForCompLinesColor.Background = compBrush;
-                }
+                StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                logger.Log("RestoreColorSelectionsError" + " " + ex.Message + " " + ex.StackTrace);
             }
         }
 
